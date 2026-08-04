@@ -1,6 +1,7 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import { getEntry, type CollectionEntry } from 'astro:content';
 
+import { getPostRoute } from '../utils/posts';
 import FormattedDate from './FormattedDate.astro';
 
 interface Props {
@@ -8,28 +9,58 @@ interface Props {
 }
 
 const { posts } = Astro.props;
+const postItems = await Promise.all(
+	posts.map(async (post) => ({
+		post,
+		author: await getEntry(post.data.author),
+	})),
+);
 ---
 
 {
-	posts.length > 0 ? (
+	postItems.length > 0 ? (
 		<ul class="divide-y divide-outline-gray-1 border-y border-outline-gray-1">
-			{posts.map((post) => (
+			{postItems.map(({ post, author }) => (
 				<li>
 					<a
-						class="group -mx-4 grid min-h-17 grid-cols-1 content-center gap-2 px-4 py-4 no-underline transition-colors hover:bg-surface-gray-1 sm:-mx-5 sm:grid-cols-[minmax(0,1fr)_10.5rem] sm:gap-8 sm:px-5"
-						href={`/${post.id}/`}
+						class="group -mx-4 grid grid-cols-[6.5rem_minmax(0,1fr)] items-start gap-4 px-4 py-5 no-underline transition-colors hover:bg-surface-gray-1 sm:-mx-5 sm:grid-cols-[11rem_minmax(0,1fr)] sm:gap-6 sm:px-5 sm:py-6"
+						href={`/${getPostRoute(post)}/`}
 					>
-						<div class="min-w-0">
-							<h3 class="text-lg-medium text-ink-gray-8 transition-colors group-hover:text-ink-gray-9">
+						{
+							post.data.image ? (
+								<img
+									class="aspect-[3/2] w-full rounded-lg border border-outline-gray-1 bg-surface-gray-1 object-cover"
+									src={post.data.image}
+									alt=""
+									width="176"
+									height="117"
+									loading="lazy"
+									decoding="async"
+								/>
+							) : (
+								<div class="grid aspect-[3/2] w-full place-items-center rounded-lg border border-outline-gray-1 bg-surface-gray-1 text-sm-medium text-ink-gray-4">
+									BWH
+								</div>
+							)
+						}
+						<div class="min-w-0 py-0.5 sm:py-1">
+							<h2 class="text-lg-medium text-ink-gray-8 transition-colors group-hover:text-ink-gray-9 sm:text-2xl sm:font-medium">
 								{post.data.title}
-							</h3>
-							<p class="mt-1.5 line-clamp-2 text-p-sm text-ink-gray-5">
+							</h2>
+							<p class="mt-2 line-clamp-2 text-p-sm text-ink-gray-5 sm:text-p-base">
 								{post.data.description}
 							</p>
+							<p class="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm tabular-nums text-ink-gray-4">
+								<span>
+									In <span class="text-ink-gray-5">{post.data.tags[0]}</span> by{' '}
+									<span class="text-ink-gray-5">{author?.data.name ?? 'BWH Tech'}</span>
+								</span>
+								<span class="whitespace-nowrap">
+									<span aria-hidden="true">·</span>{' '}
+									<FormattedDate date={post.data.pubDate} />
+								</span>
+							</p>
 						</div>
-						<p class="text-sm tabular-nums text-ink-gray-4 sm:pt-0.5 sm:text-right">
-							<FormattedDate date={post.data.pubDate} />
-						</p>
 					</a>
 				</li>
 			))}

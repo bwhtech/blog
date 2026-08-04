@@ -2,22 +2,36 @@
 import { type CollectionEntry, render } from 'astro:content';
 
 import BlogPostLayout from '../layouts/BlogPostLayout.astro';
-import { getPublishedPosts } from '../utils/posts';
+import { getPostRoute, getPublishedPosts } from '../utils/posts';
 
 export async function getStaticPaths() {
 	const posts = await getPublishedPosts();
 
-	return posts.map((post) => ({
-		params: { slug: post.id },
-		props: { post },
-	}));
+	return posts.flatMap((post) => {
+		const route = getPostRoute(post);
+
+		return [
+			{
+				params: { slug: route },
+				props: { post },
+			},
+			{
+				params: { slug: post.id },
+				props: { redirectTo: `/${route}/` },
+			},
+		];
+	});
 }
 
-interface Props {
-	post: CollectionEntry<'blog'>;
-}
+type Props =
+	| { post: CollectionEntry<'blog'>; redirectTo?: never }
+	| { post?: never; redirectTo: string };
 
-const { post } = Astro.props;
+const { post, redirectTo } = Astro.props;
+
+if (redirectTo) return Astro.redirect(redirectTo, 301);
+if (!post) throw new Error('Post not found');
+
 const { Content } = await render(post);
 ---
 
