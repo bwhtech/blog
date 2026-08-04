@@ -69,5 +69,5 @@ netlify link
 Deployments can then run through the connected Git repository or manually with:
 
 ```sh
-netlify deploy --build --prod
+netlify deploy --prod
 ```
