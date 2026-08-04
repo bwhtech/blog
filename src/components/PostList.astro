@@ -1,0 +1,42 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+	posts: CollectionEntry<'blog'>[];
+}
+
+const { posts } = Astro.props;
+---
+
+{
+	posts.length > 0 ? (
+		<ul class="divide-y divide-outline-gray-1 border-y border-outline-gray-1">
+			{posts.map((post) => (
+				<li>
+					<a
+						class="group -mx-3 grid min-h-17 grid-cols-1 content-center gap-2 px-3 py-4 no-underline transition-colors hover:bg-surface-gray-1 sm:-mx-5 sm:grid-cols-[minmax(0,1fr)_10.5rem] sm:gap-8 sm:px-5"
+						href={`/${post.id}/`}
+					>
+						<div class="min-w-0">
+							<h3 class="text-lg-medium text-ink-gray-8 transition-colors group-hover:text-ink-gray-9">
+								{post.data.title}
+							</h3>
+							<p class="mt-1.5 line-clamp-2 text-p-sm text-ink-gray-5">
+								{post.data.description}
+							</p>
+						</div>
+						<p class="text-sm tabular-nums text-ink-gray-4 sm:pt-0.5 sm:text-right">
+							<FormattedDate date={post.data.pubDate} />
+						</p>
+					</a>
+				</li>
+			))}
+		</ul>
+	) : (
+		<p class="border-y border-outline-gray-1 py-12 text-center text-p-base text-ink-gray-5">
+			No posts have been published yet.
+		</p>
+	)
+}

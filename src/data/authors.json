@@ -1,0 +1,24 @@
+[
+	{
+		"id": "vishwajeet-singh",
+		"name": "Vishwajeet Singh",
+		"avatar": "/authors/vishwajeet-singh.jpg"
+	},
+	{
+		"id": "shivam-ghosh",
+		"name": "Shivam Ghosh",
+		"avatar": "/authors/shivam-ghosh.jpg"
+	},
+	{
+		"id": "hussain-nagaria",
+		"name": "Hussain Nagaria",
+		"avatar": "/authors/hussain-nagaria.jpg",
+		"bio": "Host of Build With Hussain and a teacher who loves building useful things."
+	},
+	{
+		"id": "rahul-agrawal",
+		"name": "Rahul Agrawal",
+		"avatar": "/authors/rahul-agrawal.jpg",
+		"bio": "Software engineer interested in understanding and solving programming problems."
+	}
+]

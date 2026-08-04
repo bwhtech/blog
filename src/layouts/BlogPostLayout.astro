@@ -1,0 +1,70 @@
+---
+import { getEntry, type CollectionEntry } from 'astro:content';
+
+import CodeBlockCopy from '../components/CodeBlockCopy.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import BaseLayout from './BaseLayout.astro';
+
+type Props = CollectionEntry<'blog'>['data'];
+
+const { title, description, author, tags, pubDate, updatedDate, image } = Astro.props;
+const authorEntry = await getEntry(author);
+
+if (!authorEntry) throw new Error(`Author not found: ${author.id}`);
+---
+
+<BaseLayout
+	title={title}
+	description={description}
+	author={authorEntry.data.name}
+	image={image}
+	publishedTime={pubDate}
+	tags={tags}
+	type="article"
+>
+	<SiteHeader showBackLink />
+	<main id="main-content" class="mx-auto w-full max-w-[770px] px-3 pb-32 pt-14 sm:px-5 sm:pt-20">
+		<article>
+			<header class="mb-12 border-b border-outline-gray-1 pb-8">
+				<h1 class="text-4xl-semibold text-ink-gray-9">{title}</h1>
+				<p class="mt-3 text-p-lg text-ink-gray-6">{description}</p>
+				<div class="mt-5 flex items-center gap-2.5">
+					<img
+						class="size-7 rounded-full object-cover"
+						src={authorEntry.data.avatar}
+						alt=""
+						width="28"
+						height="28"
+					/>
+					<div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm tabular-nums">
+						<span class="text-ink-gray-6">{authorEntry.data.name}</span>
+						<span class="text-ink-gray-4" aria-hidden="true">·</span>
+						<span class="text-ink-gray-4"><FormattedDate date={pubDate} /></span>
+						{
+							updatedDate && (
+								<>
+									<span class="text-ink-gray-4" aria-hidden="true">·</span>
+									<span class="text-ink-gray-4">
+										Updated <FormattedDate date={updatedDate} />
+									</span>
+								</>
+							)
+						}
+					</div>
+				</div>
+				<ul class="mt-4 flex flex-wrap gap-1.5" aria-label="Tags">
+					{
+						tags.map((tag) => (
+							<li class="rounded-sm bg-surface-gray-2 px-2 py-1 text-xs text-ink-gray-6">{tag}</li>
+						))
+					}
+				</ul>
+			</header>
+			<div class="prose prose-v3 max-w-none">
+				<slot />
+			</div>
+			<CodeBlockCopy />
+		</article>
+	</main>
+</BaseLayout>

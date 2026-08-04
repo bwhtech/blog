@@ -1,0 +1,137 @@
+<script>
+	const COPIED_DURATION = 2000;
+
+	initializeCodeBlocks();
+	document.addEventListener('astro:page-load', initializeCodeBlocks);
+
+	function initializeCodeBlocks() {
+		const codeBlocks = document.querySelectorAll('.prose-v3 pre:not([data-copy-ready])');
+
+		for (const codeBlock of codeBlocks) {
+			const code = codeBlock.querySelector('code');
+			if (!code) continue;
+
+			codeBlock.setAttribute('data-copy-ready', 'true');
+			codeBlock.append(createCopyButton(code));
+		}
+	}
+
+	function createCopyButton(code) {
+		const button = document.createElement('button');
+		button.className = 'code-copy-button';
+		button.type = 'button';
+		button.innerHTML = '<span class="code-copy-icon" aria-hidden="true"></span>';
+		setButtonState(button, false);
+
+		let resetTimer;
+		button.addEventListener('click', async () => {
+			try {
+				await copyText(code.textContent ?? '');
+				setButtonState(button, true);
+				window.clearTimeout(resetTimer);
+				resetTimer = window.setTimeout(() => setButtonState(button, false), COPIED_DURATION);
+			} catch (error) {
+				console.error('Failed to copy code block', error);
+			}
+		});
+
+		return button;
+	}
+
+	async function copyText(text) {
+		if (navigator.clipboard?.writeText) {
+			try {
+				await navigator.clipboard.writeText(text);
+				return;
+			} catch {
+				copyViaExecCommand(text);
+				return;
+			}
+		}
+
+		copyViaExecCommand(text);
+	}
+
+	function copyViaExecCommand(text) {
+		const textarea = document.createElement('textarea');
+		textarea.value = text;
+		textarea.style.position = 'fixed';
+		textarea.style.opacity = '0';
+		document.body.append(textarea);
+		textarea.select();
+
+		const copied = document.execCommand('copy');
+		textarea.remove();
+		if (!copied) throw new Error('Clipboard API is unavailable');
+	}
+
+	function setButtonState(button, copied) {
+		button.dataset.copied = String(copied);
+		button.ariaLabel = copied ? 'Copied!' : 'Copy code';
+		button.title = copied ? 'Copied!' : 'Copy code';
+	}
+</script>
+
+<style is:global>
+	.prose-v3 pre[data-copy-ready] {
+		position: relative;
+	}
+
+	.code-copy-button {
+		position: absolute;
+		top: 6px;
+		right: 8px;
+		display: inline-flex;
+		width: 24px;
+		height: 24px;
+		flex-shrink: 0;
+		cursor: pointer;
+		align-items: center;
+		justify-content: center;
+		border: 0;
+		border-radius: var(--radius-3);
+		background: transparent;
+		color: inherit;
+		opacity: 0;
+		transition:
+			background-color 0.08s ease,
+			opacity 0.08s ease;
+	}
+
+	.prose-v3 pre:hover .code-copy-button,
+	.code-copy-button:focus-visible,
+	.code-copy-button[data-copied='true'] {
+		opacity: 1;
+	}
+
+	.code-copy-button:hover {
+		background: color-mix(in srgb, currentColor 12%, transparent);
+	}
+
+	.code-copy-button:active {
+		background: color-mix(in srgb, currentColor 18%, transparent);
+	}
+
+	.code-copy-icon {
+		width: 14px;
+		height: 14px;
+		background: currentColor;
+		-webkit-mask: center / contain no-repeat
+			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='14' height='14' x='8' y='8' rx='2' ry='2'/%3E%3Cpath d='M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2'/%3E%3C/svg%3E");
+		mask: center / contain no-repeat
+			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='14' height='14' x='8' y='8' rx='2' ry='2'/%3E%3Cpath d='M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2'/%3E%3C/svg%3E");
+	}
+
+	.code-copy-button[data-copied='true'] .code-copy-icon {
+		width: 16px;
+		height: 16px;
+		-webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m20 6-11 11-5-5'/%3E%3C/svg%3E");
+		mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m20 6-11 11-5-5'/%3E%3C/svg%3E");
+	}
+
+	@media (hover: none), (max-width: 640px) {
+		.code-copy-button {
+			opacity: 1;
+		}
+	}
+</style>

@@ -1,0 +1,28 @@
+---
+interface Props {
+	showBackLink?: boolean;
+}
+
+const { showBackLink = false } = Astro.props;
+---
+
+<header class="border-b border-outline-gray-1">
+	<nav
+		class="mx-auto flex min-h-12 w-full max-w-[940px] items-center justify-between gap-4 px-3 sm:px-5"
+		aria-label="Primary navigation"
+	>
+		<a class="text-base-semibold text-ink-gray-9 no-underline" href="/">BWH Tech</a>
+		{
+			showBackLink ? (
+				<a
+					class="text-sm text-ink-gray-5 no-underline transition-colors hover:text-ink-gray-8"
+					href="/"
+				>
+					All posts
+				</a>
+			) : (
+				<span class="text-sm text-ink-gray-5">Engineering notes</span>
+			)
+		}
+	</nav>
+</header>

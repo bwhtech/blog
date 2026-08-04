@@ -1,0 +1,42 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import { SITE_TITLE } from '../consts';
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+	description: string;
+	author?: string;
+	image?: string;
+	publishedTime?: Date;
+	tags?: string[];
+	type?: 'article' | 'website';
+}
+
+const { author, description, image, publishedTime, tags, title, type = 'website' } = Astro.props;
+const documentTitle = title === SITE_TITLE ? title : `${title} · ${SITE_TITLE}`;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead
+			title={documentTitle}
+			description={description}
+			author={author}
+			image={image}
+			publishedTime={publishedTime}
+			tags={tags}
+			type={type}
+		/>
+	</head>
+	<body class="min-h-screen bg-surface-base text-ink-gray-9 antialiased">
+		<a
+			class="sr-only fixed left-3 top-3 z-50 rounded-4 bg-surface-base px-3 py-2 text-sm text-ink-gray-9 shadow focus:not-sr-only"
+			href="#main-content"
+		>
+			Skip to content
+		</a>
+		<slot />
+	</body>
+</html>

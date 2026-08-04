@@ -1,0 +1,45 @@
+@import 'tailwindcss';
+@import './espresso.css';
+@import './prose.css';
+@plugin '@tailwindcss/typography';
+
+html {
+	background: var(--surface-base);
+	font-family: InterVar, ui-sans-serif, system-ui, sans-serif;
+	font-optical-sizing: auto;
+	scrollbar-gutter: stable;
+}
+
+html,
+body,
+button,
+p,
+span,
+div {
+	font-variation-settings: 'opsz' 24, 'cv11' 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+p:not(:where(.prose, .ProseMirror) *) {
+	line-height: 1.5;
+}
+
+:focus-visible {
+	outline: var(--focus-outline-default);
+	outline-offset: 0;
+}
+
+::selection {
+	background: var(--surface-gray-4);
+	color: var(--ink-gray-9);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		scroll-behavior: auto !important;
+		transition-duration: 0.01ms !important;
+	}
+}

@@ -1,0 +1,22 @@
+---
+interface Props {
+	date: Date;
+}
+
+const { date } = Astro.props;
+const day = date.getUTCDate();
+const month = new Intl.DateTimeFormat('en', {
+	month: 'long',
+	timeZone: 'UTC',
+}).format(date);
+const formattedDate = `${day}${getOrdinalSuffix(day)} ${month}, ${date.getUTCFullYear()}`;
+
+function getOrdinalSuffix(value: number) {
+	const remainder = value % 100;
+	if (remainder >= 11 && remainder <= 13) return 'th';
+
+	return { 1: 'st', 2: 'nd', 3: 'rd' }[value % 10] ?? 'th';
+}
+---
+
+<time datetime={date.toISOString()}>{formattedDate}</time>

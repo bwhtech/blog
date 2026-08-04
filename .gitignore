@@ -1,8 +1,10 @@
 # build output
 dist/
 
-# generated types
+# generated types and local platform state
 .astro/
+.netlify/
+deno.lock
 
 # dependencies
 node_modules/
