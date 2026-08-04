@@ -20,6 +20,84 @@
   pretty_urls = true
 
 [[redirects]]
+  from = "/how-i-became-a-developer/"
+  to = "/stories/how-i-became-a-developer/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/how-i-ended-up-at-mini-frappe/"
+  to = "/stories/how-i-ended-up-at-mini-frappe/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/introducing-bwh-studios/"
+  to = "/announcements/introducing-bwh-studios/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/my-journey-from-django-to-frappe-framework/"
+  to = "/stories/my-journey-from-django-to-frappe-framework/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/bwh-2024-recap/"
+  to = "/thoughts/bwh-2024-recap/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/frappeverse-2024-top-10-announcements/"
+  to = "/announcements/frappeverse-2024-top-10-announcements/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/five-ui-ux-things/"
+  to = "/tips-and-tricks/five-ui-ux-things/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/one-year/"
+  to = "/announcements/one-year/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/the-learn-apply-cycle/"
+  to = "/thoughts/the-learn-apply-cycle/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/system-console-is-your-friend/"
+  to = "/tips-and-tricks/system-console-is-your-friend/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/clean-and-dry-templates-with-jinja-macros-filters-and-methods-in-frappe-framework/"
+  to = "/tutorial/clean-and-dry-templates-with-jinja-macros-filters-and-methods-in-frappe-framework/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/stop-using-get-doc-for-everything/"
+  to = "/tips-and-tricks/stop-using-get-doc-for-everything/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/top-10-announcements-from-frappeverse-2023/"
+  to = "/announcements/top-10-announcements-from-frappeverse-2023/"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/blog"
   to = "/"
   status = 301
