@@ -4,7 +4,7 @@ description: "Quick thoughts on the new beginnings and what's ahead for BWH!"
 author: hussain-nagaria
 tags: [Announcements, BWH]
 pubDate: 2024-04-20
-image: "/blog-media/one-year/bwh-at-1-c33cdfee.png"
+image: "./bwh-at-1.png"
 ---
 
 Today is a very special day for 2 reasons:
@@ -12,7 +12,7 @@ Today is a very special day for 2 reasons:
 1. I created the BWH YouTube channel on this very day last year!
 2. The channel crossed 3,000 subscribers!
 
-![Screenshot of BWH Channel Page](/blog-media/one-year/bwh-at-1-c33cdfee.png)
+![Screenshot of BWH Channel Page](./bwh-at-1.png)
 
 
 No doubt *BWH has become a brand of its own*. The response has been overwhelming and I am thankful to the community for so much love and support that the concept has recieved!

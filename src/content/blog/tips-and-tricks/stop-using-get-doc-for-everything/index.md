@@ -4,7 +4,7 @@ description: "Well, there are other methods too 😉"
 author: hussain-nagaria
 tags: ["Tips & Tricks", Frappe Framework]
 pubDate: 2023-09-26
-image: "/blog-media/stop-using-get-doc-for-everything/su_get_doc_everything_meta-5103174d.png"
+image: "./su_get_doc_everything_meta.png"
 ---
 
 ## Introduction
@@ -24,7 +24,7 @@ def get_airline_website(airplane_name):
 
 Now, go through the below Jinja code snippet:
 
-![](/blog-media/stop-using-get-doc-for-everything/jinja-with-get-doc-bc296699.jpeg)
+![](./jinja-with-get-doc.jpeg)
 
 I have copied this from a Print template in Production use.
 
@@ -62,11 +62,11 @@ If you don't pass `as_dict` as `True`, this method will return a tuple instead o
 
 If you want to get child table rows without using `get_doc` and in a single database call, you need to know how a child table is linked to its parent. Consider this **Ride** document:
 
-![](/blog-media/stop-using-get-doc-for-everything/ride_form_view-b7b2b660.png)
+![](./ride_form_view.png)
 
 It has a table field called `items` and is linked to `Ride Trip Item` DocType. If we open up mariadb console and peek into the `Ride Trip Item` table:
 
-![Screenshot](/blog-media/stop-using-get-doc-for-everything/child_table-7a2dad5d.png)
+![Screenshot](./child_table.png)
 
 As you can see, it has a few fields which link it to its parent, specially the `parent` field which is the name of the parent document. Now, we can use this information to get child table rows for a given document using `get_all` method:
 
@@ -90,7 +90,7 @@ You can even omit the `parenttype` filter if you know this child table is only u
 
 Again, observe the below code snippet:
 
-![Screenshot](/blog-media/stop-using-get-doc-for-everything/db_update_get_doc-e773e363.jpg)
+![Screenshot](./db_update_get_doc.jpg)
 
 Basically, the developer of the above custom app is setting a field to `1` based on some condition. The above code uses `get_doc` to get the full document, *uses nothing* that the `get_doc` fetched, sets the value and calls `db_update` to update it in database. This all could have been done in a single line using `set_value` like this:
 

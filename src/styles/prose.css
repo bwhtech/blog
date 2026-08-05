@@ -33,6 +33,15 @@
 	margin-left: auto;
 }
 
+.prose figure img {
+	margin: 0 auto;
+	border-radius: 8px;
+}
+
+.prose figcaption {
+	text-align: center;
+}
+
 .prose-v3 {
 	--tw-prose-body: var(--ink-gray-7);
 	--tw-prose-bold: var(--ink-gray-8);

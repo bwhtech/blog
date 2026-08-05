@@ -4,7 +4,7 @@ description: "Leaving Frappe, but not leaving Frappe."
 author: hussain-nagaria
 tags: [Announcements, BWH Studios]
 pubDate: 2025-07-14
-image: "/blog-media/introducing-bwh-studios/bwh-studios-blog-d8f60373.png"
+image: "./bwh-studios-blog.png"
 ---
 
 **30.05.2025**
@@ -27,13 +27,13 @@ Right after my onboarding, I got to work in the ERPNext team with Rucha and [her
 
 While working on FC, I fell in love with Frappe Framework and apps. I wanted more people to know about it, so I created a <s>twitter</s> X account and started posting memes like these:
 
-![](/blog-media/introducing-bwh-studios/twitter-meme-post-b970539c.png)
+![](./twitter-meme-post.png)
 
 After moving out of Frappe Cloud, I was looking for my next project and around the same time, [APF](https://azimpremjifoundation.org/) had reached out to us for helping them build an MIS platform. They were collaborating with a few partner organisations for a homeless care program in the cities of Bangalore and Chennai. They wanted to build a reusable MIS app that could be deployed pan-India in future.
 
 Umair and I visited Bangalore to learn more about the service operations on-ground and to meet the end-users:
 
-![](/blog-media/introducing-bwh-studios/hussain-at-smilecare-office-9f411274.png)
+![](./hussain-at-smilecare-office.png)
 
 After a few months, we had [Frappe Changemakers](https://github.com/frappe/changemakers), an open source beneficiary management app built on Frappe Framework. As of today, it is being used to manage thousands of beneficiaries. While building Changemakers, I fell in love with Frappe Framework, again.
 
@@ -41,7 +41,7 @@ After a few months, we had [Frappe Changemakers](https://github.com/frappe/chang
 
 I wanted to desperately share some cool stuff we can do with Frappe Framework. So, I wrote my first Frappe tutorial ever:
 
-![](/blog-media/introducing-bwh-studios/mongo-db-blog-screenshot-10598e7a.png)
+![](./mongo-db-blog-screenshot.png)
 
 I enjoyed it so much that within the coming few weeks I wrote five more such blogs! Around the same time, I also took over Frappe Framework training and certification program. The combined effect of these two eventually made me take up a full time Product Evangelist role.
 
@@ -55,7 +55,7 @@ What was supposed to be a "just one live stream" experiment turned out to be [a 
 
 Let's take a slight detour here. Almost *everyone* in my family does business. My father owns a poultry farm. Before shifting to the city two years ago, we lived at that farm too. When I was about 7-8 years old, I used to collect eggs from the poultry sheds after I was back from school or during weekends. I neatly arranged them in stacked plastic trays containing 30 eggs each:
 
-![](/blog-media/introducing-bwh-studios/eggs-in-colorful-trays-fc5e0f71.png)
+![](./eggs-in-colorful-trays.png)
 
 Then I waited for customers to come. When anyone inquired for eggs, I immediately ran to the front gate and started asking them how many eggs they wanted, then told them about the price. I myself counted those eggs, placed them carefully in a plastic bag (if they wanted only a handful) and calculated the total amount using a simple calculator. I used to make a few hundred rupees like this, but man this was some feeling! This money made me more happy than my pocket money. I didn't get to keep it all since my mother wanted her share for some reason I don't remember now 🤣
 
@@ -76,7 +76,7 @@ It has been a month since I started working on BWH Studios full time. Here is th
 
 We are now a team of 4 full-time members and 4 interns.
 
-![](/blog-media/introducing-bwh-studios/team-watching-a-movie-8a3ea9b5.jpg)
+![](./team-watching-a-movie.jpg)
 
 > Us during an all-hands meeting, sometimes we watch a movie together :p
 
@@ -105,7 +105,9 @@ After putting in a lot of thought into what direction I want to take BWH (the YT
 One more announcement while we are at it: I will be the first official "**Frappe Evangelist**" on the planet!
 
 <div style="display: flex;align-items: center;justify-content: center;">
-    <img src="/blog-media/introducing-bwh-studios/frappe-evangelist-badge-61fb7b2e.svg" />
+
+![Frappe Evangelist badge](./frappe-evangelist-badge.svg)
+
 </div>
 
 ### Thank you, Frappe
@@ -114,7 +116,7 @@ It has been an honour working with such an amazing team. Before joining Frappe, 
 
 Thank you Frappe for the Freedom to follow my heart.
 
-![](/blog-media/introducing-bwh-studios/hussain-at-frappe-feed5279.png)
+![](./hussain-at-frappe.png)
 
 ### Onward 🚀
 

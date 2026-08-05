@@ -13,17 +13,23 @@ const authors = defineCollection({
 });
 
 const blog = defineCollection({
-	loader: glob({ base: './src/content/blog', pattern: '**/*.md' }),
-	schema: z.object({
-		title: z.string(),
-		description: z.string(),
-		author: reference('authors'),
-		tags: z.array(z.string()).min(1),
-		pubDate: z.coerce.date(),
-		updatedDate: z.coerce.date().optional(),
-		image: z.string().optional(),
-		draft: z.boolean().default(false),
+	loader: glob({
+		base: './src/content/blog',
+		pattern: '**/index.md',
+		// A post is a folder, so the id is the folder path: `<category>/<slug>`.
+		generateId: ({ entry }) => entry.replace(/\/index\.md$/, ''),
 	}),
+	schema: ({ image }) =>
+		z.object({
+			title: z.string(),
+			description: z.string(),
+			author: reference('authors'),
+			tags: z.array(z.string()).min(1),
+			pubDate: z.coerce.date(),
+			updatedDate: z.coerce.date().optional(),
+			image: image().optional(),
+			draft: z.boolean().default(false),
+		}),
 });
 
 export const collections = { authors, blog };

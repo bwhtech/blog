@@ -4,12 +4,12 @@ description: "Let's learn some Jinja techniques!"
 author: hussain-nagaria
 tags: [Tutorial, Frappe Framework, Jinja]
 pubDate: 2023-11-13
-image: "/blog-media/clean-and-dry-templates-with-jinja-macros-filters-and-methods-in-frappe-framework/jinja_techniques_article_meta-d9145f64.png"
+image: "./jinja_techniques_article_meta.png"
 ---
 
 Ever since the [last episode](https://www.youtube.com/live/3jRGGH7f7tg?si=LFzX5iDUY9M6M6H3) of [Building an Online Merch Store on Frappe Framework series](https://youtube.com/playlist?list=PLQGFK8RiEPSK0P937uDN2_Xl3nrGKoKhb&si=ny72WuGy6bIcSU1Z) ended, I have been working on fixing issues and shipping more essentials features [behind the scenes](https://github.com/NagariaHussain/printrov_merch_store/issues?q=is:issue+is:closed). This article is a result of shipping the [browse by category feature](https://github.com/NagariaHussain/printrov_merch_store/issues/4) in our storefront:
 
-![Screenshot Showing Browse by Categories on HackerMerch home screen](/blog-media/clean-and-dry-templates-with-jinja-macros-filters-and-methods-in-frappe-framework/gm_store-1655a96a.png)
+![Screenshot Showing Browse by Categories on HackerMerch home screen](./gm_store.png)
 
 You can try it out [here](https://HackerMerch.store).
 

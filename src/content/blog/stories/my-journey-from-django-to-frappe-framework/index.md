@@ -4,7 +4,7 @@ description: "Sharing my journey and lessons learned."
 author: rahul-agrawal
 tags: [Stories, Frappe Framework, Django]
 pubDate: 2025-06-17
-image: "/blog-media/my-journey-from-django-to-frappe-framework/frame-1-700491a7.png"
+image: "./frame-1.png"
 ---
 
 > _"Wait… this thing builds your admin panel automatically??"_  
@@ -22,7 +22,7 @@ Let's start with a bit of context between Django and I.
 
 I first learned Django in 3rd year of my college. I was supposed to submit a project (tinker with map coordinates using PostGIS) for a company's internship, though I didn't get the internship 😅 I did learn Django.
 
-![](/blog-media/my-journey-from-django-to-frappe-framework/create-99b46ad0.gif)
+![](/media/my-journey-from-django-to-frappe-framework/create.gif)
 
 This encounter with Django made me curious and I started exploring it. I made several projects, mostly for company interviews, some for learning and others for fun. As much as I was enjoying Django, time was ticking, and before I knew it, my 4th year of engineering had ended.
 
@@ -63,13 +63,13 @@ Now as previously mentioned, I or event the client didn't have a clear scope. Th
 
 The way I worked was pretty simple, take a piece of say MCQ page and start by building the Django backend (models and APIs), then switch to React to build the corresponding admin pages/UI components, and finally create the portal user interface for the same feature.
 
-![](/blog-media/my-journey-from-django-to-frappe-framework/incubator_academy_portal_images-de105f25.jpg)
+![](./incubator_academy_portal_images.jpg)
 
 With the portal and admin pages done, I started working on authentication. To start with, I had very little idea of what permission and user roles are needed, but they were not concrete. I was able to set up the authentication with Djoser but without standardised roles and permissions everything was a guess. And when you take **models** into account, each model needed its own list page, details page and basic CRUD operation from UI. This was fine for a while but soon it became a nightmare. 
 
 Anyhow I was able to stitch them together. The pieces were a bit crooked but hey it's my first real world project 😑
 
-![](/blog-media/my-journey-from-django-to-frappe-framework/incubator_academy_admin_pagesea3cfb-8c5e302e.jpg)
+![](./incubator_academy_admin_pagesea3cfb.jpg)
 
 
 And by now I had completed almost all the parts of projects, but one crucial thing was missing, can you guess what it was?
@@ -95,7 +95,7 @@ _What seemed like straightforward integrations on day one became increasingly co
 
 After completing my freelance project and updating my resume, I started job hunting.
 
-![](/blog-media/my-journey-from-django-to-frappe-framework/screenshot-2025-06-17-at-12-31-16-am-36dee3ed.png)
+![](./screenshot-2025-06-17-at-12-31-16-am.png)
 
 Soon, I joined a startup named  **[Atwin](https://atwin.app)** (Django + HTML + JQuery), it was a cloud-based sports management platform.
 
@@ -105,7 +105,7 @@ I joined the team as a software developer and that’s when things got real. Wit
 
 One of the earliest tasks I can remember that was assigned to me was to build a cart where users can add multiple courses and pay for them in one go.
 
-![](/blog-media/my-journey-from-django-to-frappe-framework/add-to-cart-arrow-737a0019.png)
+![](./add-to-cart-arrow.png)
 
 Initially, I would get a detailed description of tasks in a github issue containing all the information about what was the end goal, any functions I can use or reference along with a schema design.
 
@@ -119,7 +119,7 @@ At that time I didn't think much about it. In fact, I would work day and night t
 
 I started pushing features like crazy, revamped the complete frontend, replaced **Firebase** login with **AllAuth** and **MSG91** ,implemented notifications, added reports, integrated multiple payment gateways and progress tracking, added payment tracking, academy store management … and a lot more.
 
-![](/blog-media/my-journey-from-django-to-frappe-framework/atwin_old_vs_newv2-160ed9aa.jpg)
+![](./atwin_old_vs_newv2.jpg)
 
 Though I was completely immersed in development, I could feel some resistance. The more I worked, the more friction I felt. I had this feeling of redundancy. Each time a new feature was added I had to recreate the admin list page, details page, allow admin to edit and add new data, set access/role permissions and what not.
 
@@ -135,7 +135,7 @@ Let's start working with data.
 
 Well maybe you could use the default admin panel to do **CRUD** operations rightttt.. (sorry to break your illusion, you cannot)
 
-![](/blog-media/my-journey-from-django-to-frappe-framework/django-admin-pannel-2c2d967f.png)
+![](./django-admin-pannel.png)
 
 **Admin Panel**: Take a look at Django's admin. It looks impressive in tutorials, but try showing it to actual business users. The interface is confusing, try adding a filter to it. I might have cried at least 2 times, it is so bare-bones that you're better of building your own admin panel.
 
@@ -165,7 +165,7 @@ Things were going smoothly, I was learning, having fun but during one of the dai
 
 Just like that I was laid off from Atwin.
 
-![](/blog-media/my-journey-from-django-to-frappe-framework/screenshot-2025-06-17-at-10-37-06-am-1ab85c27.png)
+![](./screenshot-2025-06-17-at-10-37-06-am.png)
 
 
 One day I was pushing features, the next I was staring at my terminal wondering what came next.
@@ -200,7 +200,7 @@ Do you remember the feeling of drinking a mildly cold glass of water after playi
 
 **Frappe Desk**
 
-![](/blog-media/my-journey-from-django-to-frappe-framework/frappe_desk-aa7283dc.png)
+![](./frappe_desk.png)
 
 
 Frappe's admin panel commonly known as **Desk** it is one of the most customisable yet powerful admin interfaces you can ever have. Now compare this with **Django**'s admin panel 😬. The authentication which usually took days were built-in in Frappe, even role permissions for certain models, let alone field level permission. Everything is already baked into the system.

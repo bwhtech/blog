@@ -4,7 +4,7 @@ description: "Improve your iteration speed by starting in Console!"
 author: hussain-nagaria
 tags: ["Tips & Tricks", Frappe Framework]
 pubDate: 2023-12-21
-image: "/blog-media/system-console-is-your-friend/system-console-meta-80604ce6.png"
+image: "./system-console-meta.png"
 ---
 
 This article will be rather short. Hence, I am calling it a “mini article”!
@@ -17,13 +17,13 @@ System Console is like a shell to execute one-off scripts. You can write either 
 
 You can use the awesome bar to search for “System Console”. Here is an example of running a SQL query:
 
-![System Console with SQL](/blog-media/system-console-is-your-friend/system-console-1-2-3-95dd0568.png)
+![System Console with SQL](./system-console-1-2-3.png)
 
 For SQL queries, it renders a nicely formatted table with the output.
 
 Here is an example of running a Python script:
 
-![Running Python in System Console](/blog-media/system-console-is-your-friend/python-in-system-console-c2b24dc8.png)
+![Running Python in System Console](./python-in-system-console.png)
 
 As you can see, whatever you `print` ([used to be `log`](https://github.com/frappe/frappe/pull/23084)) will be shown as output below the script after execution. In the latest version of Frappe Framework, you can use  `print` inside Server Scripts and get nice debugging capabilities (more [here](https://github.com/frappe/frappe/pull/23084)).
 
@@ -36,7 +36,7 @@ If you keep the `Commit` checkbox unchecked, any changes your script makes to th
 
 All the executions of System Console are saved. So, you can view history and reload them into console whenever required. Just click on the `Logs` button to view your console logs:
 
-![Console Log feature of System Console](/blog-media/system-console-is-your-friend/console_log-52b4f883.png)
+![Console Log feature of System Console](./console_log.png)
 
 
 ## Don’t Start in Script, Start in Console.
@@ -53,7 +53,7 @@ Similarly you can write your SQL query and test it out in the System Console fir
 
 System Console has yet another feature, you can view the database processes (nicely formatted) running on your site database by just checking the **Show Processlist** checkbox:
 
-![Database Processlist in System Console](/blog-media/system-console-is-your-friend/mariadb-processlist-6fd9cf32.png)
+![Database Processlist in System Console](./mariadb-processlist.png)
 
 ### Custom App Counterparts
 

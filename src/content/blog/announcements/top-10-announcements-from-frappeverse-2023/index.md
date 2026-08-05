@@ -4,7 +4,7 @@ description: "New Design System, New Products, New Features, and much more!"
 author: hussain-nagaria
 tags: [Announcements, Frappeverse]
 pubDate: 2023-09-19
-image: "/blog-media/top-10-announcements-from-frappeverse-2023/frappeverse-top-10-thumbnail-93147860.png"
+image: "./frappeverse-top-10-thumbnail.png"
 ---
 
 ## Introduction
@@ -19,11 +19,11 @@ Faris kicked off the conference by showcasing Frappe's new design system which w
 
 Here is a glimpse of the button component:
 
-![](/blog-media/top-10-announcements-from-frappeverse-2023/espresso_glimpse-eb22a786.png)
+![](./espresso_glimpse.png)
 
 Faris went on to discuss how he used [Gameplan](https://github.com/frappe/gameplan) to build FrappeUI espresso components and vice versa:
 
-![](/blog-media/top-10-announcements-from-frappeverse-2023/gameplan-f4a863cb.png)
+![](./gameplan.png)
 
 
 ## 2. Frappe Builder
@@ -42,39 +42,39 @@ Frappe Builder will be available on Frappe Cloud Marketplace starting January 1s
 
 Yet another new product announcement! This was a much needed overhaul to the existing CRM module of ERPNext. FrappeCRM is a new product now!
 
-![](/blog-media/top-10-announcements-from-frappeverse-2023/crm_home-7360eef5.png)
+![](./crm_home.png)
 
 Sharique showed a demo of the current state of new FrappeCRM and also discussed what he has planned for the future. What truly amazed me was that he build this in a matter of few weeks 🏃🏼, which he attributed to the power of [Frappe Framework](https://frappeframework.com) in the backend and FrappeUI for the custom frontend.
 
 Personally, I found the in-app phone call (powered by Twilio) and note taking flow really cool:
 
-![](/blog-media/top-10-announcements-from-frappeverse-2023/crm_call-027f4f01.png)
+![](./crm_call.png)
 
 ## 4. Run Anything on FC!
 
-![](/blog-media/top-10-announcements-from-frappeverse-2023/run_anything_on_fc_tweet-b75defdf.png)
+![](./run_anything_on_fc_tweet.png)
 
 The tweet says it all! Apart from announcing a slew of new features like Codespaces, BYOD, VPN, and more, Aditya ended the Frappe Cloud keynote presentation with a bang! He demoed the stacks feature that will let the users deploy arbitrary services on Frappe Cloud. Yup, Frappe Cloud will no longer be just for hosting Frappe sites now! 
 
 In the demo video, Aditya pasted in docker compose file for Wordpress:
 
-![](/blog-media/top-10-announcements-from-frappeverse-2023/fc_stack_compose-a18cfd06.png)
+![](./fc_stack_compose.png)
 
 And that't it! Frappe Cloud detected the services required to be run and created a stack. Upon deploy, containers were brought up and a new Wordpress site was up and running in a matter of seconds:
 
-![](/blog-media/top-10-announcements-from-frappeverse-2023/fc_stack_deploy-2e8f9f6b.png)
+![](./fc_stack_deploy.png)
 
 Although this is early stage for the stacks feature, but I am very excited about it and about the possibilities that this will unlock for Frappeverse. In fact, Aditya [is joining me](https://www.youtube.com/live/pEpL_cEt5R0?si=0_RYM3WOq9aBrR5C) for a #BuildWithHussain episode on this very topic.
 
 ## 5. Frappe Drive
 
-![](/blog-media/top-10-announcements-from-frappeverse-2023/frappe_drive_dash-fb8c89d6.png)
+![](./frappe_drive_dash.png)
 
 Frappe Drive was showcased by Arjun, Product Engineer at Frappe. It is a beautiful new Frappe product for managing your files on your Frappe site. It has folder uploads, sharing, previews for a variety of file types, and much more!
 
 That is not it, it has an **in-built document editor** for creating, editing, and sharing documents. Heck, it even has realtime collaboration:
 
-![](/blog-media/top-10-announcements-from-frappeverse-2023/frappe_drive_docs_editor-51128045.png)
+![](./frappe_drive_docs_editor.png)
 
 So cool!
 
@@ -87,7 +87,7 @@ The next major version of ERPNext and Frappe Framework is officially landing on 
 
 No more manually adding column breaks to fields table, Phew 😌
 
-![](/blog-media/top-10-announcements-from-frappeverse-2023/form_builder-9ce07e81.png)
+![](./form_builder.png)
 
 With V15, you can now build your DocType form visually using drag and drop. It even works with the Customize Form!
 
@@ -95,30 +95,30 @@ With V15, you can now build your DocType form visually using drag and drop. It e
 
 Sharique also unveiled the cool new visual workflow builder:
 
-![](/blog-media/top-10-announcements-from-frappeverse-2023/workflow_builder-42d39280.png)
+![](./workflow_builder.png)
 
 ### Lower CPU & Memory Usage
 
 Slow and steady wins the race! The Framework team has been doing small optimisations that have added upto huge improvements in terms of memory and CPU usage:
 
-![](/blog-media/top-10-announcements-from-frappeverse-2023/improvement_ff-28a8f54d.jpeg)
+![](./improvement_ff.jpeg)
 
 ### BOM Creator
 
 [Rohit](https://github.com/rohitwaghchaure) demoed the new multi-level BOM creator feature coming in ERPNext Version 15:
 
-![](/blog-media/top-10-announcements-from-frappeverse-2023/bom_creator-8bc56d7b.png)
+![](./bom_creator.png)
 
 You can find the docs for Multi-level BOM Creator [here](https://docs.erpnext.com/docs/user/manual/en/bom-creator).
 
 
 ## 7. FrappeHR Mobile
 
-![](/blog-media/top-10-announcements-from-frappeverse-2023/frappe_hr_mobile-e0c7ba52.png)
+![](./frappe_hr_mobile.png)
 
 👏🏼👏🏼👏🏼 was the reaction when [Rucha](https://github.com/ruchamahabal) unveiled the new FrappeHR Mobile App. FrappeHR Mobile is a Progressive Web App (PWA) built with FrappeUI, VueJS and Ionic. She talked about how FrappeHR mobile's UI and UX are tailored for use in mobile phones. Essential features like Leave Management, Salary Slips, Expense Claims, Attendance, etc. are just a tap away:
 
-![](/blog-media/top-10-announcements-from-frappeverse-2023/hr_mobile_expense_claim-641f23c2.png)
+![](./hr_mobile_expense_claim.png)
 
 
 ## 8. Revenue Sharing For Marketplace Apps
@@ -139,7 +139,7 @@ Frappe Insights was first introduced to the world in ERPNext Conference last yea
 
 One more thing he went on to present is... the new **templates** feature!
 
-![](/blog-media/top-10-announcements-from-frappeverse-2023/insights_templates-f49067e4.png)
+![](./insights_templates.png)
 
 Now you can browse, import, and export pre-built Insights dashboards! This will make it very easy to share reusable dashboards (charts!) among Frappe Insights users and even other Frappe apps can have their own templates. 
 
@@ -153,7 +153,7 @@ We have revamped the Frappe Developer Certification program both in terms of con
 
 There is a new assignment portal on Frappe School built with FrappeUI which evaluates the submissions and gives automated (and instant!) feedback:
 
-![](/blog-media/top-10-announcements-from-frappeverse-2023/assignment_portal-8092b5ac.png)
+![](./assignment_portal.png)
 
 This all is open for everyone now under the Frappe Framework Self-training Program:
 

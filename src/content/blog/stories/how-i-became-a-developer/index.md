@@ -4,7 +4,7 @@ description: "I feared computers so much I planned my whole life around avoiding
 author: vishwajeet-singh
 tags: [Stories, Career]
 pubDate: 2026-07-30
-image: "/blog-media/how-i-became-a-developer/bhavesh-milan-friends-photo-9e3fa1b9.png"
+image: "./bhavesh-milan-friends-photo.png"
 ---
 
 Everyone has a different story of how they got into tech. Some people have been coding since school. Some built apps as teenagers. Mine was completely different. I feared computers.
@@ -19,9 +19,11 @@ Then one of my school friends, Bhavesh, who was already studying in a Government
 
 Finally, we agreed, mostly because for his happiness.
 
-<figure style="text-align:center; margin: 1.5em 0;">
-  <img src="/blog-media/how-i-became-a-developer/bhavesh-milan-friends-photo-9e3fa1b9.png" style="max-width:500px; width:100%; height:auto; border-radius:8px; display:block; margin:0 auto;">
-  <figcaption style="font-size:0.9em; color:#666; margin-top:6px;">Gandhiji ke 3 Bandar</figcaption>
+<figure style="max-width:500px; margin:1.5em auto;">
+
+![](./bhavesh-milan-friends-photo.png)
+
+<figcaption>Gandhiji ke 3 Bandar</figcaption>
 </figure>
 A month before the exam, he himself taught us at his home. We studied together every day, and somehow everything clicked. Then the results came. I secured good marks. It was the highest rank among my classmates. I even received a scholarship, so my college fees were completely waived. My friend also got a good rank, and both of us joined the Government Engineering College in our hometown.
 
@@ -41,10 +43,12 @@ Still, I chose IT. Because my father wanted it so again for someone else's happi
 
 College gave me some of the best friends I have today. We always joked that one day we'd work together. Back then, it sounded childish almost like a dream. But today, three of us actually work together, and maybe one or two more will join us in the future.
 
-<figure style="text-align:center; margin: 1.5em 0;">
-    <img src="/blog-media/how-i-became-a-developer/college-friends-team-photo-173500a6.png" style="max-width:500px; width:100%; height:auto; border-radius:8px; display:block; margin:0 auto;">
-    <figcaption style="font-size:0.9em; color:#666; margin-top:6px;">College group</figcaption>
-  </figure>
+<figure style="max-width:500px; margin:1.5em auto;">
+
+![](./college-friends-team-photo.png)
+
+<figcaption>College group</figcaption>
+</figure>
 
 The funny thing is that while my friends were busy preparing to become software developers, I had completely different plans.
 
@@ -62,9 +66,11 @@ For the next few months, I prepared only for SSC CGL. I collected every resource
 
 **I liked General Science. Maths was good. English didn't worry me much, and Reasoning was my strongest point.**
 
-<figure style="text-align:center; margin: 1.5em 0;">
-  <img src="/blog-media/how-i-became-a-developer/ssc-cgl-exam-strategy-faa4698b.png" style="max-width:500px; width:100%; height:auto; border-radius:8px; display:block; margin:0 auto;">
-  <figcaption style="font-size:0.9em; color:#666; margin-top:6px;">My mock results</figcaption>
+<figure style="max-width:500px; margin:1.5em auto;">
+
+![](./ssc-cgl-exam-strategy.png)
+
+<figcaption>My mock results</figcaption>
 </figure>
 
 
@@ -178,9 +184,11 @@ I was happy, but there was also a funny mistake behind that result.
 
 The project was supposed to be submitted individually as well as by the team. I thought only one team member needed to submit it, so I never uploaded my own copy. Because of that, I lost fifty marks and missed a ₹15,000 stipend.
 
-<figure style="text-align:center; margin: 1.5em 0;">
-  <img src="/blog-media/how-i-became-a-developer/zidio-internship-result-68c7fa97.png" style="max-width:900px; width:100%; height:auto; border-radius:8px;">
-  <figcaption style="font-size:0.9em; color:#666; margin-top:6px;">Zidio internship scores</figcaption>
+<figure style="max-width:900px; margin:1.5em auto;">
+
+![](./zidio-internship-result.png)
+
+<figcaption>Zidio internship scores</figcaption>
 </figure>
 Missing it because of such a small misunderstanding hurts.
 
@@ -207,7 +215,7 @@ That interview reminded me how much I still had to learn.
 Even though I couldn't answer every question, I showed him the projects I had built in my internship project, a dairy website, and a gym website. I think those projects spoke louder than my answers. I had spent a lot of time making the frontend look clean and polished without relying on AI, and I believe that left a good impression.
 
 <figure style="text-align:center; margin: 1.5em 0;">
-  <video controls src="/blog-media/how-i-became-a-developer/dairy-gym-project-demo-36d03071.mp4" style="max-width:500px; width:100%; height:auto; border-radius:8px; display:block; margin:0 auto;"></video>
+  <video controls src="/media/how-i-became-a-developer/dairy-gym-project-demo.mp4" style="max-width:500px; width:100%; height:auto; border-radius:8px; display:block; margin:0 auto;"></video>
   <figcaption style="font-size:0.9em; color:#666; margin-top:6px;">Dairy website</figcaption>
 </figure>
 I also told him honestly that I wanted to become a frontend developer because backend development still scared me.
@@ -277,9 +285,11 @@ Eventually, we were offered the opportunity to actively work on improving the Wi
 
 Then came one of the most memorable experiences of my journey so far Frappeverse.
 
-<figure style="text-align:center; margin: 1.5em 0;">
-  <img src="/blog-media/how-i-became-a-developer/frappeverse-mumbai-conference-cf9ababa.png" style="max-width:500px; width:100%; height:auto; border-radius:8px; display:block; margin:0 auto;">
-  <figcaption style="font-size:0.9em; color:#666; margin-top:6px;">Frappeverse, Mumbai.</figcaption>
+<figure style="max-width:500px; margin:1.5em auto;">
+
+![](./frappeverse-mumbai-conference.png)
+
+<figcaption>Frappeverse, Mumbai.</figcaption>
 </figure>
 
 It was my first international tech conference, held in Mumbai.

@@ -4,7 +4,7 @@ description: "The shorter the Learn-Apply Cycle, the faster and better you grasp
 author: hussain-nagaria
 tags: [Thoughts, Learning]
 pubDate: 2024-01-16
-image: "/blog-media/the-learn-apply-cycle/the-learn-apply-cycle-f6fc4702.png"
+image: "./the-learn-apply-cycle.png"
 ---
 
 Back in high school, the subject that I loved the 2nd most was Physics (you know what the first was 😉). The main reason I liked the subject of Physics was getting to solve “numericals” or problems that required application of concepts and formulas.
