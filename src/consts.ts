@@ -9,6 +9,7 @@ export const SITE_DESCRIPTION =
  */
 export const CATEGORIES = {
 	announcements: 'Announcements',
+	engineering: 'Engineering',
 	stories: 'Stories',
 	thoughts: 'Thoughts',
 	'tips-and-tricks': 'Tips & Tricks',
