@@ -108,8 +108,12 @@
 	content: none;
 }
 
-.prose-v3 blockquote p,
 .prose-v3 p {
+	margin-block: 0 16px;
+}
+
+.prose-v3 blockquote p,
+.prose-v3 figure p {
 	margin-block: 0;
 }
 
