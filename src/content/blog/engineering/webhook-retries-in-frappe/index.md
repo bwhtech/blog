@@ -1,5 +1,5 @@
 ---
-title: "Adding real retries to Frappe webhooks"
+title: "Adding real retries to Frappe Framework Webhooks"
 description: "A failed webhook used to vanish after three attempts in five seconds. This is the redesign, how the retries are scheduled and deduplicated, and a one-line bug that taught me more than the feature did."
 author: kaushal-shriwas
 tags: [Engineering, Frappe Framework, Webhooks]
@@ -9,11 +9,13 @@ image: "./cover.png"
 
 Your webhook receiver goes down for two minutes. Frappe fires an event at it, gets a connection error, tries again for five seconds, gives up, and throws the event away.
 
-<p style="font-style:italic; margin:2em 0;">Not delayed. Not parked somewhere for later. Gone.</p>
+> Not delayed. Not parked somewhere for later. Gone.
 
 That was the real behaviour until recently, and it is fixed in `develop` now ([#38913](https://github.com/frappe/frappe/pull/38913)). This is the story of how, including the part where I built the whole thing wrong first, and a one-line bug I tripped over by accident that ended up teaching me more than the feature did.
 
-Here is the delivery loop as it stood:
+A Webhook in Frappe Framework is a doctype. You pick a document type, a document event such as `after_insert` or `on_submit`, a URL, and the shape of the body you want sent. From then on, whenever that event fires on that doctype, the framework builds the request and sends it in a background job. It is how a Frappe site pushes an event into n8n or an internal service, without anyone writing code.
+
+All of it assumes the request actually arrives. Here is the delivery loop that was supposed to make sure of it:
 
 ```python
 for i in range(3):
@@ -55,7 +57,7 @@ The issue ([#21063](https://github.com/frappe/frappe/issues/21063)) asks for ret
 
 Then I went back and asked what kind of retry was actually wanted. The answer was one line: in a later job, not immediately. Along with a pointer to [Svix](https://github.com/svix/svix-webhooks).
 
-That one line invalidated everything I had written. It stung for about a day, and then it was obvious. **A `sleep()` inside a worker is not a retry policy; it is a hostage situation.** Set `max_retries` high enough and one flaky endpoint can sit on a worker for as long as it feels like. And backoff measured in minutes or hours cannot be expressed that way at all, which is exactly the backoff you want.
+So that patch was a dead end. It was frustrating at first, but then I realized something. Everything I wrote was still retrying inside the same job, and **every `sleep()` call kept the worker busy the entire time.** If I increased `max_retries`, one failed endpoint could tie up a worker for several minutes. And the kind of delays that actually make sense are often minutes or even hours, so using `sleep()` wasn't really an option anyway.
 
 So I stopped writing code and went reading, for a couple of months: Svix's source, how Stripe and GitHub describe their delivery guarantees, AWS EventBridge, and a pile of posts from teams who learned this the expensive way. The finding that surprised me most is that almost nobody uses real exponential backoff. They use a fixed, hand-picked schedule. Svix's is 5 seconds, 5 minutes, 30 minutes, 2 hours, 5 hours, 10 hours, 10 hours. Those aren't a formula; they're a judgement call about what outages look like in the wild. Most are over in seconds. The ones that aren't tend to last hours.
 
@@ -147,13 +149,13 @@ Here is the part I keep thinking about.
 
 That bug was old. It shipped, it sat there, and it was completely harmless, because nothing in the codebase ever read that header back. The value went into a log row that only humans ever looked at, and humans do not verify HMAC signatures. It could have lived there forever.
 
-<p style="font-style:italic; margin:2em 0;">Adding retries didn't introduce the bug. It introduced a <em style="font-style:normal; font-weight:600;">reader</em>.</p>
+> Adding retries didn't introduce the bug. It introduced a *reader*.
 
 It changed how I look at new features now. Most of what I build ends up reading data the system has already been writing for years. **And a value that has only ever been written is a value nobody has checked.** It got saved. It looked fine in a form. That was as far as anyone ever took it. The moment your code reads it back and does something with it, whether it is correct becomes your problem.
 
 I would never have found this by reading the diff. The only reason it surfaced is that I sat there watching a real receiver reject a real retry. Which is the other half of the lesson: the bugs that hide in stored data don't show up in review, and they don't show up in unit tests you wrote from the same assumptions as the code. They show up when something downstream finally has an opinion.
 
-<p style="font-style:italic; margin:2em 0;">There is a test for it now.</p>
+> There is a test for it now.
 
 ## The sweeper has to stay out of its own way
 
@@ -202,4 +204,4 @@ Counting it up afterwards, the retry is barely any of the work. `get_next_retry`
 
 So if you are adding retries to something, I don't think "how do I try again" is the question worth sitting with.
 
-<p style="font-style:italic; margin:2em 0;">It is "what can now happen twice".</p>
+> It is "what can now happen twice".
