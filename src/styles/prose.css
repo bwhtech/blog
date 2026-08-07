@@ -5,17 +5,17 @@
 	--tw-prose-links: var(--ink-gray-9);
 	--tw-prose-bold: var(--ink-gray-9);
 	--tw-prose-counters: var(--ink-gray-4);
-	--tw-prose-bullets: var(--ink-gray-2);
-	--tw-prose-hr: var(--ink-gray-1);
+	--tw-prose-bullets: var(--ink-gray-4);
+	--tw-prose-hr: var(--ink-gray-3);
 	--tw-prose-quotes: var(--ink-gray-8);
-	--tw-prose-quote-borders: var(--ink-gray-1);
+	--tw-prose-quote-borders: var(--ink-gray-3);
 	--tw-prose-captions: var(--ink-gray-4);
 	--tw-prose-kbd: var(--ink-gray-9);
 	--tw-prose-code: var(--ink-gray-9);
 	--tw-prose-pre-code: var(--ink-gray-1);
 	--tw-prose-pre-bg: var(--ink-gray-8);
-	--tw-prose-th-borders: var(--ink-gray-2);
-	--tw-prose-td-borders: var(--ink-gray-1);
+	--tw-prose-th-borders: var(--ink-gray-3);
+	--tw-prose-td-borders: var(--ink-gray-2);
 }
 
 .prose :is(h1, h2, h3, h4, h5),
