@@ -20,5 +20,10 @@
 		"name": "Rahul Agrawal",
 		"avatar": "/authors/rahul-agrawal.jpg",
 		"bio": "Software engineer interested in understanding and solving programming problems."
+	},
+	{
+		"id": "kaushal-shriwas",
+		"name": "Kaushal Shriwas",
+		"avatar": "/authors/kaushal-shriwas.jpg"
 	}
 ]
