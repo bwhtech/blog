@@ -3,21 +3,20 @@ title: "Automating the boring stuff w/ OpenClaw & ERPNext"
 description: "Learn how we are automated our manual book-keeping and operational processes with an AI agent named Donna"
 author: hussain-nagaria
 tags: [Automations, ERPNext, OpenClaw]
-pubDate: 2026-08-06
+pubDate: 2026-08-10
 ---
 
 ## About our business
 
 We are a bunch of problem solvers providing software services in the Frappe ecosystem. We have been using ERPNext since Day 1 (because, duh?) and Shivam has been our ERPNext guy managing accounting and admin stuff.
 
-As we grew, the book-keeping process (mostly data entry 🥲) quickly became tedious and boring. When Shivam decided to transition into Frappe development (sadly, he still hasn't been able to, ERPNext does not leave him), we hired our friend to do it for us. We trained him on ERPNext. He left after a month and claimed it to be a boring thing.
+As we grew, the book-keeping process (mostly data entry 🥲) quickly became tedious and boring. When Shivam decided to transition into Frappe development (sadly, he still hasn't been able to, ERPNext does not leave him), we hired our friend to do it for us. We trained him on ERPNext. He left after a month and claimed it to be a boring thing too.
 
-I decided to take matters in my own hands.
+This is when I decided to take matters in my own hands.
 
 ## Started as a server script
 
-The first thing that seemed worth automating was the repeatative sales invoice generation at the start of every month. So we started with a simple and dumb scheduled server script, which looped through a list of hardcoded customers and generated a Sales Invoice document for each.
-
+The first thing that seemed worth automating was the repeatative sales invoice generation at the start of every month. So we started with a simple and dumb scheduled server script (wrote it by hand, pre-Agentic AI era), which looped through a list of hardcoded customers and generated a Sales Invoice document for each.
 
 
 * But who writes code by hand these days plus things change a lot
@@ -25,23 +24,32 @@ The first thing that seemed worth automating was the repeatative sales invoice g
 
 ## The Setup
 
-OpenClaw needs a computer to run on, and given its always on nature, it made sense to host it on a cloud VM (and not buy a mac mini iykyk 😂). Although [OpenClaw setup](https://docs.openclaw.ai/install) is straight-forward and wizard based I did not want to do it manually. Hence, I provisioned a VM on Hetzner (4GB RAM if curious), put my SSH keys, and fired up Claude Code to help me through it.
+OpenClaw needs a computer to run on, and given its always on nature, it made sense to host it on a cloud VM (and not buy a mac mini iykyk 😂). Although [OpenClaw setup](https://docs.openclaw.ai/install) is straight-forward and wizard based I did not want to do it manually. Hence, I provisioned a VM on Hetzner (4GB RAM/2 vCPU if curious), put my SSH keys, and fired up Claude Code to help me through it. It then prepared the machine with firewall, and stuff.
 
-The next importance piece of the setup is to configure a chat channel through which you will interact with the OpenClaw agent.
+The next importance piece of the setup wizard is to configure a chat channel through which you will interact with the OpenClaw agent. We choose Telegram because that is where we have our team communications. You can connect WhatsApp, Slack, and many more.
 
 ## Onboarding
 
-Once the initial setup is done, rest of the things can now be done by chatting with the agent. I onboarded Donna as if onboarding an employee:
+Once the initial setup is done, rest of the things can now be done by chatting with the agent. I onboarded Donna as if onboarding an actual employee on our team:
 
 1. Setup a dedicated email account on our Google workspace, donna@bwh.tech.  
-2. A user in our ERPNext instance with necessary roles
+2. Create a user on our ERPNext instance with necessary roles.
+
+![Introduction Email to Team](hi-email.png)
 
 ## Training
+
+This is the most important piece so we will spend some time here. After some basic instructions like.
 
 * SOUL.md
 * SOPs (about the company, point to company master etc.)
 * Monitoring what it learns (push to github at night, pull locally and view in obsedian)
-* Most important: EMAIL.md + skill
+
+### Email SOP
+
+This was the second most important communication channel integration (using the `gog` CLI). This is how Donna will communicate with the external world. And since this involved external parties: customers, suppliers, and more, this has to be handeled with care. I asked Donna to setup an `EMAIL.md` file + agent skill that would be invoked for anything related to emails.
+
+The first instruction was to **take an approval** from me before replying to anyone except the team (`@bwh.tech`). The second was to always have a **byline that makes sure people know that they are interacting with an AI assistant** and what to do if it makes mistakes.
 
 ## First Automation
 
