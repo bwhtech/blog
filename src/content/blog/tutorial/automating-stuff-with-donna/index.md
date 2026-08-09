@@ -39,11 +39,9 @@ Once the initial setup is done, rest of the things can now be done by chatting w
 
 ## Training
 
-This is the most important piece so we will spend some time here. After some basic instructions like.
+This is the most important piece so we will spend some time here. OpenClaw stores all the learnings in markdown files. Even memory. So training mostly involves giving Donna context and asking it to create relevant files.
 
-* SOUL.md
-* SOPs (about the company, point to company master etc.)
-* Monitoring what it learns (push to github at night, pull locally and view in obsedian)
+I started by giving it basic information about our company (pointed to Company master in ERPNext), and Frappe's [REST API docs](https://docs.frappe.io/framework/user/en/api/rest).
 
 ### Email SOP
 
@@ -51,9 +49,15 @@ This was the second most important communication channel integration (using the 
 
 The first instruction was to **take an approval** from me before replying to anyone except the team (`@bwh.tech`). The second was to always have a **byline that makes sure people know that they are interacting with an AI assistant** and what to do if it makes mistakes.
 
-## First Automation
+### Workspace Setup
 
-In order to run a company, we need certain subscriptions (and ad-hoc purchases) to keep things running smoothly, for example: Google Workspace (we shall replace with Frappe Suite once ready!), [Frappe Cloud](https://cloud.frappe.io), Zoom etc. 
+Since OpenClaw was creating these files/SOPs, I should be able to review them without always SSHing into the VM. Here I implemented an idea I found on X: setup a Git repository of the OpenClaw workspace folder and sync every night to GitHub. Then I opened that repository in my Obsidian with the Git plugin which auto pulls changes. Now, if I want to look at all the files my agent has stored, I can just open up the Obsidian Vault.
+
+## First Automation: Account Payables / Purchases
+
+In order to run a company, we need certain subscriptions (and ad-hoc purchases) to keep things running smoothly, for example: Google Workspace (we shall replace with Frappe Suite once ready!), [Frappe Cloud](https://cloud.frappe.io), Zoom etc. They send invoices on emails. The idea was simple: these emails should go to Donna, she should create documents, and attach relevant files (invoice PDFs in specific).
+
+Before adding her to our accounts email group, we started by simple email forwards, and took baby steps.
 
 ## Tackling Piece by Piece
 
@@ -98,13 +102,16 @@ Yay!
 
 > BTW, If you also want to setup your very own "Donna" for your business, we can help you out, drop me an email at hussain@bwh.tech.
 
-## Misc
+## Beyond Book Keeping
 
-* Gameplan
-* Video Planning
-* Video Editing
+After book keeping was going smooth, we figured we can use Donna to get even more things done. For example, setup scripts that will start a weekly [Gameplan](https://github.com/frappe/gameplan) thread, so that the team can post their updates.
+
+I do this "What's new in Frappe Framework?" series every month and need to stay updated with all the new features getting merged in Frappe Framework, so Donna goes through all feature PRs merged in the past month and sends me summary of relevant ones for my video. Claude Code edits our videos these days, crazy time to be alive!
 
 ## Conclusion & Future Ideas
 
-* Replace with Hermes
-* 
+First thing I would do is replace OpenClaw with [Hermes](https://github.com/nousresearch/hermes-agent).
+
+## Bloopers
+
+![Rahul's email reply to Donna](rahul-reply.png)
