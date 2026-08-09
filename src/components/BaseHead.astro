@@ -1,4 +1,6 @@
 ---
+import { SITE_TITLE } from '../consts';
+
 interface Props {
 	title: string;
 	description: string;
@@ -11,6 +13,7 @@ interface Props {
 
 const { author, description, image, publishedTime, tags = [], title, type = 'website' } = Astro.props;
 const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+const feedURL = Astro.site ? new URL('rss.xml', Astro.site) : undefined;
 // Social crawlers do not resolve relative paths, so the built asset URL has to be absolute.
 const socialImage = image && Astro.site ? new URL(image.src, Astro.site) : undefined;
 ---
@@ -22,6 +25,7 @@ const socialImage = image && Astro.site ? new URL(image.src, Astro.site) : undef
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+{feedURL && <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href={feedURL} />}
 {canonicalURL && <link rel="canonical" href={canonicalURL} />}
 <title>{title}</title>
 <meta property="og:type" content={type} />
