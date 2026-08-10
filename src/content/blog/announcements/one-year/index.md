@@ -15,7 +15,7 @@ Today is a very special day for 2 reasons:
 ![Screenshot of BWH Channel Page](./bwh-at-1.png)
 
 
-No doubt *BWH has become a brand of its own*. The response has been overwhelming and I am thankful to the community for so much love and support that the concept has recieved!
+No doubt *BWH has become a brand of its own*. The response has been overwhelming and I am thankful to the community for so much love and support that the concept has received!
 
 ### Some Stats
 

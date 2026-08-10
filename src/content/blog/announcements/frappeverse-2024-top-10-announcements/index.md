@@ -19,7 +19,7 @@ Now the long answer. In Nabin’s talk, he explained why we had stopped adding a
 
 Here is an interesting case-study from [Kyosk’s](https://www.kyosk.app/) (a big B2C brand from Kenya) scalability issues he shared that caught my eyes:
 
-![Slide displaying scale of Kiyosk's ERPNext instance](./kiyosh-slide.png)
+![Slide displaying scale of Kyosk's ERPNext instance](./kiyosh-slide.png)
 
 From timing out after 30 minutes to taking less than 2 minutes 🫡 
 
@@ -146,7 +146,7 @@ It was exciting to see that the community has also started building non-trivial 
 * The Tridots Tech team launched bunch of new products (all 100% open source) like Go1 Accounts, Go1 Vendor Portal, Go1 Customer Portal, and more! You can check out their Github to explore more [here](https://github.com/TridotsTech).
 * The Frappe Healthcare app is (again) taken over by Earthians team and they have renamed it to “Marley”. You can read their announcement post [here](https://discuss.frappe.io/t/introducing-new-health-app-marley/128757).
 * The Aerele team demoed how they ended up building a [PWA builder](https://github.com/aerele/pwa-builder) and [Chat-bot builder](https://github.com/aerele/chatbot) while working on recurring client needs.
-* Resilient Tech, the team behind the popular India Compliance app also came on stage to showcase what they have been upto. They took over the customer support of India Compliance at Frappe and according to them, it has made way for a lot of feedback and improvements in the app.
+* Resilient Tech, the team behind the popular India Compliance app also came on stage to showcase what they have been up to. They took over the customer support of India Compliance at Frappe and according to them, it has made way for a lot of feedback and improvements in the app.
 
 ## 8. Frappe Learning & Frappe CRM Updates
 
@@ -164,7 +164,7 @@ She ended her talk by introducing a much requested Frappe [Payments app integrat
 
 The community was so excited when Sharique demoed a POC of Frappe CRM at last year’s Frappeverse! He has continued to build upon that foundation over the past year along with the feedback from our internal Sales team. He had even joined me to officially release v1 of Frappe CRM live in April this year.
 
-In this time period, Frappe CRM went from 1 (Frappe) -> 500+ users! Sharique showed us how the CRM has matured with more **sophisticated list view, a brand new Kanban view, WhatsApp integation, and of course, the PWA**:
+In this time period, Frappe CRM went from 1 (Frappe) -> 500+ users! Sharique showed us how the CRM has matured with more **sophisticated list view, a brand new Kanban view, WhatsApp integration, and of course, the PWA**:
 
 ![Frappe CRM PWA Screenshot](./crm-pwa.png)
 
@@ -214,7 +214,7 @@ If you want to host an in-person bootcamp at your city, feel free to hit me up, 
 
 ### Next up on BWH
 
-I have been missing from action for the past couple of months, here is what I have been upto:
+I have been missing from action for the past couple of months, here is what I have been up to:
 
 
 <iframe width="100%" height="500" src="https://www.youtube.com/embed/PKm16ZKCokU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
