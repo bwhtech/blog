@@ -2,7 +2,7 @@
 title: "Automating the boring stuff w/ OpenClaw & ERPNext"
 description: "Learn how we are automated our manual book-keeping and operational processes with an AI agent named Donna"
 author: hussain-nagaria
-tags: [Automations, ERPNext, OpenClaw]
+tags: [Automations, ERPNext, OpenClaw, Hermes Agent]
 pubDate: 2026-08-10
 ---
 
@@ -16,7 +16,7 @@ This is when I decided to take matters in my own hands.
 
 ## Started as a server script
 
-The first thing that seemed worth automating was the repeatative sales invoice generation at the start of every month. So we started with a simple and dumb scheduled server script (wrote it by hand, pre-Agentic AI era), which looped through a list of hardcoded customers and generated a Sales Invoice document for each.
+The first thing that seemed worth automating was the repetitive sales invoice generation at the start of every month. So we started with a simple and dumb scheduled server script (wrote it by hand, pre-Agentic AI era), which looped through a list of hardcoded customers and generated a Sales Invoice document for each.
 
 
 * But who writes code by hand these days plus things change a lot
@@ -35,6 +35,8 @@ Once the initial setup is done, rest of the things can now be done by chatting w
 1. Setup a dedicated email account on our Google workspace, donna@bwh.tech.  
 2. Create a user on our ERPNext instance with necessary roles.
 
+To test the basic setup, I asked Donna to say hello to the team:
+
 ![Introduction Email to Team](hi-email.png)
 
 ## Training
@@ -45,7 +47,7 @@ I started by giving it basic information about our company (pointed to Company m
 
 ### Email SOP
 
-This was the second most important communication channel integration (using the `gog` CLI). This is how Donna will communicate with the external world. And since this involved external parties: customers, suppliers, and more, this has to be handeled with care. I asked Donna to setup an `EMAIL.md` file + agent skill that would be invoked for anything related to emails.
+This was the second most important integration (using the `gog` CLI). This is how Donna will communicate with the external world. And since this involved external parties: customers, suppliers, and more, this has to be handled with care. I asked Donna to setup an `EMAIL.md` file + agent skill that would be invoked for anything related to emails.
 
 The first instruction was to **take an approval** from me before replying to anyone except the team (`@bwh.tech`). The second was to always have a **byline that makes sure people know that they are interacting with an AI assistant** and what to do if it makes mistakes.
 
@@ -64,9 +66,9 @@ Before adding her to our accounts email group, we started by simple email forwar
 * Monthly Sales invoices
 * Processing statements (reconciliation)
 
-## Bringing Determinism to Probablistic Machines
+## Bringing Determinism to Probabilistic Machines
 
-If you give a certain prompt to an agent (LLM), it might not give you the same output always even if the prompt remains same, because LLMs are probabilistic machines. But we need determinism in how things should be takled: sending of sales invoice on email, creation of documents in ERPNext, etc.
+If you give a certain prompt to an agent (LLM), it might not give you the same output always even if the prompt remains same, because LLMs are probabilistic machines. But we need determinism in how things should be tackled: sending of sales invoice on email, creation of documents in ERPNext, etc.
 
 ## Important Trick
 
@@ -78,7 +80,7 @@ LLMs are also good at reading code, so why not give them the codebases of our ER
 
 ## Use-case 2: Razorpay Settlements
 
-We use Razorpay as our online payment gateway. It is used by [BWH School](https://buildwithhussain.com/school) and also by few of our foriegn services clients.
+We use Razorpay as our online payment gateway. It is used by [BWH School](https://buildwithhussain.com/school) and also by few of our foreign services clients.
 
 Here is how the flow looks like:
 
