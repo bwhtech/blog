@@ -74,7 +74,7 @@ Here is the important tip: **start with one**. *One* email, *one* invoice, *one*
 
 If you give a certain prompt to an agent (LLM), it might not give you the same output always even if the prompt remains same, because LLMs are probabilistic machines. But we need determinism in how things should be tackled: sending of sales invoice on email, creation of documents in ERPNext, etc.
 
-## Code Is Cheap
+### Code Is Cheap
 
 LLMs are also good at reading code, so why not give them the codebases of our ERPNext and India Compliance apps? Open Source FTW!
 
@@ -115,9 +115,9 @@ flowchart TD
 
 You did not read through all of it, didn't you? 😂
 
-Customer pays Razorpay, it settles the amount to our bank in some frequency after deducting gateway charges and currency conversions. For this to be nicely entered into ERPNext, we need to do multiple entries, even more if currency conversion is involved. And data comes from Razorpay dashboard (manually checked) regarding the charges and taxes on those charges.
+It is a bit complex. Customer pays Razorpay, it settles the amount to our bank in some frequency after deducting gateway charges and currency conversions and can aggregate multiple payments. For this to be nicely entered into ERPNext, we need to do multiple entries, even more if currency conversion is involved. And data came from Razorpay dashboard (manually checked) regarding the charges and taxes on those charges.
 
-Before LLMs, I would have had to write an integration that would pull in data from Razorpay and a complicated script that would look at different scenarios of currency and whatnot and then pick proper accounts and stuff. It would have taken me a good amount of time, but we have agents now, right?
+Before agents, I would have had to write an integration that would pull in data from Razorpay and a complicated script that would look at different scenarios of currency and whatnot and then pick proper accounts and stuff. It would have taken me a good amount of time, but we have agents now, right?
 
 The goal was simple, all Razorpay clearing accounts should be 0 at the end of the day:
 
