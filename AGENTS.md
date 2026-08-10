@@ -41,6 +41,11 @@ reference them by absolute path.
 Renaming a category folder changes the post URL. Add a 301 to `netlify.toml`
 when that happens.
 
+A ` ```mermaid ` code block becomes a diagram. Astro leaves the block
+unhighlighted (`markdown.syntaxHighlight.excludeLangs` in `astro.config.mjs`)
+and `src/components/Mermaid.astro` renders it in the browser, matching the
+light or dark theme. Mermaid loads only on pages that contain a diagram.
+
 ## Documentation
 
 Full documentation: https://docs.astro.build
