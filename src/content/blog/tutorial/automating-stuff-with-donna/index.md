@@ -51,6 +51,8 @@ This was the second most important integration (using the `gog` CLI). This is ho
 
 The first instruction was to **take an approval** from me before replying to anyone except the team (`@bwh.tech`). The second was to always have a **byline that makes sure people know that they are interacting with an AI assistant** and what to do if it makes mistakes.
 
+Final step was to ask it to setup a scheduled (`CRON`) job to sync emails at a frequent interval and use `EMAIL.md` skill on it.
+
 ### Workspace Setup
 
 Since OpenClaw was creating these files/SOPs, I should be able to review them without always SSHing into the VM. Here I implemented an idea I found on X: setup a Git repository of the OpenClaw workspace folder and sync every night to GitHub. Then I opened that repository in my Obsidian with the Git plugin which auto pulls changes. Now, if I want to look at all the files my agent has stored, I can just open up the Obsidian Vault.
@@ -59,7 +61,9 @@ Since OpenClaw was creating these files/SOPs, I should be able to review them wi
 
 In order to run a company, we need certain subscriptions (and ad-hoc purchases) to keep things running smoothly, for example: Google Workspace (we shall replace with Frappe Suite once ready!), [Frappe Cloud](https://cloud.frappe.io), Zoom etc. They all send invoices on emails. The idea was simple: these emails should go to Donna, ~~she~~ it should create documents, and attach relevant files (invoice PDFs in specific).
 
-Before adding her to our accounts email group, we started by simple email forwards, and took baby steps.
+Before adding her to our accounts email group, we started with simple email forwards, and took baby steps.
+
+Here is the important tip: **start with one**. *One* email, *one* invoice, *one* document. Get it done by chatting with the agent end to end. Once you are happy with it, then we can ask it to create an SOP (and one more thing, but we will come to it soon) out of the learnings it just had. Then we can send it more pending invoices lying around in our inbox. Once confident enough, we will ask it to add it to our `EMAIL.md`.
 
 ## Tackling Piece by Piece
 
@@ -70,13 +74,17 @@ Before adding her to our accounts email group, we started by simple email forwar
 
 If you give a certain prompt to an agent (LLM), it might not give you the same output always even if the prompt remains same, because LLMs are probabilistic machines. But we need determinism in how things should be tackled: sending of sales invoice on email, creation of documents in ERPNext, etc.
 
-## Important Trick
+## Code Is Cheap
 
 LLMs are also good at reading code, so why not give them the codebases of our ERPNext and India Compliance apps? Open Source FTW!
 
 ## Surprise
 
+Scripts and all is fine, but one fine day Donna replied to a customer and sorted things on its own:
+
 ![Email Reply by Donna](donna-email-reply.png)
+
+If you have given your agent enough relevant context, you might be surprised with the results.
 
 ## Use-case 2: Razorpay Settlements
 
@@ -84,23 +92,44 @@ We use Razorpay as our online payment gateway. It is used by [BWH School](https:
 
 Here is how the flow looks like:
 
-<TODO: Diagram>
+```mermaid
+flowchart TD
+      A[Customer pays via Razorpay] --> B[Sales Invoice in ERPNext]
+      B --> C[Receipt Payment Entry]
+      C --> D[Razorpay Clearing Account]
+
+      D --> E{Currency?}
+
+      E -->|INR| F[Razorpay INR - BSL]
+      E -->|USD/GBP| G[Razorpay USD/GBP - BSL]
+      G --> H[FX Internal Transfer]
+      H --> F
+
+      F --> I[Final Settlement Payment Entry]
+      I --> J[HDFC Bank Account - BSL]
+
+      I --> K[Razorpay Charges - BSL]
+      L[Razorpay Settlement Recon] --> I
+      M[Bank UTR / HDFC Credit] --> I
+```
+
+You did not read through all of it, didn't you? 😂
 
 Customer pays Razorpay, it settles the amount to our bank in some frequency after deducting gateway charges and currency conversions. For this to be nicely entered into ERPNext, we need to do multiple entries, even more if currency conversion is involved. And data comes from Razorpay dashboard (manually checked) regarding the charges and taxes on those charges.
 
 Before LLMs, I would have had to write an integration that would pull in data from Razorpay and a complicated script that would look at different scenarios of currency and whatnot and then pick proper accounts and stuff. It would have taken me a good amount of time, but we have agents now, right?
 
-The goal was simple, Razorpay accounts should be 0 at the end of the day:
+The goal was simple, all Razorpay clearing accounts should be 0 at the end of the day:
 
 ![CoA Razorpay Accounts](coa-razorpay.png)
 
-And Donna, worked through this as I chatted about the process. Without even me mentioning it decided to verify via General Ledger as she perfected the process and ultimately created a script.
+Donna worked through this as I chatted about the process. Without even me mentioning it decided to verify via General Ledger as she perfected the process and ultimately created a script.
 
 I prompted my way through it, and then at the end of it, the result was a nice script that talks to the Razorpay API, gets the settlements every day, processes them, and marks payment entries properly for existing sales invoices. At the end of the day all accounts are settled nicely:
 
 ![Telegram Message from Donna](rzp-tg-message.png)
 
-Yay!
+Yay, this has been the most satisfying automation till date for me!
 
 > BTW, If you also want to setup your very own "Donna" for your business, we can help you out, drop me an email at hussain@bwh.tech.
 
@@ -112,7 +141,9 @@ I do this "What's new in Frappe Framework?" series every month and need to stay 
 
 ## Conclusion & Future Ideas
 
-First thing I would do is replace OpenClaw with [Hermes](https://github.com/nousresearch/hermes-agent).
+First thing I would do is replace OpenClaw with [Hermes](https://github.com/nousresearch/hermes-agent). I feel it is maturing fast and has a better "image" in terms of security.
+
+---
 
 ## Bloopers
 
