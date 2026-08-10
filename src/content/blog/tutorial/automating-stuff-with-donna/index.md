@@ -57,7 +57,7 @@ Since OpenClaw was creating these files/SOPs, I should be able to review them wi
 
 ## First Automation: Account Payables / Purchases
 
-In order to run a company, we need certain subscriptions (and ad-hoc purchases) to keep things running smoothly, for example: Google Workspace (we shall replace with Frappe Suite once ready!), [Frappe Cloud](https://cloud.frappe.io), Zoom etc. They send invoices on emails. The idea was simple: these emails should go to Donna, she should create documents, and attach relevant files (invoice PDFs in specific).
+In order to run a company, we need certain subscriptions (and ad-hoc purchases) to keep things running smoothly, for example: Google Workspace (we shall replace with Frappe Suite once ready!), [Frappe Cloud](https://cloud.frappe.io), Zoom etc. They all send invoices on emails. The idea was simple: these emails should go to Donna, ~~she~~ it should create documents, and attach relevant files (invoice PDFs in specific).
 
 Before adding her to our accounts email group, we started by simple email forwards, and took baby steps.
 
