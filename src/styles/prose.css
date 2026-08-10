@@ -65,6 +65,17 @@
 	border-bottom: 1px solid var(--ink-gray-6);
 }
 
+.prose-v3 :is(del, s) {
+	color: var(--ink-gray-5);
+	text-decoration-line: line-through;
+	text-decoration-thickness: 1px;
+	text-decoration-color: var(--ink-gray-4);
+}
+
+.prose-v3 :is(del, s) :is(code, strong, em, a) {
+	color: inherit;
+}
+
 .prose-v3 :where(span[style*='--prose-color-']) strong,
 .prose-v3 strong:where([style*='--prose-color-']) {
 	color: inherit;
