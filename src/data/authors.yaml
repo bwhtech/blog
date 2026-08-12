@@ -1,0 +1,43 @@
+# Every author who writes here. Each entry gets a page at /author/<id>/.
+#
+# Copy the sample below, uncomment it, and fill in your own details. Only `id`,
+# `name`, and `avatar` are required; skip any line you do not want to fill in.
+#
+# - id: your-name              # kebab-case, and the last part of your page URL
+#   name: Your Name
+#   avatar: /authors/your-name.jpg   # put the image in public/authors/
+#   role: What You Do          # shown in small caps above your name
+#   bio: |                     # leave a blank line between paragraphs
+#     A line or two about you.
+#
+#     Another paragraph, if you want one.
+#   social:                    # github, instagram, and linkedin are supported
+#     github: https://github.com/your-handle
+#     instagram: https://instagram.com/your-handle
+#     linkedin: https://www.linkedin.com/in/your-handle/
+
+- id: vishwajeet-singh
+  name: Vishwajeet Singh
+  avatar: /authors/vishwajeet-singh.jpg
+
+- id: shivam-ghosh
+  name: Shivam Ghosh
+  avatar: /authors/shivam-ghosh.jpg
+
+- id: hussain-nagaria
+  name: Hussain Nagaria
+  role: Founder
+  avatar: /authors/hussain-nagaria.jpg
+  bio: Teacher and YouTuber.
+  social:
+    github: https://github.com/NagariaHussain
+    linkedin: https://www.linkedin.com/in/buildwithhussain/
+
+- id: rahul-agrawal
+  name: Rahul Agrawal
+  avatar: /authors/rahul-agrawal.jpg
+  bio: Software engineer interested in understanding and solving programming problems.
+
+- id: kaushal-shriwas
+  name: Kaushal Shriwas
+  avatar: /authors/kaushal-shriwas.jpg

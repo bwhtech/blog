@@ -1,0 +1,83 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+import PostList from '../../components/PostList.astro';
+import SocialLinks from '../../components/SocialLinks.astro';
+import { SITE_TITLE } from '../../consts';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPostsByAuthor } from '../../utils/posts';
+
+export async function getStaticPaths() {
+	const authors = await getCollection('authors');
+
+	return authors.map((author) => ({
+		params: { id: author.id },
+		props: { author },
+	}));
+}
+
+interface Props {
+	author: CollectionEntry<'authors'>;
+}
+
+const { author } = Astro.props;
+const { avatar, bio, name, role, social } = author.data;
+
+// A blank line in the bio starts a new paragraph.
+const paragraphs = bio ? bio.split(/\n\s*\n/).filter((paragraph) => paragraph.trim()) : [];
+const posts = await getPostsByAuthor(author.id);
+---
+
+<BaseLayout title={name} description={bio ?? `Posts by ${name} on ${SITE_TITLE}.`} author={name}>
+	<main id="main-content" class="mx-auto w-full max-w-[770px] px-4 pb-32 pt-6 sm:px-5 sm:pt-20">
+		<a
+			class="mb-12 inline-flex min-h-8 items-center gap-1.5 text-sm text-ink-gray-5 no-underline transition-colors hover:text-ink-gray-8"
+			href="/"
+			aria-label="Back to all posts"
+		>
+			<svg aria-hidden="true" class="size-4" viewBox="0 0 24 24" fill="none">
+				<path
+					d="M15 18 9 12l6-6"
+					stroke="currentColor"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+				/>
+			</svg>
+			<span>All posts</span>
+		</a>
+
+		<header>
+			<img
+				class="size-20 rounded-full object-cover sm:size-24"
+				src={avatar}
+				alt=""
+				width="96"
+				height="96"
+			/>
+			{
+				role && (
+					<p class="mt-8 text-xs uppercase tracking-widest text-ink-gray-5">{role}</p>
+				)
+			}
+			<h1 class:list={['text-4xl-semibold text-ink-gray-9', role ? 'mt-2' : 'mt-8']}>{name}</h1>
+			{
+				paragraphs.length > 0 && (
+					<div class="mt-6 space-y-4 text-p-lg text-ink-gray-6">
+						{paragraphs.map((paragraph) => (
+							<p>{paragraph}</p>
+						))}
+					</div>
+				)
+			}
+			<SocialLinks social={social} />
+		</header>
+
+		<section class="mt-16" aria-labelledby="author-posts">
+			<h2 id="author-posts" class="mb-5 text-xs uppercase tracking-widest text-ink-gray-5">
+				Recent posts
+			</h2>
+			<PostList posts={posts} showAuthor={false} />
+		</section>
+	</main>
+</BaseLayout>
