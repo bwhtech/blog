@@ -378,7 +378,7 @@ I also got certified. So you can call me a certified Frappe developer now. Here 
 
 And the best part: I finally got to contribute to open source. Real contributions, to the Frappe Framework itself, the same framework I use every day at work. Remember that GSoC attempt I gave up on because I did not know enough? It came back around. You can see all my merged PRs across the Frappe org [here](https://github.com/search?q=org%3Afrappe+is%3Apr+is%3Amerged+author%3Agajjug004&type=pullrequests).
 
-I also got the chance to go to Mumbai for Build 2026, the tech event organised by Frappe. That was so much fun.
+I also got the chance to go to Mumbai for Build 2026, the tech event organised by Frappe. That was so much fun. It was my first big tech event, and it opened up my mind. Sitting in a room full of great developers, listening to their talks, seeing what people are building out there. I came back with a much bigger idea of what is possible.
 
 I am comfortable with everyone here now. Everyone is polite, and everyone is excellent at what they do professionally. I admire all of them.
 
