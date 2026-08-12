@@ -128,7 +128,7 @@ So we solved and revised only those. Only the book and the past papers. Nothing 
 
 And it worked.
 
-The result was not great, but we came up to the surface from the drowning ocean. We both got 78%.
+The result was not great, but we had stopped drowning. We both got 78%.
 
 Here is the result:
 
