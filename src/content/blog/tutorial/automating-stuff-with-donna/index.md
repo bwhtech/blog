@@ -1,9 +1,9 @@
 ---
 title: "Automating the boring stuff w/ OpenClaw & ERPNext"
-description: "Learn how we are automated our manual book-keeping and operational processes with an AI agent named Donna"
+description: "Learn how we automated our manual book-keeping and operational processes with an AI agent named Donna"
 author: hussain-nagaria
 tags: [Automations, ERPNext, OpenClaw, Hermes Agent]
-pubDate: 2026-08-10
+pubDate: 2026-08-12
 ---
 
 ## About our business
@@ -20,7 +20,7 @@ Even before the agent saga, we had tried a little bit of automation for repetiti
 
 But this script had to be maintained and there were a few things (we will soon see a few) we could not do via not-so-smart scripts like these. It worked for a month or two and we left it to die.
 
-Then came OpenClaw, and clicked to me that this could be it, an AI accountant!
+Then came OpenClaw, and it clicked to me that this could be it, an AI accountant!
 
 ## The Setup
 
@@ -28,7 +28,7 @@ I got started in early April this year.
 
 OpenClaw needs a computer to run on, and given its always on nature, it made sense to host it on a cloud VM (and not buy a mac mini iykyk 😂). Although [OpenClaw setup](https://docs.openclaw.ai/install) is straight-forward and wizard based I did not want to do it manually. Hence, I provisioned a VM on Hetzner (4GB RAM/2 vCPU if curious), put my SSH keys, and fired up Claude Code to help me through it. It then hardened the machine with firewall, etc.
 
-The next importance piece of the setup wizard is to configure a chat channel through which you will interact with the OpenClaw agent. We choose **Telegram** because that is where we have our team communications. You can connect WhatsApp, Slack, and many more.
+The next important piece of the setup wizard is to configure a chat channel through which you will interact with the OpenClaw agent. We chose **Telegram** because that is where we have our team communications. You can connect WhatsApp, Slack, and many more.
 
 ## Onboarding
 
@@ -66,7 +66,7 @@ In order to run a company, we need certain subscriptions (and ad-hoc purchases) 
 
 Before adding her to our accounts email group, we started with simple email forwards, and took baby steps.
 
-Here is the important tip: **start with one**. *One* email, *one* invoice, *one* document. Get it done by chatting with the agent end to end. Here is what the it looked like for our AP automation, when Donna had figured it out:
+Here is the important tip: **start with one**. *One* email, *one* invoice, *one* document. Get it done by chatting with the agent end to end. Here is what it looked like for our AP automation, when Donna had figured it out:
 
 ![Donna's activity timeline on ERPNext document](donna-activity-timeline.png)
 
@@ -82,12 +82,13 @@ We also get an important benefit by having the agent write scripts, we are **not
 
 ## Tackling Piece by Piece
 
-* Monthly Sales invoices
-* Processing statements (reconciliation)
+The above process took a few hours. Then I started to look for what else we can automate. Next I automated Sales Invoices: first retainers (created on a monthly schedule), then I connected our LMS instance ([BWH School](https://buildwithhussain.com/school)) to create (and send) invoices for payments done for cohorts and courses. This took even less time to setup since a lot of ground work was already there. 
 
-### Code Is Cheap
+Again I took the same approach, tackle one LMS payment → Sales Invoice end to end, then SOP + Script. It even created a Custom Field in LMS payment document to de-dup and track the respective invoice in our ERPNext instance!
 
-Many times while figuring out ERPNext flows and API endpoints, Donna made mistakes and went through a lot of trial error. Why not provide it with the best source of truth? Code. LLMs are also good at reading code, so I asked it to clone the codebases of ERPNext and India Compliance apps. This turned out to be huge unlock.
+### Code is the Best Documentation
+
+Many times while figuring out ERPNext flows and API endpoints, Donna made mistakes and went through a lot of trial and error. Why not provide it with the best source of truth? Code. LLMs are also good at reading code, so I asked it to clone the codebases of ERPNext and India Compliance apps. This turned out to be a huge unlock.
 
 Open Source FTW!
 
@@ -101,7 +102,7 @@ If you have given your agent enough relevant context, you might be surprised wit
 
 ## Use-case 2: Razorpay Settlements
 
-We use Razorpay as our online payment gateway. It is used by [BWH School](https://buildwithhussain.com/school) and also by few of our foreign services clients.
+We use Razorpay as our online payment gateway. It is used by [BWH School](https://buildwithhussain.com/school) and also by a few of our foreign services clients.
 
 Here is how the flow looks like:
 
@@ -126,9 +127,9 @@ flowchart TD
       M[Bank UTR / HDFC Credit] --> I
 ```
 
-You did not read through all of it, didn't you? 😂
+You did not read through all of it, did you? 😂
 
-It is a bit complex. Customer pays Razorpay, it settles the amount to our bank in some frequency after deducting gateway charges and currency conversions and can aggregate multiple payments. For this to be nicely entered into ERPNext, we need to do multiple entries, even more if currency conversion is involved. And data came from Razorpay dashboard (manually checked) regarding the charges and taxes on those charges.
+It is a bit complex. Customer pays Razorpay, it settles the amount to our bank in some frequency after deducting gateway charges and currency conversions and can aggregate multiple payments. For this to be nicely entered into ERPNext, we need to do multiple entries, even more if currency conversion is involved. And data came from the Razorpay dashboard (manually checked) regarding the charges and taxes on those charges.
 
 Before agents, I would have had to write an integration that would pull in data from Razorpay and a complicated script that would look at different scenarios of currency and whatnot and then pick proper accounts and stuff. It would have taken me a good amount of time, but we have agents now, right?
 
@@ -136,7 +137,7 @@ The goal was simple, all Razorpay clearing accounts should be 0 at the end of th
 
 ![CoA Razorpay Accounts](coa-razorpay.png)
 
-Donna worked through this as I chatted about the process. Without even me mentioning it decided to verify via General Ledger as she perfected the process and ultimately created a script.
+Donna worked through this as I chatted about the process. Without me even mentioning it, it decided to verify via General Ledger as she perfected the process and ultimately created a script.
 
 I prompted my way through it, and then at the end of it, the result was a nice script that talks to the Razorpay API, gets the settlements every day, processes them, and marks payment entries properly for existing sales invoices. At the end of the day all accounts are settled nicely:
 
@@ -150,7 +151,7 @@ Yay, this has been the most satisfying automation till date for me!
 
 After book keeping was going smooth, we figured we can use Donna to get even more things done. For example, setup scripts that will start a weekly [Gameplan](https://github.com/frappe/gameplan) thread, so that the team can post their updates.
 
-I do this "What's new in Frappe Framework?" series every month and need to stay updated with all the new features getting merged in Frappe Framework, so Donna goes through all feature PRs merged in the past month and sends me summary of relevant ones for my video. Claude Code edits our videos these days, crazy time to be alive!
+I do this "What's new in Frappe Framework?" series every month and need to stay updated with all the new features getting merged in Frappe Framework, so Donna goes through all feature PRs merged in the past month and sends me a summary of relevant ones for my video. Claude Code edits our videos these days, crazy time to be alive!
 
 ## Conclusion & Future Ideas
 
