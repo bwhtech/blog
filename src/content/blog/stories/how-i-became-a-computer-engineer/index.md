@@ -236,8 +236,6 @@ I wrote the whole API layer for that project. It took me 1 or 2 days to build th
 
 One day everyone asked me to take a class and teach them backend. So I made a PPT and taught them how to start and structure a backend project. The feedback was good, even from the tutors.
 
-I also learned a bit of FastAPI and Flask. All Python frameworks, so it was easy to pick up.
-
 ### Chat with PDF
 
 For my final semester I did my project completely on my own. A RAG based AI system: Chat with PDF.
