@@ -258,7 +258,7 @@ I stayed home for all of it. In between I kept applying for internships and jobs
 
 And the job hunt was frustrating.
 
-I applied to many companies. I started cold DMing on LinkedIn. I DMed more than 200 HRs and people. No response. These things take time, and I did not want to sit at home any more. So I called everyone in my contact list and asked for a referral from anyone they knew.
+I applied to many companies. I started cold DMing on LinkedIn. I DMed **more than 200 HRs** and people! No response. These things take time, and I did not want to sit at home any more. So I called everyone in my contact list and asked for a referral from anyone they knew.
 
 Got nothing.
 
