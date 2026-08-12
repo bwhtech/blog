@@ -196,6 +196,10 @@
 	margin-block: 0;
 }
 
+.prose-v3 figure > figcaption {
+	margin-block-start: 10px;
+}
+
 .prose-v3 hr {
 	width: 20%;
 	margin: 24px auto;
