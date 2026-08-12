@@ -8,7 +8,18 @@ const authors = defineCollection({
 		id: z.string(),
 		name: z.string(),
 		avatar: z.string(),
+		/** Shown above the name on the author page, e.g. "Founder". */
+		role: z.string().optional(),
+		// Blank lines split the bio into paragraphs on the author page.
 		bio: z.string().optional(),
+		links: z
+			.array(
+				z.object({
+					label: z.string(),
+					url: z.string().url(),
+				}),
+			)
+			.optional(),
 	}),
 });
 

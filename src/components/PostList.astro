@@ -7,9 +7,11 @@ import FormattedDate from './FormattedDate.astro';
 
 interface Props {
 	posts: CollectionEntry<'blog'>[];
+	/** Off on an author page, where every post has the same author. */
+	showAuthor?: boolean;
 }
 
-const { posts } = Astro.props;
+const { posts, showAuthor = true } = Astro.props;
 const postItems = await Promise.all(
 	posts.map(async (post) => ({
 		post,
@@ -53,8 +55,13 @@ const postItems = await Promise.all(
 							</p>
 							<p class="mt-3 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm tabular-nums text-ink-gray-4">
 								<span>
-									In <span class="text-ink-gray-5">{category}</span> by{' '}
-									<span class="text-ink-gray-5">{author?.data.name ?? 'BWH Tech'}</span>
+									In <span class="text-ink-gray-5">{category}</span>
+									{showAuthor && (
+										<>
+											{' '}
+											by <span class="text-ink-gray-5">{author?.data.name ?? 'BWH Tech'}</span>
+										</>
+									)}
 								</span>
 								<span class="whitespace-nowrap">
 									<span aria-hidden="true">·</span>{' '}

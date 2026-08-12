@@ -26,6 +26,17 @@ export function getCategoryLabel(post: CollectionEntry<'blog'>) {
 	return CATEGORIES[getCategorySlug(post)];
 }
 
+/** Author pages live under `/author/` so they never collide with the avatars in `public/authors/`. */
+export function getAuthorRoute(authorId: string) {
+	return `/author/${authorId}/`;
+}
+
+export async function getPostsByAuthor(authorId: string) {
+	const posts = await getPublishedPosts();
+
+	return posts.filter((post) => post.data.author.id === authorId);
+}
+
 export async function getPublishedPosts() {
 	const posts = await getCollection('blog', ({ data }) => !data.draft);
 
