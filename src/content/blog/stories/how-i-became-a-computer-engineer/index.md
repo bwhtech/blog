@@ -186,7 +186,7 @@ After BCA, I gave the entrance exam and got into a Bilaspur university for my MC
 
 ![Anas and me in college uniform, walking back from class during MCA](./me-with-anas-mca.jpg)
 
-<figcaption>Classes just got over and we are heading back to our room. Good weather that day, and the same friend from the worst report card of my life.</figcaption>
+<figcaption>Anas on the left, me on the right. Classes just got over and we are heading back to our room. Good weather that day, and the same friend from the worst report card of my life.</figcaption>
 </figure>
 
 Here the core subject was Python. And it was interesting. Compared to C and C++, I had to write much less code, and it was fast to work with.
