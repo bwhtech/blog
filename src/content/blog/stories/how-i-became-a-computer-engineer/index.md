@@ -348,11 +348,11 @@ He messaged me in the morning while I was at office. After office I came home, s
 
 Surprisingly, it was the last day to apply.
 
-And then I got a revert. They called directly and asked if I could join a quick call. I said yes and joined the meet. I told them about myself and the projects I had worked on.
+And then I got a revert. Shivam Ghosh called me directly and asked if I could join a quick call. I said yes and joined the meet. I told him about myself and the projects I had worked on.
 
 I had also done some research on the company, what they do and the open source work they do. I had once tried applying to Google Summer of Code (GSoC), but I did not have enough knowledge at that time. So I shared that interest too.
 
-They liked it and wanted to proceed to the next round. I asked them whether I would get an intern or full time offer, since I had applied for both. They said it depends on the next round.
+He liked it and wanted to proceed to the next round. I asked him whether I would get an intern or a full time offer, since I had applied for both. He said it depends on the next round.
 
 The next round was coding and technical. I was prepared. I answered most of the questions, and I answered them honestly. I did not lie about anything. I could do the DSA questions too, though I got stuck on a few.
 
