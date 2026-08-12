@@ -274,7 +274,7 @@ And then guess what they offered. 3k per month for the internship, and 20k full 
 
 After all that struggle and four rounds of interviews. Man, I was so disappointed.
 
-I told the HR honestly that it would not work. I am from Korba. If I take this job I have to live here on rent. So I asked for at least 8k so I could pay rent and eat. Their final offer was 5k for 3 months, then 8k for the next 3 months of the internship.
+I told the HR honestly that 3k would not cover rent and food in a new city. We settled at 5k for 3 months, then 8k.
 
 I discussed it with my brother. He said no. What is a 5k stipend? He told me to apply for the computer teacher vacancy at Aatmanand School instead. Easy to get, and the salary would be above 30k.
 
