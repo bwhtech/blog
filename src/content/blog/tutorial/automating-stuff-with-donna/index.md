@@ -155,7 +155,11 @@ I do this "What's new in Frappe Framework?" series every month and need to stay 
 
 ## Conclusion & Future Ideas
 
-First thing I would do is replace OpenClaw with [Hermes](https://github.com/nousresearch/hermes-agent). I feel it is maturing fast and has a better "image" in terms of security.
+With this all in place, the biggest benefit I feel is the ability to chat with the agent to now get things done: send me a PDF of a quotation for X, give me pending receivables, create a new gameplan post every week, etc.
+
+I would replace OpenClaw with [Hermes](https://github.com/nousresearch/hermes-agent) though. I feel it is maturing fast and has a better "image" in terms of security.
+
+Hope this post was helpful, feel free to send your questions to hussain@bwh.tech, will be happy to answer.
 
 ---
 
