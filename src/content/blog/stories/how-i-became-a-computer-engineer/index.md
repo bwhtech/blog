@@ -100,7 +100,7 @@ That left me 1 or 2 hours of actual study, at max. And that was nowhere near eno
 
 So my grades dropped. Day by day.
 
-Class 11 gave me the worst report card of my life. For a lot of people that score would be fine. But I was the guy who scored a perfect 10 CGPA a year ago, so it felt like falling off a cliff. I was broken. My confidence was gone.
+Class 11 gave me the worst report card of my life. For a lot of people that score would be fine. But a year ago my name was on that banner board. Now I was barely passing. I was broken. My confidence was gone.
 
 And then they called a parents teacher meeting.
 
