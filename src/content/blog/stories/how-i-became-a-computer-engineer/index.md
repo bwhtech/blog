@@ -104,7 +104,7 @@ Class 11 gave me the worst report card of my life. For a lot of people that scor
 
 And then they called a parents teacher meeting.
 
-I was so afraid of my father. The teacher told him, "Aapka ladka padhta bhi hai ghar me? Ye kya marks hain?" I had barely passed most subjects. The only good score was CS. My father had never heard anything like this about me before. He looked straight into my eyes, and I could see the disappointment.
+I was so afraid of my father. The teacher told him, *"Aapka ladka padhta bhi hai ghar me? Ye kya marks hain?"* (Does your son even study at home? What kind of marks are these?) I had barely passed most subjects. The only good score was CS. My father had never heard anything like this about me before. He looked straight into my eyes, and I could see the disappointment.
 
 Man, I was dead.
 
