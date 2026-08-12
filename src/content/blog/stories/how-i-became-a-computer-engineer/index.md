@@ -270,7 +270,7 @@ Then I looked at other software companies in Raipur, and found Codenicely. I tal
 
 I cleared 3 technical rounds, 1 HR round, and a final call with the CEO.
 
-And then guess what they offered. 3k per month for the internship, and 20k full time after that.
+And then guess what they offered. A 6 month internship at 3k per month, and 20k full time after that.
 
 After all that struggle and four rounds of interviews. Man, I was so disappointed.
 
