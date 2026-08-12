@@ -132,7 +132,7 @@ One sad part though. While I was busy saving physics, chemistry and maths, I mad
 
 One good thing from these two years: I learned C and C++. I wrote a lot of code, solved a lot of questions, made a lot of small programs. That gave me a solid base in programming.
 
-## After 12th, What Now?
+## School Over, What Now?
 
 Everyone from the maths stream runs the JEE race. Anas and I could not make it. And we knew that reality very well.
 
