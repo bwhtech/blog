@@ -75,7 +75,7 @@ And here is the result:
 
 ![My class 10 marksheet, 10 CGPA](./class-10-marksheet.png)
 
-10 CGPA. The only guy from the Katghora branch of Jay Bharat School to score 10. My name went up on the banner board of the main branch in Janjgir Champa, along with 15 other students.
+10 CGPA. The only one from my school branch to score it, and my name went up on the banner board of the main branch.
 
 ## Class 11 Broke Me
 
