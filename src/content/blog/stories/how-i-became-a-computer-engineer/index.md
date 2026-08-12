@@ -180,7 +180,7 @@ By this time I was mature enough to know that marks and degrees are just records
 
 ## MCA and Django
 
-After BCA, I gave the entrance exam and got selected in a Bilaspur university. I was the 2nd candidate selected, with 5th rank in the entrance exam. I had also applied for CUET for central colleges, but I had already taken this admission, so I skipped that exam.
+After BCA, I gave the entrance exam and got into a Bilaspur university for my MCA.
 
 Here the core subject was Python. And it was interesting. Compared to C and C++, I had to write much less code, and it was fast to work with.
 
