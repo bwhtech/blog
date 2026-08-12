@@ -55,7 +55,7 @@ That bhaiya was the one who explained the whole thing to me. What the internet i
 
 So I bought a second hand phone from him, a Nokia Lumia 520. Yes, a Windows phone. Honestly it was a pretty amazing one, totally different from everything else.
 
-I created my Gmail on it that night. The next morning I was the first student in school with a Gmail account. And this is the one I made: `gajjug004@gmail.com`. 4 was my roll number back then, so 004 is still sitting in most of my social accounts even today 😁
+I created my Gmail on it that night. The next morning I was the first student in school with a Gmail account. And this is the one I made: `gajjug004@gmail.com`. 4 was my roll number back then, so 004 is still sitting in most of my accounts even today. My [GitHub](https://github.com/gajjug004) too 😁
 
 ### 12 AM to 6 AM
 
