@@ -180,7 +180,14 @@ By this time I was mature enough to know that marks and degrees are just records
 
 ## MCA and Django
 
-After BCA, I gave the entrance exam and got into a Bilaspur university for my MCA.
+After BCA, I gave the entrance exam and got into a Bilaspur university for my MCA. Anas was there too, same course, same city. From that class 11 crash to this, he never went anywhere.
+
+<figure style="max-width:760px; margin:1.75em auto;">
+
+![Anas and me in college uniform, walking back from class during MCA](./me-with-anas-mca.jpg)
+
+<figcaption>Classes just got over and we are heading back to our room. Good weather that day, and the same friend from the worst report card of my life.</figcaption>
+</figure>
 
 Here the core subject was Python. And it was interesting. Compared to C and C++, I had to write much less code, and it was fast to work with.
 
@@ -233,6 +240,21 @@ I also learned Git and GitHub there, and got my first look at AWS deployment. Al
 We worked on it for 3 to 4 months, and then the project went live. We got 12 clients within Raipur they said, since they had someone doing the marketing.
 
 I wrote the whole API layer for that project. It took me 1 or 2 days to build the APIs fully working and tested. Then it took weeks for the frontend folks to design and consume them 😆
+
+### The Surprise
+
+Then Yashvitech turned one, and they called everyone in for the anniversary. Cake, balloons, a normal office celebration. I was standing there for the cake, honestly.
+
+Then they announced awards. And my name was called. Rising Star.
+
+<figure style="max-width:820px; margin:1.75em auto;">
+
+![Me receiving the Rising Star award at the Yashvitech first anniversary celebration](./yashvitech-risingstar.jpg)
+
+<figcaption>Rising Star, on Yashvitech's first anniversary. I came for the cake and walked out with this.</figcaption>
+</figure>
+
+The unpaid intern who was charged 8k for training. I did not see that coming at all.
 
 ### Chat with PDF
 
