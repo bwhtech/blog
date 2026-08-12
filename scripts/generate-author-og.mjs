@@ -1,11 +1,13 @@
 /**
  * Renders one Open Graph image per author into public/og/author/<id>.png.
  *
- * This runs as part of `npm run build`, so the images are always in step with
- * src/data/authors.yaml and are never committed. Run it on its own with:
+ * The images are committed. Run this after adding an author or changing a
+ * name, role, bio, or photo:
  *
  *   npm run generate-og            # every author
  *   npm run generate-og -- <id>    # one author
+ *
+ * The build fails on a missing image, so a new author cannot ship without one.
  *
  * Satori renders a subset of CSS: flexbox only, no pseudo-elements, and every
  * element with more than one child needs an explicit `display: flex`.
@@ -29,8 +31,7 @@ const PADDING_X = 90;
 const AVATAR = 300;
 const GAP = 56;
 const TEXT_WIDTH = WIDTH - PADDING_X * 2 - AVATAR - GAP;
-/** Rendered at 2x so the card stays sharp on high-density screens. */
-const SCALE = 2;
+
 
 const MIME_TYPES = {
 	'.jpg': 'image/jpeg',
@@ -159,7 +160,7 @@ fs.mkdirSync(outDir, { recursive: true });
 
 for (const author of targets) {
 	const svg = await satori(card(author), { width: WIDTH, height: HEIGHT, fonts });
-	const png = new Resvg(svg, { fitTo: { mode: 'width', value: WIDTH * SCALE } }).render().asPng();
+	const png = new Resvg(svg).render().asPng();
 	const outFile = path.join(outDir, `${author.id}.png`);
 
 	fs.writeFileSync(outFile, png);

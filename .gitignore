@@ -27,6 +27,3 @@ pnpm-debug.log*
 
 # obsidian vault settings
 .obsidian/
-
-# Generated at build time by scripts/generate-author-og.mjs
-public/og/
