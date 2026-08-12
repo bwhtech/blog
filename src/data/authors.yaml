@@ -41,3 +41,12 @@
 - id: kaushal-shriwas
   name: Kaushal Shriwas
   avatar: /authors/kaushal-shriwas.jpg
+
+- id: gajendra-nishad
+  name: Gajendra Nishad
+  role: Backend Engineer
+  avatar: /authors/gajendra-nishad.jpg
+  bio: Backend engineer who has been hooked on computers since he first saw one on a CRT monitor.
+  social:
+    github: https://github.com/gajjug004
+    linkedin: https://www.linkedin.com/in/gajju004/
