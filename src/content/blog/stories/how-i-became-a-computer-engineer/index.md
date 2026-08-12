@@ -9,7 +9,7 @@ image: "./waiting-outside-the-computer-class.png"
 
 I have never written a blog before. So this is my first one. And I decided to make it about the only thing that has stayed with me since class 4: the computer.
 
-It has been a long ride. A tutor who pulled my hand into a lab, a Nokia Lumia, a terrace at 12 AM, one 67% report card that broke me, a 5k stipend I almost said no to, and a job that changed everything. I will tell it in order. Let's start!
+It has been a long ride. A tutor who pulled my hand into a lab, a terrace at 12 AM, a report card that broke me, and a lot more. I will tell it in order. Let's start!
 
 ## The First Computer
 
