@@ -16,17 +16,19 @@ This is when I decided to take matters in my own hands.
 
 ## Started as a server script
 
-The first thing that seemed worth automating was the repetitive sales invoice generation at the start of every month. So we started with a simple and dumb scheduled server script (wrote it by hand, pre-Agentic AI era), which looped through a list of hardcoded customers and generated a Sales Invoice document for each.
+Even before the agent saga, we had tried a little bit of automation for repetitive tasks. We had a simple and dumb scheduled server script (wrote it by hand, pre-Agentic AI era), which looped through a list of hardcoded customers and generated a Sales Invoice document for each.
 
+But this script had to be maintained and there were a few things (we will soon see a few) we could not do via not-so-smart scripts like these. It worked for a month or two and we left it to die.
 
-* But who writes code by hand these days plus things change a lot
-* Wanted to do more
+Then came OpenClaw, and clicked to me that this could be it, an AI accountant!
 
 ## The Setup
 
-OpenClaw needs a computer to run on, and given its always on nature, it made sense to host it on a cloud VM (and not buy a mac mini iykyk 😂). Although [OpenClaw setup](https://docs.openclaw.ai/install) is straight-forward and wizard based I did not want to do it manually. Hence, I provisioned a VM on Hetzner (4GB RAM/2 vCPU if curious), put my SSH keys, and fired up Claude Code to help me through it. It then prepared the machine with firewall, and stuff.
+I got started in early April this year.
 
-The next importance piece of the setup wizard is to configure a chat channel through which you will interact with the OpenClaw agent. We choose Telegram because that is where we have our team communications. You can connect WhatsApp, Slack, and many more.
+OpenClaw needs a computer to run on, and given its always on nature, it made sense to host it on a cloud VM (and not buy a mac mini iykyk 😂). Although [OpenClaw setup](https://docs.openclaw.ai/install) is straight-forward and wizard based I did not want to do it manually. Hence, I provisioned a VM on Hetzner (4GB RAM/2 vCPU if curious), put my SSH keys, and fired up Claude Code to help me through it. It then hardened the machine with firewall, etc.
+
+The next importance piece of the setup wizard is to configure a chat channel through which you will interact with the OpenClaw agent. We choose **Telegram** because that is where we have our team communications. You can connect WhatsApp, Slack, and many more.
 
 ## Onboarding
 
@@ -34,6 +36,7 @@ Once the initial setup is done, rest of the things can now be done by chatting w
 
 1. Setup a dedicated email account on our Google workspace, donna@bwh.tech.  
 2. Create a user on our ERPNext instance with necessary roles.
+    ![Donna ERPNext Connection Success](donna-access-erp.png)
 
 To test the basic setup, I asked Donna to say hello to the team:
 
@@ -74,9 +77,13 @@ Here is the important tip: **start with one**. *One* email, *one* invoice, *one*
 
 If you give a certain prompt to an agent (LLM), it might not give you the same output always even if the prompt remains same, because LLMs are probabilistic machines. But we need determinism in how things should be tackled: sending of sales invoice on email, creation of documents in ERPNext, etc.
 
+But code is deterministic, so we ask our agent to generate scripts for all SOPs! Then it is a matter of running these scripts at the right time. We also get an important benefit, we are **not wasting tokens on figuring out and doing the same thing**. Analogous to the DRY principle in programming.
+
 ### Code Is Cheap
 
-LLMs are also good at reading code, so why not give them the codebases of our ERPNext and India Compliance apps? Open Source FTW!
+Many times while figuring out ERPNext flows and API endpoints, Donna made mistakes and went through a lot of trial error. Why not provide it with the best source of truth? Code. LLMs are also good at reading code, so I asked it to clone the codebases of ERPNext and India Compliance apps. This turned out to be huge unlock.
+
+Open Source FTW!
 
 ## Surprise
 
