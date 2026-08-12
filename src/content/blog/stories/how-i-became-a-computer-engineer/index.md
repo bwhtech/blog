@@ -15,7 +15,7 @@ It has been a long ride. A tutor who pulled my hand into a lab, a Nokia Lumia, a
 
 My story starts in class 4.
 
-That was the year I first saw a computer. A big CRT monitor one. I was in a Hindi medium school back then. My big brother was in class 7 and he was doing computer coaching classes. I still don't know why he joined it. The class was 1.5 hours, right after school.
+That was the year I first saw a computer. A big CRT monitor one. I was in a Hindi medium school back then. My big brother was in class 7 and he was attending computer coaching classes. I still don't know why he joined it. The class was 1.5 hours, right after school.
 
 And I had to wait outside for all of those 1.5 hours.
 
