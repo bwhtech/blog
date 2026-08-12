@@ -52,13 +52,13 @@ I started by giving it basic information about our company (pointed to Company m
 
 This was the second most important integration (using the `gog` CLI). This is how Donna will communicate with the external world. And since this involved external parties: customers, suppliers, and more, this has to be handled with care. I asked Donna to setup an `EMAIL.md` file + agent skill that would be invoked for anything related to emails.
 
-The first instruction was to **take an approval** from me before replying to anyone except the team (`@bwh.tech`). The second was to always have a **byline that makes sure people know that they are interacting with an AI assistant** and what to do if it makes mistakes.
+The first instruction was to **take an approval** from me before replying to anyone except our team (`@bwh.tech`). The second was to always have a **byline that makes sure people know that they are interacting with an AI assistant** and what to do if it makes mistakes.
 
 Final step was to ask it to setup a scheduled (`CRON`) job to sync emails at a frequent interval and use `EMAIL.md` skill on it.
 
 ### Workspace Setup
 
-Since OpenClaw was creating these files/SOPs, I should be able to review them without always SSHing into the VM. Here I implemented an idea I found on X: setup a Git repository of the OpenClaw workspace folder and sync every night to GitHub. Then I opened that repository in my Obsidian with the Git plugin which auto pulls changes. Now, if I want to look at all the files my agent has stored, I can just open up the Obsidian Vault.
+Since OpenClaw was creating these files/SOPs, I should be able to review them without always SSHing into the VM. Here I implemented an idea I found on X: setup a Git repository of the OpenClaw workspace folder and sync every night to GitHub. Then I opened that repository in my Obsidian with the Git plugin which auto pulls changes. Now, if I want to look at all the files my agent has stored (or its brain so to say), I can just open up the Obsidian Vault.
 
 ## First Automation: Account Payables / Purchases
 
@@ -66,18 +66,24 @@ In order to run a company, we need certain subscriptions (and ad-hoc purchases) 
 
 Before adding her to our accounts email group, we started with simple email forwards, and took baby steps.
 
-Here is the important tip: **start with one**. *One* email, *one* invoice, *one* document. Get it done by chatting with the agent end to end. Once you are happy with it, then we can ask it to create an SOP (and one more thing, but we will come to it soon) out of the learnings it just had. Then we can send it more pending invoices lying around in our inbox. Once confident enough, we will ask it to add it to our `EMAIL.md`.
+Here is the important tip: **start with one**. *One* email, *one* invoice, *one* document. Get it done by chatting with the agent end to end. Here is what the it looked like for our AP automation, when Donna had figured it out:
+
+![Donna's activity timeline on ERPNext document](donna-activity-timeline.png)
+
+Once you are happy with it, then we can ask it to create an SOP (and one more thing which is covered in the next section) out of the learnings it just had. Then we can send it more pending invoices lying around in our inbox. Once confident enough, we will ask it to add it to our `EMAIL.md`.
+
+## Bringing Determinism to Probabilistic Machines
+
+If you give a certain prompt to an agent (LLM), it might not give you the same output each time even if the prompt remains same, because LLMs are probabilistic machines. But we need determinism in how things should be tackled: creation of documents in ERPNext, sending of sales invoice on email, etc.
+
+But code is deterministic, so we ask our agent to generate scripts for all SOPs! Then it is a matter of running these scripts at the right time. In case of our AP automation, it means extracting the data from the email and handing it over to the script.
+
+We also get an important benefit by having the agent write scripts, we are **not wasting tokens on figuring out and doing the same thing**. Analogous to the DRY principle in programming.
 
 ## Tackling Piece by Piece
 
 * Monthly Sales invoices
 * Processing statements (reconciliation)
-
-## Bringing Determinism to Probabilistic Machines
-
-If you give a certain prompt to an agent (LLM), it might not give you the same output always even if the prompt remains same, because LLMs are probabilistic machines. But we need determinism in how things should be tackled: sending of sales invoice on email, creation of documents in ERPNext, etc.
-
-But code is deterministic, so we ask our agent to generate scripts for all SOPs! Then it is a matter of running these scripts at the right time. We also get an important benefit, we are **not wasting tokens on figuring out and doing the same thing**. Analogous to the DRY principle in programming.
 
 ### Code Is Cheap
 
