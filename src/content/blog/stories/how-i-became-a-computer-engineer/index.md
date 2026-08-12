@@ -168,7 +168,7 @@ Then I went to Bilaspur for my Bachelor in Computer Applications.
 
 That is where I found web development. And I dropped graphic design completely and put everything into this one skill.
 
-HTML, CSS, JavaScript. I did this for 3 years. I used to build vanilla components with plain HTML, CSS and JavaScript. Buttons, cards, forms, carousels, navbars, nav components, input boxes, headers, footers. I learned CSS styling and animations, and form validation in JavaScript.
+HTML, CSS, JavaScript. I did this for 3 years. I used to build vanilla components with plain HTML, CSS and JavaScript. Buttons, cards, forms, carousels, navbars, nav components, input boxes, headers, footers. I learned CSS styling and animations, and form validation in JavaScript. All of it by hand (no AI to prompt back then, you read the docs, broke things, and fixed them yourself 🙃).
 
 I was not doing it for money. I never even thought about money back then. I did it because it was fun and I always want to learn new things.
 
