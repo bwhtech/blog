@@ -365,7 +365,7 @@ He gave me an overview, explained what an NBFC is and what Orrish does. Then he 
 
 ![The Orrish Django admin, showing the disbursement records list with loan IDs and statuses](./orrish-django-admin.png)
 
-<figcaption>Orrish in the Django admin. Disbursements moving through the APIs I wrote</figcaption>
+<figcaption>Orrish in the Django admin</figcaption>
 </figure>
 
 Then one day they decided to make it multi tenant. And they did not want to rewrite it from scratch.
