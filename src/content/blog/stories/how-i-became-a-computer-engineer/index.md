@@ -79,7 +79,7 @@ And here is the result:
 
 ## Class 11 Broke Me
 
-Then I joined KV. New school, new environment, zero friends. Everybody was a stranger.
+Then I joined Kendriya Vidyalaya, one of the central government schools in India. New school, new environment, zero friends. Everybody was a stranger.
 
 I took PCM with CS. And that is where the real struggle started.
 
