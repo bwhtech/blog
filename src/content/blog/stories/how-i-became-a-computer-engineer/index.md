@@ -67,7 +67,7 @@ This thing got crazy. I slept less. My routine was: sleep before 10, alarm at 12
 
 I had already got the software from that bhaiya and installed it on my computer. So I started editing photos, doing colour grading, learning layers, cutting images, blending them. I was good at it.
 
-Then the mid sem exams came and I had to pause. My father was strict about scores. We had 4 formative assessments (FA) and 2 summative assessments (SA), one FA per quarter and an SA after every two. So I gave more time to studies. I did not stop Photoshop completely, I still opened it in my free time, but studies came first.
+Then the mid sem exams came and I had to pause. My father was strict about scores, so studies came first. I did not stop Photoshop completely, I still opened it in my free time. But it moved to the back seat.
 
 In the last one month, our syllabus was already done. So I downloaded sample papers and model papers from the internet and just practised. I revised and solved a lot of questions till the exam arrived.
 
