@@ -1,21 +1,37 @@
 ---
 import { SITE_TITLE } from '../consts';
 
+/** Open Graph images are 1200x630, the size crawlers expect. */
+const OG_SIZE = { width: 1200, height: 630 };
+
 interface Props {
 	title: string;
 	description: string;
 	author?: string;
 	image?: ImageMetadata;
+	/** A path under public/, for pages whose card is a pre-rendered OG image. */
+	ogImage?: string;
 	publishedTime?: Date;
 	tags?: string[];
 	type?: 'article' | 'website';
 }
 
-const { author, description, image, publishedTime, tags = [], title, type = 'website' } = Astro.props;
+const {
+	author,
+	description,
+	image,
+	ogImage,
+	publishedTime,
+	tags = [],
+	title,
+	type = 'website',
+} = Astro.props;
 const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
 const feedURL = Astro.site ? new URL('rss.xml', Astro.site) : undefined;
+const card = image ? { src: image.src, width: image.width, height: image.height } : undefined;
+const socialCard = ogImage ? { src: ogImage, ...OG_SIZE } : card;
 // Social crawlers do not resolve relative paths, so the built asset URL has to be absolute.
-const socialImage = image && Astro.site ? new URL(image.src, Astro.site) : undefined;
+const socialImage = socialCard && Astro.site ? new URL(socialCard.src, Astro.site) : undefined;
 ---
 
 <meta charset="utf-8" />
@@ -33,11 +49,11 @@ const socialImage = image && Astro.site ? new URL(image.src, Astro.site) : undef
 <meta property="og:description" content={description} />
 {canonicalURL && <meta property="og:url" content={canonicalURL} />}
 {
-	socialImage && image && (
+	socialImage && socialCard && (
 		<>
 			<meta property="og:image" content={socialImage} />
-			<meta property="og:image:width" content={String(image.width)} />
-			<meta property="og:image:height" content={String(image.height)} />
+			<meta property="og:image:width" content={String(socialCard.width)} />
+			<meta property="og:image:height" content={String(socialCard.height)} />
 		</>
 	)
 }
