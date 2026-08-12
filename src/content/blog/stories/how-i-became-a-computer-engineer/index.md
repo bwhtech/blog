@@ -59,7 +59,7 @@ I created my Gmail on it that night. The next morning I was the first student in
 
 ### 12 AM to 6 AM
 
-That phone opened up the internet for me. I was on an Idea SIM. And do you know what Idea gave you back then? Unlimited 2G/3G internet between 12 AM and 6 AM for a 7 rupee voucher.
+That phone opened up the internet for me. I was on an Idea SIM, one of the big telecom operators in India back then. And do you know what Idea gave you? Unlimited 2G/3G internet between 12 AM and 6 AM for a 7 rupee voucher.
 
 So here is what I did. Every day I bought a 10 rupee recharge coupon from the mobile shop. At night I activated the plan. Then I scrolled YouTube and downloaded Photoshop and Illustrator tutorials.
 
