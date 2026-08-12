@@ -156,13 +156,9 @@ It never fully left. I used to design things when I was alone, and after those h
 
 Then I researched it properly and found out this could actually be a career: Graphic Designer. So I spent some time learning it seriously. Photoshop, Illustrator, Lightroom, After Effects. It was genuinely fun.
 
-Then reality hit. Graphics rendering needs a heavy GPU and RAM. I had a dual core CPU with 2 GB RAM.
+Then reality hit. Graphics rendering needs a heavy GPU and a lot of RAM. I had a dual core CPU with 2 GB. I knew it would not hold up. But I still tried.
 
-So I did my research on PCs and laptops for design work and asked my father for one. The budget I found was around 50k to 60k for an entry level machine. He refused that budget and got me a 30k Lenovo i3 6th gen with 4 GB RAM.
-
-I did not say anything. I just took it. I already knew it would not work for graphics design. But I still tried.
-
-This is a clip I made in After Effects on that machine. It took 7 hours to render.
+This is a clip I made in After Effects back then. It took 7 hours to render.
 
 [Here it is on YouTube](https://www.youtube.com/watch?v=l6zJRFPxW3k).
 
