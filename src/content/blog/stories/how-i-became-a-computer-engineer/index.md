@@ -29,7 +29,7 @@ He asked me who I was waiting for. I pointed my hand toward the lab and said, "P
 
 He said, "Aao kuch dikhata hun."
 
-He pulled my hand and took me inside the lab, where everyone was busy with their practicals. He switched on a computer and started a space war game (I really don't remember the name of it 😅). But it was cool. He played one or two rounds. He told me to watch his hand on the mouse and his fingers on the keyboard. Then he helped me play it myself.
+He pulled my hand and took me inside the lab, where everyone was busy with their practicals. He switched on a computer and started some space war game (I really don't remember the name of it 😅). But it was cool. He played one or two rounds. He told me to watch his hand on the mouse and his fingers on the keyboard. Then he helped me play it myself.
 
 After that, I played that game for 20 minutes daily. But only if nobody was sitting on that computer. I would check first. If it was free, I played. If not, I simply walked out and sat outside again. No complaints, no anger, nothing.
 
