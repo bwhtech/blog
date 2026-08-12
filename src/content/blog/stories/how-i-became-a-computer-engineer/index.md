@@ -392,6 +392,13 @@ And the best part: I finally got to contribute to open source. Real contribution
 
 I also got the chance to go to Mumbai for Build 2026, the tech event organised by Frappe. That was so much fun. It was my first big tech event, and it opened up my mind. Sitting in a room full of great developers, listening to their talks, seeing what people are building out there. I came back with a much bigger idea of what is possible.
 
+<figure style="max-width:880px; margin:1.75em auto;">
+
+![The BWH team on stage at Frappe Build 2026 in Mumbai](./build-2026-team-photo.jpg)
+
+<figcaption>The BWH team at Frappe Build 2026</figcaption>
+</figure>
+
 I am comfortable with everyone here now. Everyone is polite, and everyone is excellent at what they do professionally. I admire all of them.
 
 And some words for Hussain Bhaiya, Founder and CEO of BWH. He is very inspiring, and a great tutor and mentor. I have learned a lot from him, and there is a lot still pending. All the growth I found in this short period is because of him. So a big thanks from the depth of my heart.
