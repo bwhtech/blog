@@ -164,7 +164,7 @@ This is a clip I made in After Effects back then. It took 7 hours to render.
 
 ## BCA and the Web
 
-Then I went to Bilaspur for my Bachelor of Computer Application.
+Then I went to Bilaspur for my Bachelor in Computer Applications.
 
 That is where I found web development. And I dropped graphic design completely and put everything into this one skill.
 
