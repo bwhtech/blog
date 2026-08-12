@@ -7,7 +7,7 @@ pubDate: 2026-08-12
 image: "./waiting-outside-the-computer-class.png"
 ---
 
-I have never written a blog before. So this is my first one. And I decided to make it about the only thing that has stayed with me since class 4: the computer.
+I have never written a blog before. So this is my first one. And I decided to make it about the only thing that has stayed with me since class 4: **the computer**.
 
 It has been a long ride. A tutor who pulled my hand into a lab, a terrace at 12 AM, a report card that broke me, and a lot more. Let's start!
 
@@ -394,6 +394,6 @@ One thing stayed with me from the very beginning: the computer.
 
 From a game on a CRT monitor, to a terrace at 12 AM, to APIs in production. So I chose the computer for my entire life.
 
-And that is how I became a computer engineer ✌🏼
+And that is how I became a **computer engineer** ✌🏼
 
 If you read the whole thing, thank you, seriously. If any part of this felt like your story too, I would love to hear it. Reach me on [LinkedIn](https://www.linkedin.com/in/gajju004/), or just drop a mail at gajjug004@gmail.com 😁
