@@ -243,21 +243,21 @@ We worked on it for 3 to 4 months, and then the project went live. We got 12 cli
 
 ![The BillZap login screen](./billzap-login.png)
 
-<figcaption>Where a BillZap client starts</figcaption>
+<figcaption>Client login UI</figcaption>
 </figure>
 
 <figure style="max-width:880px; margin:1.75em auto;">
 
 ![The BillZap dashboard, showing total sales, purchases, payments, recent invoices and lowest stock](./billzap-dashboard.png)
 
-<figcaption>The dashboard: sales, purchases, payments and the stock running low</figcaption>
+<figcaption>Dashboard UI</figcaption>
 </figure>
 
 <figure style="max-width:880px; margin:1.75em auto;">
 
 ![The BillZap reports section, listing voucher, party, inventory and GST reports](./billzap-reports.png)
 
-<figcaption>The reports section: vouchers, party ledgers, inventory and GST</figcaption>
+<figcaption>The report section</figcaption>
 </figure>
 
 I wrote the whole API layer for that project. It took me 1 or 2 days to build the APIs fully working and tested. Then it took weeks for the frontend folks to design and consume them 😆
