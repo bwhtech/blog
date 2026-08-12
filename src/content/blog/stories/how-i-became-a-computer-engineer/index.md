@@ -396,4 +396,4 @@ From a game on a CRT monitor, to a terrace at 12 AM, to APIs in production. So I
 
 And that is how I became a computer engineer ✌🏼
 
-If you read the whole thing, thank you, seriously. If any part of this felt like your story too, drop me a message. I would love to hear it.
+If you read the whole thing, thank you, seriously. If any part of this felt like your story too, I would love to hear it. Reach me on [LinkedIn](https://www.linkedin.com/in/gajju004/), on [GitHub](https://github.com/gajjug004), or just drop a mail at gajjug004@gmail.com. Yes, the same one from class 10 😁
