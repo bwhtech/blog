@@ -234,8 +234,6 @@ We worked on it for 3 to 4 months, and then the project went live. We got 12 cli
 
 I wrote the whole API layer for that project. It took me 1 or 2 days to build the APIs fully working and tested. Then it took weeks for the frontend folks to design and consume them 😆
 
-One day everyone asked me to take a class and teach them backend. So I made a PPT and taught them how to start and structure a backend project. The feedback was good, even from the tutors.
-
 ### Chat with PDF
 
 For my final semester I did my project completely on my own. A RAG based AI system: Chat with PDF.
