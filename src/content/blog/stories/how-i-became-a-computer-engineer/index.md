@@ -284,6 +284,27 @@ I saw a YouTube video that showed how to create a vector DB for context and quer
 
 It worked with about 95% accuracy.
 
+<figure style="max-width:880px; margin:1.75em auto;">
+
+![The upload screen of the PDF elaborator, with a PDF picked and ready to upload](./chat-with-pdf-upload.png)
+
+<figcaption>Pick a PDF, upload it</figcaption>
+</figure>
+
+<figure style="max-width:880px; margin:1.75em auto;">
+
+![The chat screen answering what the uploaded project report is about](./chat-with-pdf-answer.png)
+
+<figcaption>Asking the PDF what it is about</figcaption>
+</figure>
+
+<figure style="max-width:880px; margin:1.75em auto;">
+
+![The chat screen listing functional requirements and summarising the feasibility study from the report](./chat-with-pdf-followup.png)
+
+<figcaption>Follow up questions, answers straight from the report</figcaption>
+</figure>
+
 ## The Gap Year I Did Not Plan
 
 Then both the internship and my MCA ended.
