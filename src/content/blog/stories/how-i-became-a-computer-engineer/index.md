@@ -47,7 +47,13 @@ My brother was doing coaching at another place, and I used to go with him. That 
 
 ### The Gmail and the Lumia
 
-Our principal told us to create a Gmail account to register for the boards. So I bought a second hand phone from that bhaiya, a Nokia Lumia 520. Yes, a Windows phone. Honestly it was a pretty amazing one, totally different from everything else.
+Our principal told us to create a Gmail account to register for the boards.
+
+Now here is the funny part. I had a computer at home, but it had no internet. No Wi-Fi, and I had no idea how you would even connect it. Nobody at home had a smartphone either. So I had never actually used the internet in my life. To me a computer was a machine that ran Paint and games. That is it.
+
+That bhaiya was the one who explained the whole thing to me. What the internet is. What Gmail is. And that you could buy a data voucher, 100 MB for 20 rupees.
+
+So I bought a second hand phone from him, a Nokia Lumia 520. Yes, a Windows phone. Honestly it was a pretty amazing one, totally different from everything else.
 
 I created my Gmail on it that night. The next morning I was the first student in school with a Gmail account. And this is the one I made: `gajjug004@gmail.com`. 4 was my roll number back then, so 004 is still sitting in most of my social accounts even today 😁
 
