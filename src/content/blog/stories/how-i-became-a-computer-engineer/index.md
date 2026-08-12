@@ -239,6 +239,27 @@ I also learned Git and GitHub there, and got my first look at AWS deployment. Al
 
 We worked on it for 3 to 4 months, and then the project went live. We got 12 clients within Raipur they said, since they had someone doing the marketing.
 
+<figure style="max-width:880px; margin:1.75em auto;">
+
+![The BillZap login screen](./billzap-login.png)
+
+<figcaption>Where a BillZap client starts</figcaption>
+</figure>
+
+<figure style="max-width:880px; margin:1.75em auto;">
+
+![The BillZap dashboard, showing total sales, purchases, payments, recent invoices and lowest stock](./billzap-dashboard.png)
+
+<figcaption>The dashboard: sales, purchases, payments and the stock running low</figcaption>
+</figure>
+
+<figure style="max-width:880px; margin:1.75em auto;">
+
+![The BillZap reports section, listing voucher, party, inventory and GST reports](./billzap-reports.png)
+
+<figcaption>The reports section: vouchers, party ledgers, inventory and GST</figcaption>
+</figure>
+
 I wrote the whole API layer for that project. It took me 1 or 2 days to build the APIs fully working and tested. Then it took weeks for the frontend folks to design and consume them 😆
 
 <figure style="max-width:820px; margin:1.75em auto;">
@@ -339,6 +360,13 @@ One day our manager called us into her cabin and asked the team lead to give me 
 He gave me the KT in 5 to 10 minutes. That was it 😅
 
 He gave me an overview, explained what an NBFC is and what Orrish does. Then he asked me to set the project up locally, gave me access to the staging server, and told me to go through the whole flow from the start, one by one. Then he gave me the task list. I completed them and got them reviewed by him. Mostly building the APIs the client needed.
+
+<figure style="max-width:880px; margin:1.75em auto;">
+
+![The Orrish Django admin, showing the disbursement records list with loan IDs and statuses](./orrish-django-admin.png)
+
+<figcaption>Orrish in the Django admin. Disbursements moving through the APIs I wrote</figcaption>
+</figure>
 
 Then one day they decided to make it multi tenant. And they did not want to rewrite it from scratch.
 
