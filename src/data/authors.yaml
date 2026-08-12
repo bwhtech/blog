@@ -26,8 +26,9 @@
 
 - id: hussain-nagaria
   name: Hussain Nagaria
+  role: Founder
   avatar: /authors/hussain-nagaria.jpg
-  bio: Host of Build With Hussain and a teacher who loves building useful things.
+  bio: Teacher and YouTuber.
   social:
     github: https://github.com/NagariaHussain
     linkedin: https://www.linkedin.com/in/buildwithhussain/
