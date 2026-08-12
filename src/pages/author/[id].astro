@@ -2,6 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 import PostList from '../../components/PostList.astro';
+import SocialLinks from '../../components/SocialLinks.astro';
 import { SITE_TITLE } from '../../consts';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getPostsByAuthor } from '../../utils/posts';
@@ -20,7 +21,7 @@ interface Props {
 }
 
 const { author } = Astro.props;
-const { avatar, bio, links = [], name, role } = author.data;
+const { avatar, bio, name, role, social } = author.data;
 
 // A blank line in the bio starts a new paragraph.
 const paragraphs = bio ? bio.split(/\n\s*\n/).filter((paragraph) => paragraph.trim()) : [];
@@ -69,24 +70,7 @@ const posts = await getPostsByAuthor(author.id);
 					</div>
 				)
 			}
-			{
-				links.length > 0 && (
-					<ul class="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm text-ink-gray-5">
-						{links.map((link) => (
-							<li>
-								<a
-									class="no-underline transition-colors hover:text-ink-gray-8"
-									href={link.url}
-									rel="me noopener"
-									target="_blank"
-								>
-									{link.label}
-								</a>
-							</li>
-						))}
-					</ul>
-				)
-			}
+			<SocialLinks social={social} />
 		</header>
 
 		<section class="mt-16" aria-labelledby="author-posts">
