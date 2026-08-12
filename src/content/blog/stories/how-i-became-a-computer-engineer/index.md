@@ -83,7 +83,9 @@ Then I joined Kendriya Vidyalaya, one of the central government schools in India
 
 I took PCM with CS. And that is where the real struggle started.
 
-All the subjects were new. And I don't know why, but the teachers were cruel. Literally cruel. There was daily homework and daily classwork, and every other day you had to submit both notebooks for checking. For every subject. Managing all of that along with actual studying was too tough for me.
+All the subjects were new. And the teachers were strict. Very strict. Daily homework, daily classwork, and every other day you had to submit both notebooks for checking. For every subject.
+
+Looking back, I don't think the teachers were the problem. They were running the system they were handed, and that system measured you by how many notebooks you filled, not by how much you actually understood. Keeping up with all of it and studying on top of it was too much for me.
 
 I could not understand things on my own, so I joined coaching. It was 15 km away, so bus. And the timing was insane:
 
