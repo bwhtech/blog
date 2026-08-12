@@ -25,9 +25,9 @@ I was just a kid, so I did kid things. Counting the people I saw that day. Count
 
 Then one day the tutor noticed me.
 
-He asked me who I was waiting for. I pointed my hand toward the lab and said, "Papa aayenge, bhaiya padh rha hai." He asked, "Games khelte ho?" I said, "Nahi."
+He asked me who I was waiting for. I pointed my hand toward the lab and said, *"Papa aayenge, bhaiya padh rha hai."* (Papa will come, my brother is studying inside.) He asked, *"Games khelte ho?"* (Do you play games?) I said, *"Nahi."* (No.)
 
-He said, "Aao kuch dikhata hun."
+He said, *"Aao kuch dikhata hun."* (Come, let me show you something.)
 
 He pulled my hand and took me inside the lab, where everyone was busy with their practicals. He switched on a computer and started some space war game (I really don't remember the name of it 😅). But it was cool. He played one or two rounds. He told me to watch his hand on the mouse and his fingers on the keyboard. Then he helped me play it myself.
 
