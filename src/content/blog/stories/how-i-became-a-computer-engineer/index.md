@@ -251,7 +251,7 @@ Then they announced awards. And my name was called. Rising Star.
 
 ![Me receiving the Rising Star award at the Yashvitech first anniversary celebration](./yashvitech-risingstar.jpg)
 
-<figcaption>Rising Star, on Yashvitech's first anniversary. I came for the cake and walked out with this.</figcaption>
+<figcaption>Rising Star, on Yashvitech's first anniversary.</figcaption>
 </figure>
 
 The unpaid intern who was charged 8k for training. I did not see that coming at all.
