@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/generate-author-og.mjs && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "generate-og": "node scripts/generate-author-og.mjs"
@@ -17,9 +17,10 @@
     "astro": "^7.1.6"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.3.3",
-    "playwright": "^1.62.1",
+    "satori": "^0.29.0",
     "tailwindcss": "^4.3.3",
     "yaml": "^2.9.0"
   }
