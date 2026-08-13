@@ -20,17 +20,39 @@ const description = 'We solve problems with Frappe Framework and apps.';
 			<p class="max-w-[480px] text-p-lg text-ink-gray-6">We solve it, with Frappe.</p>
 		</div>
 
-		<svg
-			aria-hidden="true"
-			class="text-ink-gray-4"
-			width="40"
-			height="12"
-			viewBox="0 0 40 12"
-			fill="none"
-		>
-			<path d="M0 6H14" stroke="currentColor" stroke-width="1"></path>
-			<path d="M26 6H40" stroke="currentColor" stroke-width="1"></path>
-			<circle cx="20" cy="6" r="2.5" fill="currentColor"></circle>
-		</svg>
+		<div class="flex flex-col items-center gap-6">
+			<svg
+				aria-hidden="true"
+				class="text-ink-gray-4"
+				width="40"
+				height="12"
+				viewBox="0 0 40 12"
+				fill="none"
+			>
+				<path d="M0 6H14" stroke="currentColor" stroke-width="1"></path>
+				<path d="M26 6H40" stroke="currentColor" stroke-width="1"></path>
+				<circle cx="20" cy="6" r="2.5" fill="currentColor"></circle>
+			</svg>
+
+			<a
+				class="group inline-flex min-h-8 items-center gap-1.5 text-sm text-ink-gray-5 no-underline transition-colors hover:text-ink-gray-9"
+				href="/blog"
+			>
+				<span>Read the blog</span>
+				<svg
+					aria-hidden="true"
+					class="size-4 transition-transform group-hover:translate-x-0.5"
+					viewBox="0 0 24 24"
+					fill="none"
+				>
+					<path
+						d="M9 6l6 6-6 6"
+						stroke="currentColor"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"></path>
+				</svg>
+			</a>
+		</div>
 	</main>
 </BaseLayout>
