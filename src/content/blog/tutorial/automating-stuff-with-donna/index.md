@@ -3,7 +3,7 @@ title: "Automating the boring stuff w/ OpenClaw & ERPNext"
 description: "Learn how we automated our manual book-keeping and operational processes with an AI agent named Donna"
 author: hussain-nagaria
 tags: [Automations, ERPNext, OpenClaw, Hermes Agent]
-pubDate: 2026-08-12
+pubDate: 2026-08-13
 ---
 
 ## About our business
@@ -22,9 +22,11 @@ But this script had to be maintained and there were a few things (we will soon s
 
 Then came OpenClaw, and it clicked to me that this could be it, an AI accountant!
 
-## The Setup
+## What is OpenClaw?
 
-I got started in early April this year.
+OpenClaw (or similar: Hermes, nanoclaw, etc.) are a type of LLM-backed agents that are always-on running on a machine of your choice (local or cloud) and get things done for you. Instead of you using it via a custom UI (like chatgpt.com), you can connect your own communication channel and chat with it like an actual person. These agents also have a built-in system to "learn", i.e. create and manage memory.
+
+## The Setup
 
 OpenClaw needs a computer to run on, and given its always on nature, it made sense to host it on a cloud VM (and not buy a mac mini iykyk 😂). Although [OpenClaw setup](https://docs.openclaw.ai/install) is straight-forward and wizard based I did not want to do it manually. Hence, I provisioned a VM on Hetzner (4GB RAM/2 vCPU if curious), put my SSH keys, and fired up Claude Code to help me through it. It then hardened the machine with firewall, etc.
 
