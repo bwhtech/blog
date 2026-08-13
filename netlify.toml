@@ -32,6 +32,43 @@
   status = 301
   force = true
 
+# The desk, HRMS and Gameplan apps live on hq.bwh.tech, not on the site.
+[[redirects]]
+  from = "/desk"
+  to = "https://hq.bwh.tech/desk"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/desk/*"
+  to = "https://hq.bwh.tech/desk/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/hrms"
+  to = "https://hq.bwh.tech/hrms"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/hrms/*"
+  to = "https://hq.bwh.tech/hrms/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/g"
+  to = "https://hq.bwh.tech/g"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/g/*"
+  to = "https://hq.bwh.tech/g/:splat"
+  status = 301
+  force = true
+
 # Posts used to sit at the site root, before the root became the landing page.
 [[redirects]]
   from = "/announcements/*"
