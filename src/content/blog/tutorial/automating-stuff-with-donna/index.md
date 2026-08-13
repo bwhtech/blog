@@ -4,6 +4,7 @@ description: "Learn how we automated our manual book-keeping and operational pro
 author: hussain-nagaria
 tags: [Automations, ERPNext, OpenClaw, Hermes Agent]
 pubDate: 2026-08-13
+image: ./og.png
 ---
 
 ## About our business
@@ -59,6 +60,8 @@ The first instruction was to **take an approval** from me before replying to any
 Final step was to ask it to setup a scheduled (`CRON`) job to sync emails at a frequent interval and use `EMAIL.md` skill on it.
 
 ### Workspace Setup
+
+![Donna's Workspace Open in Obsidian](donna-workspace.png)
 
 Since OpenClaw was creating these files/SOPs, I should be able to review them without always SSHing into the VM. Here I implemented an idea I found on X: setup a Git repository of the OpenClaw workspace folder and sync every night to GitHub. Then I opened that repository in my Obsidian with the Git plugin which auto pulls changes. Now, if I want to look at all the files my agent has stored (or its brain so to say), I can just open up the Obsidian Vault.
 
