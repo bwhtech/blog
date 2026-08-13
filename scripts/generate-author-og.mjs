@@ -168,8 +168,8 @@ function buildHtml(author, fontUri) {
 </head>
 <body>
 	<div class="corners">
-		<div class="brand">BWH Tech</div>
-		<div class="domain">blog.bwh.tech</div>
+		<div class="brand">BWH</div>
+		<div class="domain">bwh.tech</div>
 	</div>
 	<div class="author">
 		<img class="avatar" src="${avatar}" />

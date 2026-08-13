@@ -16,7 +16,10 @@ pull request body. The person who asked for the work is the only author.
 
 ## Content
 
-Each post is a folder. The folder path is the post URL:
+The site root is the landing page. Posts live under the `/blog` prefix and
+author pages stay at `/author/<id>/`.
+
+Each post is a folder. The folder path is the post URL after `/blog/`:
 
 ```
 src/content/blog/<category>/<post-slug>/

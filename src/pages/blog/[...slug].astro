@@ -1,8 +1,8 @@
 ---
 import { type CollectionEntry, render } from 'astro:content';
 
-import BlogPostLayout from '../layouts/BlogPostLayout.astro';
-import { getLegacySlug, getPostRoute, getPublishedPosts } from '../utils/posts';
+import BlogPostLayout from '../../layouts/BlogPostLayout.astro';
+import { getLegacySlug, getPostHref, getPostRoute, getPublishedPosts } from '../../utils/posts';
 
 export async function getStaticPaths() {
 	const posts = await getPublishedPosts();
@@ -17,7 +17,7 @@ export async function getStaticPaths() {
 			},
 			{
 				params: { slug: getLegacySlug(post) },
-				props: { redirectTo: `/${route}/` },
+				props: { redirectTo: getPostHref(post) },
 			},
 		];
 	});

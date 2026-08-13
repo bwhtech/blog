@@ -1,6 +1,7 @@
-# BWH Tech Blog
+# BWH
 
-Static Astro blog for `blog.bwh.tech`, styled with Tailwind CSS 4 and Frappe UI's Espresso design tokens.
+Static Astro site for `bwh.tech`, styled with Tailwind CSS 4 and Frappe UI's Espresso design tokens. The
+landing page is the site root and the blog lives under `/blog`.
 
 ## Development
 
