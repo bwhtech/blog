@@ -8,6 +8,12 @@ astro dev --background
 
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
+## Commits
+
+Never add yourself as a co-author. Do not put a `Co-Authored-By` trailer, a
+generated-with note, or any other agent attribution in a commit message or a
+pull request body. The person who asked for the work is the only author.
+
 ## Content
 
 Each post is a folder. The folder path is the post URL:
@@ -40,6 +46,11 @@ reference them by absolute path.
 
 Renaming a category folder changes the post URL. Add a 301 to `netlify.toml`
 when that happens.
+
+A ` ```mermaid ` code block becomes a diagram. Astro leaves the block
+unhighlighted (`markdown.syntaxHighlight.excludeLangs` in `astro.config.mjs`)
+and `src/components/Mermaid.astro` renders it in the browser, matching the
+light or dark theme. Mermaid loads only on pages that contain a diagram.
 
 ## Documentation
 

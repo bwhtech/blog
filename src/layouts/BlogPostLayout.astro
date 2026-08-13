@@ -3,6 +3,7 @@ import { getEntry, type CollectionEntry } from 'astro:content';
 
 import CodeBlockCopy from '../components/CodeBlockCopy.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import Mermaid from '../components/Mermaid.astro';
 import { getAuthorRoute } from '../utils/posts';
 import BaseLayout from './BaseLayout.astro';
 
@@ -86,6 +87,7 @@ if (!authorEntry) throw new Error(`Author not found: ${author.id}`);
 			<div class="prose prose-v3 max-w-none">
 				<slot />
 			</div>
+			<Mermaid />
 			<CodeBlockCopy />
 		</article>
 	</main>

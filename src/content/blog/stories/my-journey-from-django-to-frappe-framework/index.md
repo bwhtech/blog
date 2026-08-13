@@ -244,7 +244,7 @@ This is not all, it has [Frappe Cloud Marketplace](https://frappecloud.com/marke
 
 > _Fix it, Fork it, F*ck off_
 
-Do whatever you want with your app, nobody cares (MIT liscensed), this makes Frappe a framework which is batteries-included and apps built on Frappe, truly plug-n-play. I personally created an app that gives you the ability to add a BNPL service Tabby. You can add this to any Frappe instance and it just works.
+Do whatever you want with your app, nobody cares (MIT licensed), this makes Frappe a framework which is batteries-included and apps built on Frappe, truly plug-n-play. I personally created an app that gives you the ability to add a BNPL service Tabby. You can add this to any Frappe instance and it just works.
 
 Now coming to deployment: you can either self-host or deploy it on Frappe Cloud for a seamless experience. Or you can self-host the cloud platform itself ([Frappe Press](https://github.com/frappe/press)). I don't know of any other framework or company that gives this much freedom.
 

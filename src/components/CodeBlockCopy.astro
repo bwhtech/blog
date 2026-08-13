@@ -5,7 +5,10 @@
 	document.addEventListener('astro:page-load', initializeCodeBlocks);
 
 	function initializeCodeBlocks() {
-		const codeBlocks = document.querySelectorAll('.prose-v3 pre:not([data-copy-ready])');
+		// Mermaid blocks become diagrams, not code — see src/components/Mermaid.astro.
+		const codeBlocks = document.querySelectorAll(
+			'.prose-v3 pre:not([data-copy-ready]):not(:has(code.language-mermaid))',
+		);
 
 		for (const codeBlock of codeBlocks) {
 			const code = codeBlock.querySelector('code');

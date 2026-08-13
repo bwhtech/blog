@@ -99,7 +99,7 @@ Sharique also unveiled the cool new visual workflow builder:
 
 ### Lower CPU & Memory Usage
 
-Slow and steady wins the race! The Framework team has been doing small optimisations that have added upto huge improvements in terms of memory and CPU usage:
+Slow and steady wins the race! The Framework team has been doing small optimisations that have added up to huge improvements in terms of memory and CPU usage:
 
 ![](./improvement_ff.jpeg)
 

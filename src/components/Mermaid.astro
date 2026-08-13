@@ -1,0 +1,93 @@
+---
+// Renders ```mermaid code blocks as diagrams.
+//
+// Astro leaves these blocks unhighlighted (see `markdown.syntaxHighlight.excludeLangs`
+// in astro.config.mjs), so the raw diagram source reaches the browser as plain text
+// inside <pre><code class="language-mermaid">. This component swaps each of those
+// blocks for the rendered SVG, and re-renders on a light/dark mode change.
+---
+
+<script>
+	const SELECTOR = '.prose-v3 pre > code.language-mermaid';
+
+	const darkMode = window.matchMedia('(prefers-color-scheme: dark)');
+	let diagrams = [];
+
+	render();
+	document.addEventListener('astro:page-load', render);
+	darkMode.addEventListener('change', render);
+
+	async function render() {
+		const blocks = document.querySelectorAll(SELECTOR);
+		if (blocks.length > 0) diagrams = [...blocks].map(replaceBlock);
+		if (diagrams.length === 0) return;
+
+		// Mermaid sizes nodes by measuring their label text, so the web font has to be
+		// loaded first or every label gets clipped.
+		await document.fonts.ready;
+
+		const { default: mermaid } = await import('mermaid');
+		mermaid.initialize({
+			startOnLoad: false,
+			theme: darkMode.matches ? 'dark' : 'default',
+			fontFamily: 'InterVar, ui-sans-serif, system-ui, sans-serif',
+		});
+
+		await Promise.all(diagrams.map((diagram, index) => draw(mermaid, diagram, index)));
+	}
+
+	// Takes a <code class="language-mermaid"> and returns the container that replaced
+	// its <pre>, with the diagram source kept for re-rendering on a theme change.
+	function replaceBlock(code) {
+		const container = document.createElement('div');
+		container.className = 'mermaid-diagram';
+		container.dataset.source = code.textContent ?? '';
+		code.parentElement.replaceWith(container);
+		return container;
+	}
+
+	async function draw(mermaid, container, index) {
+		const source = container.dataset.source ?? '';
+		try {
+			const { svg } = await mermaid.render(`mermaid-diagram-${index}`, source);
+			container.innerHTML = svg;
+			delete container.dataset.error;
+		} catch (error) {
+			console.error('Failed to render Mermaid diagram', error);
+			container.dataset.error = 'true';
+			container.textContent = source;
+		}
+	}
+</script>
+
+<style is:global>
+	.mermaid-diagram {
+		margin-block: 16px;
+		overflow-x: auto;
+		text-align: center;
+	}
+
+	.mermaid-diagram svg {
+		display: block;
+		height: auto;
+		max-width: 100%;
+		margin-inline: auto;
+	}
+
+	/* Mermaid measures label widths in a scratch container outside the prose
+	   wrapper, so the prose letter-spacing would push labels past their boxes. */
+	.mermaid-diagram,
+	.mermaid-diagram * {
+		letter-spacing: normal;
+	}
+
+	.mermaid-diagram[data-error] {
+		border-radius: 0.375rem;
+		background: var(--surface-gray-2);
+		padding: 0.75em 1em;
+		text-align: left;
+		font-family: ui-monospace, monospace;
+		font-size: 0.8571428571428571em;
+		white-space: pre-wrap;
+	}
+</style>
