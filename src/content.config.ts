@@ -3,12 +3,25 @@ import { file, glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 const authors = defineCollection({
-	loader: file('./src/data/authors.json'),
+	loader: file('./src/data/authors.yaml'),
 	schema: z.object({
 		id: z.string(),
 		name: z.string(),
 		avatar: z.string(),
+		/** Shown above the name on the author page, e.g. "Founder". */
+		role: z.string().optional(),
+		// Blank lines split the bio into paragraphs on the author page.
 		bio: z.string().optional(),
+		// Each key renders as an icon on the author page. Adding one means adding
+		// an icon to src/components/SocialLinks.astro too.
+		social: z
+			.object({
+				github: z.string().url(),
+				instagram: z.string().url(),
+				linkedin: z.string().url(),
+			})
+			.partial()
+			.optional(),
 	}),
 });
 
