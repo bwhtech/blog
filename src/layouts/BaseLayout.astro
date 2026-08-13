@@ -8,12 +8,23 @@ interface Props {
 	description: string;
 	author?: string;
 	image?: ImageMetadata;
+	/** A path under public/, for pages whose card is a pre-rendered OG image. */
+	ogImage?: string;
 	publishedTime?: Date;
 	tags?: string[];
 	type?: 'article' | 'website';
 }
 
-const { author, description, image, publishedTime, tags, title, type = 'website' } = Astro.props;
+const {
+	author,
+	description,
+	image,
+	ogImage,
+	publishedTime,
+	tags,
+	title,
+	type = 'website',
+} = Astro.props;
 const documentTitle = title === SITE_TITLE ? title : `${title} · ${SITE_TITLE}`;
 ---
 
@@ -25,6 +36,7 @@ const documentTitle = title === SITE_TITLE ? title : `${title} · ${SITE_TITLE}`
 			description={description}
 			author={author}
 			image={image}
+			ogImage={ogImage}
 			publishedTime={publishedTime}
 			tags={tags}
 			type={type}
