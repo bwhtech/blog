@@ -2,9 +2,14 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 
 import { CATEGORIES, type CategorySlug } from '../consts';
 
-/** Post ids are `<category>/<slug>`, which is also the post route. */
+/** Post ids are `<category>/<slug>`, which is the route under `src/pages/blog/`. */
 export function getPostRoute(post: CollectionEntry<'blog'>) {
 	return post.id;
+}
+
+/** The full site path of a post. Posts live under `/blog/`; the site root is the landing page. */
+export function getPostHref(post: CollectionEntry<'blog'>) {
+	return `/blog/${getPostRoute(post)}/`;
 }
 
 /** The bare slug the post was published under before categories existed. */
