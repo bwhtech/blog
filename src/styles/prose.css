@@ -8,12 +8,12 @@
 	--tw-prose-bullets: var(--ink-gray-4);
 	--tw-prose-hr: var(--ink-gray-3);
 	--tw-prose-quotes: var(--ink-gray-8);
-	--tw-prose-quote-borders: var(--ink-gray-3);
+	--tw-prose-quote-borders: var(--outline-gray-4);
 	--tw-prose-captions: var(--ink-gray-4);
 	--tw-prose-kbd: var(--ink-gray-9);
 	--tw-prose-code: var(--ink-gray-9);
-	--tw-prose-pre-code: var(--ink-gray-1);
-	--tw-prose-pre-bg: var(--ink-gray-8);
+	--tw-prose-pre-code: var(--ink-gray-8);
+	--tw-prose-pre-bg: var(--surface-gray-2);
 	--tw-prose-th-borders: var(--ink-gray-3);
 	--tw-prose-td-borders: var(--ink-gray-2);
 }
@@ -46,7 +46,7 @@
 	--tw-prose-body: var(--ink-gray-7);
 	--tw-prose-bold: var(--ink-gray-8);
 	--tw-prose-quotes: var(--ink-gray-7);
-	--tw-prose-quote-borders: var(--ink-gray-3);
+	--tw-prose-quote-borders: var(--outline-gray-4);
 	--tw-prose-kbd: var(--ink-gray-8);
 	--tw-prose-code: var(--ink-gray-8);
 	font-size: var(--prose-font-size, 15px);
@@ -103,11 +103,36 @@
 	font-weight: inherit;
 }
 
+/*
+ * Shiki runs with `defaultColor: false` (see astro.config.mjs), so highlighted
+ * blocks carry no colour of their own — each token exposes a --shiki-light and a
+ * --shiki-dark custom property and the stylesheet picks one. The surface comes
+ * from --tw-prose-pre-bg, so a code block sits on the same Frappe surface as
+ * inline code in both colour schemes.
+ */
+.prose-v3 .astro-code,
+.prose-v3 .astro-code span {
+	color: var(--shiki-light);
+	font-style: var(--shiki-light-font-style, inherit);
+	font-weight: var(--shiki-light-font-weight, inherit);
+	text-decoration: var(--shiki-light-text-decoration, inherit);
+}
+
+@media (prefers-color-scheme: dark) {
+	.prose-v3 .astro-code,
+	.prose-v3 .astro-code span {
+		color: var(--shiki-dark);
+		font-style: var(--shiki-dark-font-style, inherit);
+		font-weight: var(--shiki-dark-font-weight, inherit);
+		text-decoration: var(--shiki-dark-text-decoration, inherit);
+	}
+}
+
 .prose-v3 blockquote {
 	margin-block: 16px;
 	border-inline-start-width: 2px;
 	border-inline-start-style: solid;
-	border-inline-start-color: var(--ink-gray-3);
+	border-inline-start-color: var(--outline-gray-4);
 	padding-inline-start: 1em;
 	color: var(--ink-gray-6);
 	font-style: normal;
