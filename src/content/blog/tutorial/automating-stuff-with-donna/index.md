@@ -25,11 +25,15 @@ Then came OpenClaw, and it clicked to me that this could be it, an AI accountant
 
 ## What is OpenClaw?
 
-OpenClaw (or similar: Hermes, nanoclaw, etc.) are a type of LLM-backed agents that are always-on running on a machine of your choice (local or cloud) and get things done for you. Instead of you using it via a custom UI (like chatgpt.com), you can connect your own communication channel and chat with it like an actual person. These agents also have a built-in system to "learn", i.e. create and manage memory.
+OpenClaw (or similar: Hermes, nanoclaw, etc.) are a type of LLM-backed agents that are always-on running on a machine of your choice (local or cloud) and get things done for you. It is an agent harness. Instead of you using it via a custom UI (like chatgpt.com), you can connect your own communication channel and chat with it like an actual person. These agents also have a built-in system to "learn", i.e. create and manage memory.
 
 ## The Setup
 
-OpenClaw needs a computer to run on, and given its always on nature, it made sense to host it on a cloud VM (and not buy a mac mini iykyk 😂). Although [OpenClaw setup](https://docs.openclaw.ai/install) is straight-forward and wizard based I did not want to do it manually. Hence, I provisioned a VM on Hetzner (4GB RAM/2 vCPU if curious), put my SSH keys, and fired up Claude Code to help me through it. It then hardened the machine with firewall, etc.
+OpenClaw needs a computer to run on, and given its always on nature, it made sense to host it on a cloud VM (and not buy a mac mini iykyk 😂). Although [OpenClaw setup](https://docs.openclaw.ai/install) is straight-forward and wizard based I did not want to do it manually. Hence, I provisioned a VM on Hetzner, put my SSH keys, and fired up Claude Code to help me through it. 
+
+![Screenshot of Hetzner's Console](vm-on-hetzner.png)
+
+It then hardened the machine with firewall, etc.
 
 The next important piece of the setup wizard is to configure a chat channel through which you will interact with the OpenClaw agent. We chose **Telegram** because that is where we have our team communications. You can connect WhatsApp, Slack, and many more.
 
@@ -44,6 +48,10 @@ Once the initial setup is done, rest of the things can now be done by chatting w
 To test the basic setup, I asked Donna to say hello to the team:
 
 ![Introduction Email to Team](hi-email.png)
+
+Apparently, Rahul from our team did not like her:
+
+![Rahul's email reply to Donna](rahul-reply.png)
 
 ## Training
 
@@ -61,9 +69,11 @@ Final step was to ask it to setup a scheduled (`CRON`) job to sync emails at a f
 
 ### Workspace Setup
 
-![Donna's Workspace Open in Obsidian](donna-workspace.png)
+![GitHub Repo](donna-ws-on-github.png)
 
-Since OpenClaw was creating these files/SOPs, I should be able to review them without always SSHing into the VM. Here I implemented an idea I found on X: setup a Git repository of the OpenClaw workspace folder and sync every night to GitHub. Then I opened that repository in my Obsidian with the Git plugin which auto pulls changes. Now, if I want to look at all the files my agent has stored (or its brain so to say), I can just open up the Obsidian Vault.
+Since OpenClaw was creating these files/SOPs, I should be able to review them without always SSHing into the VM. Here I implemented an idea I found on X: setup a Git repository of the OpenClaw workspace folder and sync every night to GitHub. Then I opened that repository in my Obsidian with the Git plugin which auto pulls changes. Now, if I want to look at all the files my agent has stored (or its brain so to say), I can just open up the Obsidian Vault:
+
+![Donna's Workspace Open in Obsidian](donna-workspace.png)
 
 ## First Automation: Account Payables / Purchases
 
@@ -77,6 +87,12 @@ Here is the important tip: **start with one**. *One* email, *one* invoice, *one*
 
 Once you are happy with it, then we can ask it to create an SOP (and one more thing which is covered in the next section) out of the learnings it just had. Then we can send it more pending invoices lying around in our inbox. Once confident enough, we will ask it to add it to our `EMAIL.md`.
 
+## Human in the Loop
+
+During the initial stages you might want to approve submitting of transactions after a review, I asked Donna to ask Shivam "ji" for approval via email:
+
+![Donna asking approval to Shivam on Email](shivam-in-the-loop.png)
+
 ## Bringing Determinism to Probabilistic Machines
 
 If you give a certain prompt to an agent (LLM), it might not give you the same output each time even if the prompt remains same, because LLMs are probabilistic machines. But we need determinism in how things should be tackled: creation of documents in ERPNext, sending of sales invoice on email, etc.
@@ -88,6 +104,8 @@ But code is deterministic, so we ask our agent to generate scripts for all SOPs!
 We also get an important benefit by having the agent write scripts, we are **not wasting tokens on figuring out and doing the same thing**. Analogous to the DRY principle in programming.
 
 ## Tackling Piece by Piece
+
+![Training Process](training-process.png)
 
 The above process took a few hours. Then I started to look for what else we can automate. Next I automated Sales Invoices: first retainers (created on a monthly schedule), then I connected our LMS instance ([BWH School](https://buildwithhussain.com/school)) to create (and send) invoices for payments done for cohorts and courses. This took even less time to setup since a lot of ground work was already there. 
 
@@ -107,7 +125,7 @@ Scripts and all is fine, but one fine day Donna replied to a customer and sorted
 
 If you have given your agent enough relevant context, you might be surprised with the results.
 
-## Use-case 2: Razorpay Settlements
+## More impact: Razorpay Settlements
 
 We use Razorpay as our online payment gateway. It is used by [BWH School](https://buildwithhussain.com/school) and also by a few of our foreign services clients.
 
@@ -136,6 +154,10 @@ flowchart TD
 
 You did not read through all of it, did you? 😂
 
+Basically the end-to-end process needs multiple entries:
+
+![Razorpay Payment to Settlement Entries](razorpay-entries.png)
+
 It is a bit complex. Customer pays Razorpay, it settles the amount to our bank in some frequency after deducting gateway charges and currency conversions and can aggregate multiple payments. For this to be nicely entered into ERPNext, we need to do multiple entries, even more if currency conversion is involved. And data came from the Razorpay dashboard (manually checked) regarding the charges and taxes on those charges.
 
 Before agents, I would have had to write an integration that would pull in data from Razorpay and a complicated script that would look at different scenarios of currency and whatnot and then pick proper accounts and stuff. It would have taken me a good amount of time, but we have agents now, right?
@@ -150,7 +172,7 @@ I prompted my way through it, and then at the end of it, the result was a nice s
 
 ![Telegram Message from Donna](rzp-tg-message.png)
 
-Yay, this has been the most satisfying automation till date for me!
+Yay, this has been the most satisfying automation till date for me! **There was a 6 month backlog of these entries and Donna cleared it in minutes!**
 
 > BTW, If you also want to setup your very own "Donna" for your business, we can help you out, drop me an email at hussain@bwh.tech.
 
@@ -160,18 +182,16 @@ After book keeping was going smooth, we figured we can use Donna to get even mor
 
 ![Donna posts on Gameplan](donna-gp-thread.png)
 
-I do this ["What's new in Frappe Framework?"](https://youtube.com/playlist?list=PLQGFK8RiEPSKfflSujB1GQiKk-MhbVE87&si=C_uYYm7pp69YAUP-) video series every month and need to stay updated with all the new features getting merged in Frappe Framework, so Donna goes through all feature PRs merged in the past month and sends me a summary of relevant ones for my video. Claude Code edits our videos these days, crazy time to be alive!
+I do this ["What's new in Frappe Framework?"](https://youtube.com/playlist?list=PLQGFK8RiEPSKfflSujB1GQiKk-MhbVE87&si=C_uYYm7pp69YAUP-) video series every month and need to stay updated with all the new features getting merged in Frappe Framework, so Donna goes through all feature PRs merged in the past month and sends me a summary of relevant ones for my video. Claude Code edits our videos these days (using the `video-use` and `hyperframes` skills), crazy time to be alive!
 
 ## Conclusion & Future Ideas
 
 With this all in place, the biggest benefit I feel is the ability to chat with the agent to now get things done: send me a PDF of a quotation for X, give me pending receivables, create a new gameplan post every week, etc.
 
-I would replace OpenClaw with [Hermes](https://github.com/nousresearch/hermes-agent) though. I feel it is maturing fast and has a better "image" in terms of security.
+I would replace OpenClaw with [Hermes](https://github.com/nousresearch/hermes-agent) though. I feel it is maturing fast and is better in terms of security.
+
+One other thing I did was to invite Donna to a group chat so team could directly work with Donna instead of me being her only point of contact:
+
+![Jatin tagging Donna in Telegram Group](donna-in-group.png)
 
 Hope this post was helpful, feel free to send your questions to hussain@bwh.tech, will be happy to answer.
-
----
-
-## Bloopers
-
-![Rahul's email reply to Donna](rahul-reply.png)
