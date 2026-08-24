@@ -207,6 +207,39 @@ It used proper Frappe UI components like charts, lists, etc. to create slick fro
 
 I think this is an interesting direction: prompt your own custom UIs or customize standard UI shipped with apps (like Frappe Helpdesk customer portal, that is being rebuilt on Frappe Studio). If done right, this will be even more flexible than the desk customisations!
 
+### Frappe CLI, Frappe Flow, and LLMs
+
+Ankush and Shrihari showed what Frappe has been up to in terms of agentic tools. Ankush has developed the `frappectl` CLI, which can act as a nice tool for any harness to interact with a Frappe instance:
+
+![Ankush showing frappectl + pi](./frappectl-ankush.png)
+
+They did not stop there, they are working on an experimental home-grown agent harness called **Frappe Flow**.
+
+![Frappe Flow Chat](./frappe-flow.png)
+
+The above screenshot shows **flow** chat having generative Frappe UI components! Along with the chat UI it has a server with tools. Shrihari even mentioned he has been building Flow with Flow! 🤯 (DocType is a DocType!)
+
+### Agentic Development for Non-devs
+
+Once Asif built Sheets using AI, other non-coding people at Frappe also started bringing their own ideas to life. Vibhav and Neha gave a nice presentation on what they have built.
+
+Vibhav built Frappe Draw and [frappe.tools](https://frappe.tools) (this was a surprise!). Frappe Draw is a full-fledged wireframing, mind-map, and flowcharting tool, built with Frappe UI.
+
+![Vibhav showing off Frappe Toolbox](./vibhav-frappe-tools.png)
+
+frappe.tools is backed by Frappe Toolbox app which has lots of everyday use tools like a GST calculator, converters, voice recorders, etc.
+
+Neha showed two interesting things:
+
+1. How she improved the ERPNext documentation with the help of Codex:
+    ![The new technical writer at Frappe](./neha-docs-agent.png)
+
+2. An upload-first experience for Purchase Invoice, etc. Upload a PDF, ERPNext extracts data, and you can review and create the documents. There is also a document queue:
+    ![Document Queue in ERPNext](./document-queue-erpnext.png)
+
+This started as a separate app but will be included in ERPNext core later this year.
+
+
 ### The Trivia
 
 ![Trivia Contest at Frappeverse 2026](./quizzly-at-fv.png)
@@ -217,6 +250,10 @@ Congratulations Vishwajeet from our team for being one of the winners, his gener
 
 ![Chiku winning Frappeverse Trivia with username "Winner"](./vishwajeet-the-winner.png)
 
+## Meeting the community
+
+This remains an important reason for my visit to the conference. Meeting as many community members as possible: some new, many familiar faces! Thank you to all those who support BWH. I am glad the videos are making a difference.
+
 ## The future is bright
 
 ![Rushabh, Hussain, Frappe, CS17 team](./the-future.jpeg)
@@ -225,9 +262,13 @@ What do you see in the above image? Let me explain.
 
 On one side you see Rushabh having a discussion with [CS17](https://cs17.org) students, and on the other me having a discussion with the students in the Frappe apprentice program. What a coincidence!
 
-## Meeting the community
+## That is a wrap
 
-This remains an important reason for my visit to the conference. Meeting as many community members as possible: some new, many familiar faces! Thank you to all those who support BWH. I am glad the videos are making a difference.
+The two days of awesomeness wrapped up with Frappe's traditional open mic with the community sharing their thoughts and feedback.
+
+![Community Open Mic at Frappeverse 2026](./community-open-mic.png)
+
+The discussion ended with a proposal to let the community be part of the organising committee, and to hold Frappeverse in a different location next year. There is a poll live on LinkedIn with Mumbai, Bangalore, and Goa (😆) as options for this.
 
 ## Conclusion
 
