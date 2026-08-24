@@ -225,6 +225,10 @@ What do you see in the above image? Let me explain.
 
 On one side you see Rushabh having a discussion with [CS17](https://cs17.org) students, and on the other me having a discussion with the students in the Frappe apprentice program. What a coincidence!
 
+## Meeting the community
+
+This remains an important reason for my visit to the conference. Meeting as many community members as possible: some new, many familiar faces! Thank you to all those who support BWH. I am glad the videos are making a difference.
+
 ## Conclusion
 
 Apart from this, there were a lot of interesting community sessions where members shared their experience solving problems with Frappe/ERPNext. I recommend skimming through the livestreams to watch talks that you might find interesting. Shivam and Rahul from our team also shared a story of one of our implementation failures and how we recovered from it!
