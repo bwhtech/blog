@@ -3,6 +3,10 @@ dist/
 
 # generated types and local platform state
 .astro/
+# written by unplugin-auto-import / unplugin-vue-components, via frappe-ui's
+# lucideIcons() plugin, on every dev start and build
+auto-imports.d.ts
+components.d.ts
 .netlify/
 deno.lock
 

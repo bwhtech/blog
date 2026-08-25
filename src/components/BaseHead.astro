@@ -36,6 +36,31 @@ const socialImage = socialCard && Astro.site ? new URL(socialCard.src, Astro.sit
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!--
+  frappe-ui reads the active scheme off `[data-theme]` on <html>, not off a
+  media query, so the attribute has to be stamped before first paint or every
+  page flashes light. Contract matches frappe-ui's `useColorScheme`: the stored
+  preference is 'light' | 'dark' | 'system', and only the resolved value is
+  written to the attribute.
+-->
+<script is:inline>
+	(() => {
+		const stored = localStorage.getItem('theme');
+		const preference = stored === 'light' || stored === 'dark' ? stored : 'system';
+		const resolve = () =>
+			preference === 'system'
+				? matchMedia('(prefers-color-scheme: dark)').matches
+					? 'dark'
+					: 'light'
+				: preference;
+		document.documentElement.dataset.theme = resolve();
+		if (preference === 'system') {
+			matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+				document.documentElement.dataset.theme = resolve();
+			});
+		}
+	})();
+</script>
 <meta name="generator" content={Astro.generator} />
 <meta name="description" content={description} />
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />

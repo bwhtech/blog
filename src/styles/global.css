@@ -1,33 +1,30 @@
-@import 'tailwindcss';
-@import './espresso.css';
-@import './prose.css';
-@plugin '@tailwindcss/typography';
+@import './fonts.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* prose.css is NOT imported here. It retunes the typography plugin's `.prose`
+   variables, and both live at the same specificity, so it only wins if it is
+   emitted after the components layer. BaseLayout imports it right after this
+   file to guarantee that order. */
+
+/* Everything the blog used to declare here — the Inter stack, `opsz`/`cv11`
+   variation settings, font smoothing, the relaxed line-height on bare `<p>`,
+   and the `:focus-visible` ring — now comes from frappe-ui's Tailwind plugin
+   base layer, as do the `--surface-*` / `--ink-*` variables read below. Only
+   what the plugin does not cover stays here. */
 
 html {
 	background: var(--surface-base);
-	font-family: InterVar, ui-sans-serif, system-ui, sans-serif;
-	font-optical-sizing: auto;
 	scrollbar-gutter: stable;
+	/* frappe-ui swaps tokens on [data-theme], so the UA has to be told which
+	   scheme is live or form controls and scrollbars stay light. */
+	color-scheme: light;
 }
 
-html,
-body,
-button,
-p,
-span,
-div {
-	font-variation-settings: 'opsz' 24, 'cv11' 1;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-
-p:not(:where(.prose, .ProseMirror) *) {
-	line-height: 1.5;
-}
-
-:focus-visible {
-	outline: var(--focus-outline-default);
-	outline-offset: 0;
+html[data-theme='dark'] {
+	color-scheme: dark;
 }
 
 ::selection {

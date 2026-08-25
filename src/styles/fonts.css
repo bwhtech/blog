@@ -1,0 +1,46 @@
+/* Self-hosted Inter. frappe-ui ships its own copy via frappe-ui/style.css, but
+   the blog serves these two variable files from src/assets so Astro can
+   fingerprint and preload them. */
+@font-face {
+	font-family: 'InterVar';
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src:
+		url('../assets/fonts/Inter.var.woff2') format('woff2-variations'),
+		url('../assets/fonts/Inter.var.woff2') format('woff2');
+	src: url('../assets/fonts/Inter.var.woff2') format('woff2') tech('variations');
+}
+
+@font-face {
+	font-family: 'InterVar';
+	font-style: italic;
+	font-weight: 100 900;
+	font-display: swap;
+	src:
+		url('../assets/fonts/Inter-Italic.var.woff2') format('woff2-variations'),
+		url('../assets/fonts/Inter-Italic.var.woff2') format('woff2');
+	src: url('../assets/fonts/Inter-Italic.var.woff2') format('woff2') tech('variations');
+}
+
+@font-face {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src:
+		url('../assets/fonts/Inter.var.woff2') format('woff2-variations'),
+		url('../assets/fonts/Inter.var.woff2') format('woff2');
+	src: url('../assets/fonts/Inter.var.woff2') format('woff2') tech('variations');
+}
+
+@font-face {
+	font-family: 'Inter';
+	font-style: italic;
+	font-weight: 100 900;
+	font-display: swap;
+	src:
+		url('../assets/fonts/Inter-Italic.var.woff2') format('woff2-variations'),
+		url('../assets/fonts/Inter-Italic.var.woff2') format('woff2');
+	src: url('../assets/fonts/Inter-Italic.var.woff2') format('woff2') tech('variations');
+}

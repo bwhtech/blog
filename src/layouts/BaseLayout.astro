@@ -2,6 +2,9 @@
 import BaseHead from '../components/BaseHead.astro';
 import { SITE_TITLE } from '../consts';
 import '../styles/global.css';
+// After global.css on purpose: prose.css overrides `.prose` variables that the
+// typography plugin sets at the same specificity, so it has to come later.
+import '../styles/prose.css';
 
 interface Props {
 	title: string;

@@ -1,6 +1,30 @@
 // @ts-check
-import tailwindcss from '@tailwindcss/vite';
+import { createRequire } from 'node:module';
+import vue from '@astrojs/vue';
 import { defineConfig } from 'astro/config';
+import { barrelImports, lucideIcons } from 'frappe-ui/vite';
+
+/**
+ * frappe-ui's barrel imports `dayjs/esm`, and that import survives tree-shaking
+ * because the module calls `dayjs.extend()` at load time. `dayjs/esm/index.js`
+ * in turn imports `./constant` with no file extension — legal for a bundler,
+ * rejected by Node's ESM resolver, which is what renders the pages at build
+ * time. `ssr.noExternal` does not reach it, so resolve the subtree to absolute
+ * file paths: a non-bare id is never externalised, and its relative imports
+ * then go through Vite's own extension-guessing resolver.
+ */
+function bundleDayjsEsm() {
+	const require = createRequire(import.meta.url);
+	return {
+		name: 'bundle-dayjs-esm',
+		enforce: 'pre',
+		resolveId(source) {
+			if (source !== 'dayjs/esm' && !source.startsWith('dayjs/esm/')) return null;
+			// CommonJS resolution, which fills in the `/index.js` the ESM one refuses to.
+			return { id: require.resolve(source), external: false };
+		},
+	};
+}
 
 // https://astro.build/config
 export default defineConfig({
@@ -8,6 +32,9 @@ export default defineConfig({
 	devToolbar: {
 		enabled: false,
 	},
+	integrations: [
+		vue({ devtools: false }),
+	],
 	markdown: {
 		syntaxHighlight: {
 			type: 'shiki',
@@ -26,6 +53,19 @@ export default defineConfig({
 		},
 	},
 	vite: {
-		plugins: [tailwindcss()],
+		plugins: [
+			bundleDayjsEsm(),
+			// Keeps `import { Button } from 'frappe-ui'` in source but resolves it to
+			// the declaring module, so dev never serves the whole barrel.
+			barrelImports(),
+			// frappe-ui templates use `<LucideChevronDown />` with no import.
+			lucideIcons(),
+		],
+		// frappe-ui ships raw .ts/.vue, so Vite has to compile it for the SSG render
+		// rather than hand it to Node as a prebuilt external. dayjs is listed for the
+		// same reason bundleDayjsEsm exists; the dev server needs both.
+		ssr: { noExternal: ['frappe-ui', 'dayjs'] },
+		// Not pre-bundlable: the dep optimiser cannot read .vue source.
+		optimizeDeps: { exclude: ['frappe-ui'] },
 	},
 });

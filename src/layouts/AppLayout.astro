@@ -1,0 +1,27 @@
+---
+import '../styles/islands.css';
+import BaseLayout from './BaseLayout.astro';
+
+/**
+ * BaseLayout plus the frappe-ui utility sheet. Any page that mounts a Vue
+ * island has to use this layout, otherwise Tailwind never emits the classes
+ * frappe-ui's components render with and the island paints unstyled.
+ */
+interface Props {
+	title: string;
+	description: string;
+	author?: string;
+	image?: ImageMetadata;
+	/** A path under public/, for pages whose card is a pre-rendered OG image. */
+	ogImage?: string;
+	publishedTime?: Date;
+	tags?: string[];
+	type?: 'article' | 'website';
+}
+
+const props = Astro.props;
+---
+
+<BaseLayout {...props}>
+	<slot />
+</BaseLayout>

@@ -1,0 +1,20 @@
+---
+import FrappeUIDemo from '../components/islands/FrappeUIDemo.vue';
+import AppLayout from '../layouts/AppLayout.astro';
+
+const title = 'Playground';
+const description = 'frappe-ui components running as a Vue island on a static Astro page.';
+---
+
+<AppLayout title={title} description={description}>
+	<main id="main-content" class="mx-auto w-full max-w-[770px] px-4 pb-32 pt-6 sm:px-5 sm:pt-20">
+		<header class="mb-12 border-b border-outline-gray-1 pb-8">
+			<h1 class="text-4xl-semibold text-ink-gray-9">{title}</h1>
+			<p class="mt-3 text-p-lg text-ink-gray-6">{description}</p>
+		</header>
+
+		<!-- client:load: the island is interactive from the first paint. Swap to
+		     client:visible for anything further down a long page. -->
+		<FrappeUIDemo client:load />
+	</main>
+</AppLayout>

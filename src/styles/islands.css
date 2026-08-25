@@ -1,0 +1,8 @@
+@config '../../tailwind.islands.config.js';
+
+/* Utilities for the frappe-ui components themselves. Kept out of global.css so
+   that the 40 static blog pages do not download them.
+   No `@tailwind base`: preflight and the token variables are emitted once by
+   global.css and apply document-wide. */
+@tailwind components;
+@tailwind utilities;

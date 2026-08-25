@@ -55,6 +55,40 @@ unhighlighted (`markdown.syntaxHighlight.excludeLangs` in `astro.config.mjs`)
 and `src/components/Mermaid.astro` renders it in the browser, matching the
 light or dark theme. Mermaid loads only on pages that contain a diagram.
 
+## Styling and Vue islands
+
+Every design token comes from `frappe-ui` — the Espresso palette, the semantic
+`surface-*` / `ink-*` / `outline-*` colours, the radius scale, the elevation and
+focus effects, and the `text-<size>-<weight>` / `text-p-*` type utilities. They
+are not copied into this repo. `tailwind.config.js` spreads
+`frappe-ui/tailwind`'s preset; upgrading the package upgrades the tokens.
+
+This pins the blog to Tailwind v3. frappe-ui ships a v3 preset and plugin and
+has no v4 support, so do not upgrade Tailwind until it does.
+
+Dark mode is `[data-theme="dark"]` on `<html>`, not a media query. An inline
+script in `BaseHead.astro` stamps it before first paint, using the same
+`localStorage.theme` contract as frappe-ui's `useColorScheme` (`light` | `dark` |
+`system`). Anything reading the scheme must read the attribute.
+
+`src/styles/prose.css` retunes `.prose` variables that the typography plugin
+sets at the same specificity, so it is imported *after* `global.css` in
+`BaseLayout.astro` rather than from inside it. Moving it earlier silently breaks
+code-block colours in dark mode.
+
+Vue islands live in `src/components/islands/` and their pages must use
+`AppLayout.astro`, not `BaseLayout.astro`. AppLayout adds `src/styles/islands.css`,
+a second Tailwind pass (`tailwind.islands.config.js`) that scans frappe-ui's own
+source *and* the island sources. Without it the island renders unstyled; putting
+those globs in the main config instead would add ~29 kB gzip of unused utilities
+to all 40 static pages. For the same reason `tailwind.config.js` excludes
+`src/components/islands/**` — the islands pass already covers it.
+
+`src/pages/playground.astro` is the working reference for an island. Component
+demos under `src/components/islands/stories/` are copied from the matching file
+in `node_modules/frappe-ui/src/components/<Name>/stories/`; each names its source
+in a comment so it can be re-synced after an upgrade.
+
 ## Documentation
 
 Full documentation: https://docs.astro.build
