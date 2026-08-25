@@ -7,14 +7,15 @@
 -->
 <script setup lang="ts">
 import { Alert, FrappeUIProvider } from 'frappe-ui';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 import { type PublicComment, fetchEngagement, likePost, messageOf } from './engagement/api';
 import CommentForm from './engagement/CommentForm.vue';
 import CommentList from './engagement/CommentList.vue';
+import CommentPrompt from './engagement/CommentPrompt.vue';
 import CommentSkeleton from './engagement/CommentSkeleton.vue';
 import LikeButton from './engagement/LikeButton.vue';
-import { hasLiked, markLiked } from './engagement/likedPosts';
+import { hasLiked, markLiked, readCommenter } from './engagement/likedPosts';
 
 const props = defineProps<{ postId: string }>();
 
@@ -31,6 +32,14 @@ const liked = ref(false);
 const likeBusy = ref(false);
 const comments = ref<PublicComment[]>([]);
 const errorMessage = ref('');
+/**
+ * The form is collapsed behind a prompt only while a post has no comments. Once
+ * there is a thread to join, it stays open — so `showForm` is the prompt having
+ * been clicked, or there being comments already.
+ */
+const formOpen = ref(false);
+const commenterName = ref('');
+const showForm = computed(() => comments.value.length > 0 || formOpen.value);
 
 async function load() {
 	state.value = 'loading';
@@ -48,6 +57,7 @@ async function load() {
 onMounted(async () => {
 	mounted.value = true;
 	liked.value = hasLiked(props.postId);
+	commenterName.value = readCommenter().name;
 	await load();
 });
 
@@ -99,13 +109,24 @@ function onPosted(comment: PublicComment) {
 				<Alert v-else-if="state === 'error'" theme="red" title="Comments could not be loaded">
 					{{ errorMessage }}
 				</Alert>
-				<CommentList v-else :comments="comments" />
+				<template v-else>
+					<CommentList v-if="comments.length" :comments="comments" />
+					<!-- Rendered only after mount: it keeps the honeypot out of the
+					     built HTML, dodges any id mismatch between the static render
+					     and hydration inside FormControl, and starts the form's
+					     submit-timing clock when it is actually opened. -->
+					<template v-if="mounted">
+						<CommentForm
+							v-if="showForm"
+							:class="comments.length ? 'mt-8' : ''"
+							:post-id="postId"
+							:autofocus="formOpen"
+							@posted="onPosted"
+						/>
+						<CommentPrompt v-else :name="commenterName" @open="formOpen = true" />
+					</template>
+				</template>
 			</div>
-
-			<!-- Rendered only after mount: it keeps the honeypot out of the built
-			     HTML, and dodges any id mismatch between the static render and
-			     hydration inside FormControl. -->
-			<CommentForm v-if="mounted" class="mt-8" :post-id="postId" @posted="onPosted" />
 		</section>
 	</FrappeUIProvider>
 </template>

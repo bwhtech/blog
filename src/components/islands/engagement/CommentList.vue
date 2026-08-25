@@ -13,13 +13,7 @@ defineProps<{ comments: PublicComment[] }>();
 </script>
 
 <template>
-	<div v-if="!comments.length" class="flex flex-col items-center justify-center gap-3 py-8">
-		<LucideMessageCircle class="h-7 w-7 text-ink-gray-4" />
-		<span class="text-md font-medium text-ink-gray-8">No comments yet</span>
-		<span class="text-p-sm text-ink-gray-5">Be the first to say something.</span>
-	</div>
-
-	<ul v-else class="flex flex-col">
+	<ul class="flex flex-col">
 		<li
 			v-for="(comment, index) in comments"
 			:key="comment.id"

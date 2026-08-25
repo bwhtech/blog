@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Avatar, Button, ErrorMessage, FormControl } from 'frappe-ui';
-import { computed, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue';
 
 import {
 	type FieldErrors,
@@ -11,7 +11,9 @@ import {
 } from './api';
 import { readCommenter, saveCommenter } from './likedPosts';
 
-const props = defineProps<{ postId: string }>();
+const props = withDefaults(defineProps<{ postId: string; autofocus?: boolean }>(), {
+	autofocus: false,
+});
 const emit = defineEmits<{ posted: [comment: PublicComment] }>();
 
 const BODY_MAX = 2000;
@@ -34,11 +36,21 @@ const posted = ref(false);
 /** Set on mount, so the server can reject a form submitted faster than a person could read it. */
 let shownAt = 0;
 
-onMounted(() => {
+const formEl = useTemplateRef<HTMLFormElement>('formEl');
+
+onMounted(async () => {
 	shownAt = performance.now();
 	const remembered = readCommenter();
 	name.value = remembered.name;
 	email.value = remembered.email;
+
+	// Opened from the collapsed prompt, so the click was intent to write. Land
+	// on the first field they still have to fill rather than the top of a form
+	// whose name and email are already remembered.
+	if (!props.autofocus) return;
+	await nextTick();
+	const target = name.value && email.value ? 'textarea' : 'input';
+	formEl.value?.querySelector<HTMLElement>(target)?.focus();
 });
 
 const remaining = computed(() => BODY_MAX - body.value.length);
@@ -75,7 +87,11 @@ async function submit() {
 </script>
 
 <template>
-	<form class="rounded-6 border border-outline-gray-2 bg-surface-base p-4" @submit.prevent="submit">
+	<form
+		ref="formEl"
+		class="rounded-6 border border-outline-gray-2 bg-surface-base p-4"
+		@submit.prevent="submit"
+	>
 		<div class="mb-4 flex items-center gap-2">
 			<Avatar :label="name || '?'" size="md" />
 			<span class="min-w-0 flex-1 truncate text-base font-medium text-ink-gray-8">
