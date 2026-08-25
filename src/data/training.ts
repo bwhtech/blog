@@ -7,6 +7,25 @@
  */
 export const TBD = 'TBD';
 
+/**
+ * Frappe product logos, keyed so a programme can name what it covers without
+ * repeating a path. Brand-coloured marks, so they render as `<img>` rather than
+ * inline SVG — nothing here should inherit currentColor.
+ */
+export const PRODUCTS = {
+	framework: { label: 'Frappe Framework', src: '/media/train-your-team/logos/framework.svg' },
+	'frappe-ui': { label: 'Frappe UI', src: '/media/train-your-team/logos/frappe-ui.svg' },
+	cloud: { label: 'Frappe Cloud', src: '/media/train-your-team/logos/cloud.svg' },
+	erpnext: { label: 'ERPNext', src: '/media/train-your-team/logos/erpnext.svg' },
+	crm: { label: 'Frappe CRM', src: '/media/train-your-team/logos/crm.svg' },
+	helpdesk: { label: 'Frappe Helpdesk', src: '/media/train-your-team/logos/helpdesk.svg' },
+	hr: { label: 'Frappe HR', src: '/media/train-your-team/logos/hr.svg' },
+	builder: { label: 'Frappe Builder', src: '/media/train-your-team/logos/builder.svg' },
+	insights: { label: 'Frappe Insights', src: '/media/train-your-team/logos/insights.svg' },
+} as const;
+
+export type ProductKey = keyof typeof PRODUCTS;
+
 export interface Program {
 	title: string;
 	/** One line on what the programme is for. */
@@ -21,6 +40,8 @@ export interface Program {
 	outcome?: string;
 	/** Label on the card's call to action. */
 	cta: string;
+	/** Frappe products the programme works in, shown as a logo row. */
+	products?: ProductKey[];
 }
 
 export interface Track {
@@ -38,38 +59,27 @@ export interface Track {
 	pricing: Pricing;
 }
 
-export interface PriceTier {
-	/** Seat band, e.g. `5–10 seats`. */
-	seats: string;
-	/** Headline figure: the rate on the first band, a discount on the rest. */
-	price: string;
-	/** Small text beside the figure. */
-	unit: string;
-}
-
 export interface Pricing {
-	tiers: PriceTier[];
-	/** Small print under the tiers. */
+	/** Per-seat rate for the smallest band. */
+	base: string;
+	/** Volume discounts, in the shortest phrasing that still reads. */
+	discounts: string[];
+	/** Anything else that qualifies the rate. */
 	note: string;
 }
 
-const PRICE_NOTE = 'Remote or on-site; travel is quoted separately.';
-
 /**
- * Only the first band carries a number. The larger bands are expressed as a
- * discount off it, so a rate change is one edit per track rather than three.
+ * Only the base band carries a number; the larger bands are a discount off it,
+ * so a rate change is one edit per track and the ladder cannot drift.
  *
  * PLACEHOLDER RATES — the figures passed in below are stand-ins chosen to see
- * how the cards look. Replace them before anyone can hold us to a quote.
+ * how this reads. Replace them before anyone can hold us to a quote.
  */
 function pricing(base: string): Pricing {
 	return {
-		tiers: [
-			{ seats: '5–10 seats', price: base, unit: 'per seat' },
-			{ seats: '11–25 seats', price: '10% off', unit: 'off the base rate' },
-			{ seats: '26+ seats', price: '20% off', unit: 'off the base rate' },
-		],
-		note: PRICE_NOTE,
+		base,
+		discounts: ['10% off from 11 seats', '20% off from 26'],
+		note: 'minimum 5 seats · remote or on-site, travel quoted separately',
 	};
 }
 
@@ -98,9 +108,10 @@ export const TRACKS: Track[] = [
 				],
 				outcome: 'Your team can build and ship a real Frappe application.',
 				cta: 'Train my developers',
+				products: ['framework', 'frappe-ui', 'cloud'],
 			},
 			{
-				title: 'Developer Pro',
+				title: 'Developer Zero to Hero',
 				tagline: 'From fresher to production-ready Frappe developer.',
 				format: '6 weeks',
 				audience: 'New hires, freshers, and junior developers.',
@@ -116,6 +127,7 @@ export const TRACKS: Track[] = [
 				],
 				outcome: 'Developers who can contribute meaningfully to real Frappe projects.',
 				cta: 'Build my Frappe team',
+				products: ['framework', 'frappe-ui', 'cloud'],
 			},
 		],
 		addOns: [
@@ -156,6 +168,7 @@ export const TRACKS: Track[] = [
 				],
 				outcome: 'Participants can turn a business process into a working Frappe application.',
 				cta: 'Train my business team',
+				products: ['framework', 'builder', 'insights'],
 			},
 			{
 				title: 'ERPNext',
@@ -169,6 +182,7 @@ export const TRACKS: Track[] = [
 					'ERPNext Functional Pro',
 				],
 				cta: 'Explore ERPNext training',
+				products: ['erpnext'],
 			},
 			{
 				title: 'Frappe HR',
@@ -187,6 +201,7 @@ export const TRACKS: Track[] = [
 				],
 				outcome: 'Your team can configure and operate Frappe HR properly.',
 				cta: 'Train my HR team',
+				products: ['hr'],
 			},
 			{
 				title: 'Essential Business Apps',
@@ -200,6 +215,7 @@ export const TRACKS: Track[] = [
 				],
 				outcome: 'Win customers, support customers, understand the business.',
 				cta: 'Explore Essential Business Apps',
+				products: ['crm', 'helpdesk', 'insights'],
 			},
 		],
 		addOns: [

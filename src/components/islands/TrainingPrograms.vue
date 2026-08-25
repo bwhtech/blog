@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Badge, Button, FrappeUIProvider, TabButtons } from 'frappe-ui';
 import { computed, ref } from 'vue';
-import type { Track } from '../../data/training';
+import { PRODUCTS, type Track } from '../../data/training';
 
 const props = defineProps<{ tracks: Track[] }>();
 
@@ -71,11 +71,32 @@ function badgeTheme(index: number) {
 						</p>
 
 						<!-- mt-auto: CTAs line up along the bottom however tall the card grows. -->
-						<div class="mt-auto pt-5">
+						<div class="mt-auto flex flex-wrap items-center gap-3 pt-5">
+							<ul v-if="program.products?.length" class="flex items-center gap-1.5">
+								<li v-for="key in program.products" :key="key">
+									<img
+										class="size-6"
+										:src="PRODUCTS[key].src"
+										:alt="PRODUCTS[key].label"
+										:title="PRODUCTS[key].label"
+										width="24"
+										height="24"
+										loading="lazy"
+									/>
+								</li>
+							</ul>
 							<Button :label="program.cta" link="/meet" variant="subtle" theme="gray" size="md" />
 						</div>
 					</li>
 				</ul>
+
+				<p class="text-p-sm text-ink-gray-5">
+					<span class="font-medium text-ink-gray-8">{{ active.pricing.base }}</span> per seat
+					<template v-for="discount in active.pricing.discounts" :key="discount">
+						· {{ discount }}
+					</template>
+					· {{ active.pricing.note }}
+				</p>
 
 				<div v-if="active.addOns?.length" class="flex flex-col gap-3">
 					<div class="flex flex-wrap gap-2">
@@ -89,32 +110,7 @@ function badgeTheme(index: number) {
 					</div>
 				</div>
 
-				<section
-					class="rounded-7 border border-outline-gray-2 bg-surface-gray-1 p-5 sm:p-6"
-					aria-label="Pricing"
-				>
-					<div class="flex flex-wrap items-center justify-between gap-3">
-						<h3 class="text-lg-medium text-ink-gray-8">What it costs</h3>
-						<Badge label="Minimum 5 seats" theme="gray" variant="subtle" />
-					</div>
 
-					<ul class="mt-5 grid gap-3 sm:grid-cols-3">
-						<li
-							v-for="(tier, index) in active.pricing.tiers"
-							:key="tier.seats"
-							class="rounded-6 border bg-surface-base p-4"
-							:class="index === 0 ? 'border-outline-gray-3' : 'border-outline-gray-1'"
-						>
-							<p class="text-p-sm text-ink-gray-5">{{ tier.seats }}</p>
-							<p class="mt-2 text-2xl-semibold" :class="index === 0 ? 'text-ink-gray-9' : 'text-ink-green-7'">
-								{{ tier.price }}
-							</p>
-							<p class="mt-1 text-p-sm text-ink-gray-5">{{ tier.unit }}</p>
-						</li>
-					</ul>
-
-					<p class="mt-4 text-p-sm text-ink-gray-5">{{ active.pricing.note }}</p>
-				</section>
 			</div>
 		</div>
 	</FrappeUIProvider>
