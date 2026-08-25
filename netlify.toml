@@ -69,6 +69,19 @@
   status = 301
   force = true
 
+# Short links to services that are not part of the site.
+[[redirects]]
+  from = "/school"
+  to = "https://school.bwh.tech/lms"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/meet"
+  to = "https://cal.com/bwhtech"
+  status = 301
+  force = true
+
 # Posts used to sit at the site root, before the root became the landing page.
 [[redirects]]
   from = "/announcements/*"
