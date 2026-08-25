@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Astro builds this to dist/404.html, which Netlify serves for any unmatched
+// path on a static site. No netlify.toml entry is needed.
+const description = 'That page does not exist.';
+---
+
+<BaseLayout title="Page not found" description={description}>
+	<main
+		id="main-content"
+		class="mx-auto flex min-h-screen w-full max-w-[820px] flex-col items-center justify-center gap-9 px-4 text-center sm:px-5"
+	>
+		<div class="flex flex-col items-center gap-5">
+			<p class="text-xs uppercase tracking-widest text-ink-gray-5">404</p>
+			<h1
+				class="max-w-[650px] text-[34px] font-semibold leading-[1.1] tracking-tight text-ink-gray-9 sm:text-[52px]"
+			>
+				Page not found.
+			</h1>
+			<p class="max-w-[480px] text-p-lg text-ink-gray-6">
+				The page you asked for moved, or never existed.
+			</p>
+		</div>
+
+		<div class="flex flex-col items-center gap-6">
+			<svg
+				aria-hidden="true"
+				class="text-ink-gray-4"
+				width="40"
+				height="12"
+				viewBox="0 0 40 12"
+				fill="none"
+			>
+				<path d="M0 6H14" stroke="currentColor" stroke-width="1"></path>
+				<path d="M26 6H40" stroke="currentColor" stroke-width="1"></path>
+				<circle cx="20" cy="6" r="2.5" fill="currentColor"></circle>
+			</svg>
+
+			<div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+				<a
+					class="group inline-flex min-h-8 items-center gap-1.5 text-sm text-ink-gray-5 no-underline transition-colors hover:text-ink-gray-9"
+					href="/"
+				>
+					<span>Go home</span>
+					<svg
+						aria-hidden="true"
+						class="size-4 transition-transform group-hover:translate-x-0.5"
+						viewBox="0 0 24 24"
+						fill="none"
+					>
+						<path
+							d="M9 6l6 6-6 6"
+							stroke="currentColor"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"></path>
+					</svg>
+				</a>
+
+				<a
+					class="group inline-flex min-h-8 items-center gap-1.5 text-sm text-ink-gray-5 no-underline transition-colors hover:text-ink-gray-9"
+					href="/blog"
+				>
+					<span>Read the blog</span>
+					<svg
+						aria-hidden="true"
+						class="size-4 transition-transform group-hover:translate-x-0.5"
+						viewBox="0 0 24 24"
+						fill="none"
+					>
+						<path
+							d="M9 6l6 6-6 6"
+							stroke="currentColor"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"></path>
+					</svg>
+				</a>
+			</div>
+		</div>
+	</main>
+</BaseLayout>
