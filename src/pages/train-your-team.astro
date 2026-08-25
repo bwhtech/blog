@@ -1,5 +1,6 @@
 ---
 import { Avatar, Button } from 'frappe-ui';
+import ThemeSwitcher from '../components/islands/ThemeSwitcher.vue';
 import TrainingPrograms from '../components/islands/TrainingPrograms.vue';
 import { FAQS, REVIEWS, TBD, TRACKS, TRAINERS } from '../data/training';
 import AppLayout from '../layouts/AppLayout.astro';
@@ -40,7 +41,24 @@ const description =
 			<p class="mt-5 max-w-[560px] text-p-lg text-ink-gray-6">{description}</p>
 
 			<div class="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
-				<Button link="/meet" label="Book A Call" variant="solid" theme="gray" size="lg" />
+				<!-- Button's size is a prop, not a utility, so the responsive step needs
+				     two instances. `hidden` keeps the inactive one out of the a11y tree. -->
+				<Button
+					class="sm:hidden"
+					link="/meet"
+					label="Book A Call"
+					variant="solid"
+					theme="gray"
+					size="md"
+				/>
+				<Button
+					class="hidden sm:inline-flex"
+					link="/meet"
+					label="Book A Call"
+					variant="solid"
+					theme="gray"
+					size="lg"
+				/>
 
 				<!-- An in-page jump, so it stays a plain anchor: Button's `link` prop
 				     always opens a new tab, which would break a fragment target. -->
@@ -196,6 +214,13 @@ const description =
 			<div class="mt-6">
 				<Button link="/meet" label="Book A Call" variant="outline" theme="gray" size="lg" />
 			</div>
+		</section>
+
+		<section class="mt-20 flex justify-center sm:mt-24" aria-label="Colour scheme">
+			<!-- client:only: the active scheme lives in localStorage and matchMedia, so
+			     the server cannot know it. Rendering it would guarantee a hydration
+			     mismatch; skipping SSR is cheaper than reconciling one. -->
+			<ThemeSwitcher client:only="vue" />
 		</section>
 	</main>
 </AppLayout>

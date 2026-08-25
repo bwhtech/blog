@@ -165,6 +165,18 @@ export const TRACKS: Track[] = [
 				cta: 'Explore Essential Business Apps',
 			},
 		],
+		addOns: [
+			'Accounting & Finance',
+			'Selling',
+			'Buying',
+			'Stock',
+			'Payroll',
+			'Frappe CRM',
+			'Frappe Helpdesk',
+			'Frappe Insights',
+			'Workflows',
+			'Frappe Builder',
+		],
 	},
 	{
 		id: 'ai',
@@ -210,6 +222,17 @@ export const TRACKS: Track[] = [
 				outcome: 'Build Frappe applications without becoming a traditional developer.',
 				cta: 'Talk to us',
 			},
+		],
+		// Tools are named here and nowhere else: the programmes themselves teach a
+		// workflow, not a product, so tool names belong on optional deep-dives.
+		addOns: [
+			'Spec-driven development',
+			'Context engineering',
+			'Skills',
+			'AGENTS.md',
+			'Claude Code',
+			'OpenCode',
+			'Gemini CLI',
 		],
 	},
 ];
