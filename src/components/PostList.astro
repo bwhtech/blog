@@ -33,7 +33,7 @@ const postItems = await Promise.all(
 						{
 							post.data.image ? (
 								<Image
-									class="aspect-video w-full rounded-lg border border-outline-gray-1 bg-surface-gray-1 object-cover"
+									class="aspect-video w-full rounded-6 border border-outline-gray-1 bg-surface-gray-1 object-cover"
 									src={post.data.image}
 									alt=""
 									width={352}
@@ -41,7 +41,7 @@ const postItems = await Promise.all(
 									decoding="async"
 								/>
 							) : (
-								<div class="grid aspect-video w-full place-items-center rounded-lg border border-outline-gray-1 bg-surface-gray-1 text-sm-medium text-ink-gray-4">
+								<div class="grid aspect-video w-full place-items-center rounded-6 border border-outline-gray-1 bg-surface-gray-1 text-sm-medium text-ink-gray-4">
 									BWH
 								</div>
 							)
