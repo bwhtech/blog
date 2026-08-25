@@ -93,7 +93,17 @@ async function submit() {
 		@submit.prevent="submit"
 	>
 		<div class="mb-4 flex items-center gap-2">
-			<Avatar :label="name || '?'" size="md" />
+			<!-- Two elements rather than a slot with a v-if inside it: Avatar keys the
+			     fallback on `$slots.default` existing at all, so an always-present slot
+			     that renders nothing leaves an empty circle once a name is typed. -->
+			<Avatar v-if="name.trim()" :label="name" size="md" />
+			<Avatar v-else size="md">
+				<!-- The span re-centres it: Avatar's slot wrapper is a fixed 16px box, so
+				     a 12px glyph left in it sits 2px off in both directions. -->
+				<span class="flex size-full items-center justify-center">
+					<LucideMessageCircle class="size-3" />
+				</span>
+			</Avatar>
 			<span class="min-w-0 flex-1 truncate text-base font-medium text-ink-gray-8">
 				{{ name || 'Leave a comment' }}
 			</span>

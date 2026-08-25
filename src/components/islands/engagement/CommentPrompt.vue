@@ -20,7 +20,13 @@ defineEmits<{ open: [] }>();
 		class="flex w-full items-center gap-3 rounded-6 border border-outline-gray-2 bg-surface-base px-3 py-3 text-left transition hover:border-outline-gray-3 hover:bg-surface-gray-1"
 		@click="$emit('open')"
 	>
-		<Avatar :label="name || '?'" size="md" />
+		<!-- See CommentForm for why this is two elements and not one with a slot. -->
+		<Avatar v-if="name.trim()" :label="name" size="md" />
+		<Avatar v-else size="md">
+			<span class="flex size-full items-center justify-center">
+				<LucideMessageCircle class="size-3" />
+			</span>
+		</Avatar>
 		<span class="min-w-0 flex-1 truncate text-base text-ink-gray-5">
 			Leave a comment
 		</span>
