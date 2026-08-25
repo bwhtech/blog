@@ -212,7 +212,23 @@ const description =
 				Get your team ready for action.
 			</h2>
 			<div class="mt-6">
-				<Button link="/meet" label="Book A Call" variant="outline" theme="gray" size="lg" />
+				<!-- Same two-instance responsive step as the hero: size is a prop. -->
+				<Button
+					class="sm:hidden"
+					link="/meet"
+					label="Book A Call"
+					variant="outline"
+					theme="gray"
+					size="md"
+				/>
+				<Button
+					class="hidden sm:inline-flex"
+					link="/meet"
+					label="Book A Call"
+					variant="outline"
+					theme="gray"
+					size="lg"
+				/>
 			</div>
 		</section>
 

@@ -35,6 +35,42 @@ export interface Track {
 	programs: Program[];
 	/** Deep-dives that bolt onto a programme rather than standing alone. */
 	addOns?: string[];
+	pricing: Pricing;
+}
+
+export interface PriceTier {
+	/** Seat band, e.g. `5–10 seats`. */
+	seats: string;
+	/** Headline figure: the rate on the first band, a discount on the rest. */
+	price: string;
+	/** Small text beside the figure. */
+	unit: string;
+}
+
+export interface Pricing {
+	tiers: PriceTier[];
+	/** Small print under the tiers. */
+	note: string;
+}
+
+const PRICE_NOTE = 'Remote or on-site; travel is quoted separately.';
+
+/**
+ * Only the first band carries a number. The larger bands are expressed as a
+ * discount off it, so a rate change is one edit per track rather than three.
+ *
+ * PLACEHOLDER RATES — the figures passed in below are stand-ins chosen to see
+ * how the cards look. Replace them before anyone can hold us to a quote.
+ */
+function pricing(base: string): Pricing {
+	return {
+		tiers: [
+			{ seats: '5–10 seats', price: base, unit: 'per seat' },
+			{ seats: '11–25 seats', price: '10% off', unit: 'off the base rate' },
+			{ seats: '26+ seats', price: '20% off', unit: 'off the base rate' },
+		],
+		note: PRICE_NOTE,
+	};
 }
 
 export const TRACKS: Track[] = [
@@ -93,6 +129,7 @@ export const TRACKS: Track[] = [
 			'Architecture',
 			'Agentic Development',
 		],
+		pricing: pricing('$450'),
 	},
 	{
 		id: 'business',
@@ -177,6 +214,7 @@ export const TRACKS: Track[] = [
 			'Workflows',
 			'Frappe Builder',
 		],
+		pricing: pricing('$350'),
 	},
 	{
 		id: 'ai',
@@ -234,6 +272,7 @@ export const TRACKS: Track[] = [
 			'OpenCode',
 			'Gemini CLI',
 		],
+		pricing: pricing('$525'),
 	},
 ];
 

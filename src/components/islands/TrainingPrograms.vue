@@ -88,6 +88,33 @@ function badgeTheme(index: number) {
 						/>
 					</div>
 				</div>
+
+				<section
+					class="rounded-7 border border-outline-gray-2 bg-surface-gray-1 p-5 sm:p-6"
+					aria-label="Pricing"
+				>
+					<div class="flex flex-wrap items-center justify-between gap-3">
+						<h3 class="text-lg-medium text-ink-gray-8">What it costs</h3>
+						<Badge label="Minimum 5 seats" theme="gray" variant="subtle" />
+					</div>
+
+					<ul class="mt-5 grid gap-3 sm:grid-cols-3">
+						<li
+							v-for="(tier, index) in active.pricing.tiers"
+							:key="tier.seats"
+							class="rounded-6 border bg-surface-base p-4"
+							:class="index === 0 ? 'border-outline-gray-3' : 'border-outline-gray-1'"
+						>
+							<p class="text-p-sm text-ink-gray-5">{{ tier.seats }}</p>
+							<p class="mt-2 text-2xl-semibold" :class="index === 0 ? 'text-ink-gray-9' : 'text-ink-green-7'">
+								{{ tier.price }}
+							</p>
+							<p class="mt-1 text-p-sm text-ink-gray-5">{{ tier.unit }}</p>
+						</li>
+					</ul>
+
+					<p class="mt-4 text-p-sm text-ink-gray-5">{{ active.pricing.note }}</p>
+				</section>
 			</div>
 		</div>
 	</FrappeUIProvider>
