@@ -23,7 +23,9 @@ defineEmits<{ open: [] }>();
 		<!-- See CommentForm for why this is two elements and not one with a slot. -->
 		<Avatar v-if="name.trim()" :label="name" size="md" />
 		<Avatar v-else size="md">
-			<LucideMessageCircle class="size-4" />
+			<span class="flex size-full items-center justify-center">
+				<LucideMessageCircle class="size-3" />
+			</span>
 		</Avatar>
 		<span class="min-w-0 flex-1 truncate text-base text-ink-gray-5">
 			Leave a comment
