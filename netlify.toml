@@ -5,6 +5,13 @@
 [build.environment]
   NODE_VERSION = "24.15.0"
 
+[functions]
+  directory = "netlify/functions"
+  # @libsql/client/web is pure JS over fetch, so esbuild inlines it and nothing
+  # needs external_node_modules. Add that only if bundling ever fails; it ships
+  # the package unbundled, which means a fatter function and a slower cold start.
+  node_bundler = "esbuild"
+
 [build.processing]
   skip_processing = false
 

@@ -35,6 +35,6 @@ if (!post) throw new Error('Post not found');
 const { Content } = await render(post);
 ---
 
-<BlogPostLayout {...post.data}>
+<BlogPostLayout {...post.data} postId={post.id}>
 	<Content />
 </BlogPostLayout>

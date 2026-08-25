@@ -13,7 +13,8 @@
     "spellcheck": "cspell --no-progress",
     "generate-og:author": "node scripts/generate-author-og.mjs",
     "generate-og:home": "node scripts/generate-home-og.mjs",
-    "prepare": "husky"
+    "prepare": "husky",
+    "db:migrate": "node --env-file=.env scripts/migrate-db.mjs"
   },
   "lint-staged": {
     "src/content/blog/**/*.{md,mdx}": "cspell --no-must-find-files"
@@ -21,6 +22,7 @@
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
     "@astrojs/vue": "^7.0.2",
+    "@libsql/client": "^0.17.4",
     "astro": "^7.1.6",
     "frappe-ui": "^1.0.0-beta.55",
     "mermaid": "^11.16.1",
@@ -28,6 +30,7 @@
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
+    "@netlify/functions": "^6.0.0",
     "autoprefixer": "^10.5.4",
     "cspell": "^10.0.1",
     "husky": "^9.1.7",
