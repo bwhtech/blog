@@ -1,0 +1,79 @@
+<script>
+	initializeHeadings();
+	document.addEventListener('astro:page-load', initializeHeadings);
+
+	function initializeHeadings() {
+		const headings = document.querySelectorAll(
+			'.prose-v3 :is(h2, h3, h4)[id]:not([data-anchor-ready])',
+		);
+
+		for (const heading of headings) {
+			heading.setAttribute('data-anchor-ready', 'true');
+			heading.append(createAnchorLink(heading.id));
+		}
+	}
+
+	function createAnchorLink(id) {
+		const link = document.createElement('a');
+		link.className = 'heading-anchor';
+		link.href = `#${id}`;
+		// The glyph is a ::before, so the link has no text of its own.
+		link.ariaLabel = 'Link to this section';
+		link.title = 'Link to this section';
+		return link;
+	}
+</script>
+
+<style is:global>
+	.prose-v3 :is(h2, h3, h4)[data-anchor-ready] {
+		position: relative;
+		/* Nothing is sticky, but landing flush against the viewport edge reads as
+		   a mis-scroll. */
+		scroll-margin-top: 2rem;
+	}
+
+	/* .prose-v3 a puts a border under every link; this one is a glyph. */
+	.prose-v3 .heading-anchor,
+	.prose-v3 .heading-anchor:hover {
+		border-bottom: 0;
+	}
+
+	/* Scoped under .prose-v3 to outrank Tailwind Typography's `.prose :where(a)`,
+	   which otherwise paints this --tw-prose-links, the same ink-gray-9 as the
+	   heading itself. */
+	.prose-v3 .heading-anchor {
+		position: absolute;
+		top: 0;
+		/* In the left gutter, so nothing in the column reflows when it appears. */
+		left: -0.85em;
+		font-weight: 400;
+		color: var(--ink-gray-3);
+		opacity: 0;
+		transition: opacity 0.08s ease;
+	}
+
+	.heading-anchor::before {
+		content: '#';
+	}
+
+	.prose-v3 :is(h2, h3, h4):hover .heading-anchor,
+	/* The heading the URL currently points at keeps its anchor — it is the one
+	   the reader just linked to. */
+	.prose-v3 :is(h2, h3, h4):target .heading-anchor,
+	.prose-v3 .heading-anchor:focus-visible {
+		opacity: 1;
+	}
+
+	.prose-v3 :is(h2, h3, h4):target .heading-anchor,
+	.prose-v3 .heading-anchor:hover {
+		color: var(--ink-gray-5);
+	}
+
+	/* Below this the article is flush against the viewport gutter and there is no
+	   left margin to put the anchor in — and no hover to reveal it either. */
+	@media (max-width: 860px) {
+		.prose-v3 .heading-anchor {
+			display: none;
+		}
+	}
+</style>

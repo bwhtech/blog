@@ -3,6 +3,7 @@ import { getEntry, type CollectionEntry } from 'astro:content';
 
 import CodeBlockCopy from '../components/CodeBlockCopy.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import HeadingAnchors from '../components/HeadingAnchors.astro';
 import Mermaid from '../components/Mermaid.astro';
 import PostEngagement from '../components/islands/PostEngagement.vue';
 import { getAuthorRoute } from '../utils/posts';
@@ -93,6 +94,7 @@ if (!authorEntry) throw new Error(`Author not found: ${author.id}`);
 			</div>
 			<Mermaid />
 			<CodeBlockCopy />
+			<HeadingAnchors />
 			<!-- client:visible: nothing is fetched until the reader nears the end of
 			     the post. The margin starts the request just before it scrolls in. -->
 			<PostEngagement client:visible={{ rootMargin: '300px' }} postId={postId} />
