@@ -181,7 +181,7 @@ export const TRACKS: Track[] = [
 					'Selling, Buying & Stock',
 					'ERPNext Functional Pro',
 				],
-				cta: 'Explore ERPNext training',
+				cta: 'Get ERPNext training',
 				products: ['erpnext'],
 			},
 			{
@@ -214,7 +214,7 @@ export const TRACKS: Track[] = [
 					'Frappe Insights — query builder, dashboards, metrics',
 				],
 				outcome: 'Win customers, support customers, understand the business.',
-				cta: 'Explore Essential Business Apps',
+				cta: 'Train my team',
 				products: ['crm', 'helpdesk', 'insights'],
 			},
 		],
