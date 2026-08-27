@@ -62,6 +62,14 @@ layout wrapper, leave blank lines around the image so markdown is still parsed:
 Astro cannot process GIF or video. Put those in `public/media/<post-slug>/` and
 reference them by absolute path.
 
+Author avatars live in `src/data/author-avatars/`, not `public/`, so the same
+pipeline resizes and converts them. `avatar` in `src/data/authors.yaml` is a
+path relative to that file and the schema declares it with Astro's `image()`
+helper, so a wrong path fails the build. Two consumers do not take an
+`ImageMetadata`: `scripts/generate-author-og.mjs` reads the original off disk
+because its card renders at 300px, and the trainer list in `src/data/training.ts`
+resolves a URL string through `getImage` for frappe-ui's `Avatar`.
+
 Renaming a category folder changes the post URL. Add a 301 to `netlify.toml`
 when that happens — and, because the post id is also the key likes and comments
 are stored under, repoint the existing rows:

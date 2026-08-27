@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 import PostList from '../../components/PostList.astro';
@@ -53,12 +54,13 @@ const posts = await getPostsByAuthor(author.id);
 		</a>
 
 		<header>
-			<img
+			<Image
 				class="size-20 rounded-full object-cover sm:size-24"
 				src={avatar}
 				alt=""
-				width="96"
-				height="96"
+				width={96}
+				height={96}
+				densities={[1, 2]}
 			/>
 			{
 				role && (

@@ -7,6 +7,7 @@
  */
 export const TBD = 'TBD';
 
+
 /**
  * Frappe product logos, keyed so a programme can name what it covers without
  * repeating a path. Brand-coloured marks, so they render as `<img>` rather than
@@ -294,7 +295,10 @@ export const TRACKS: Track[] = [
 
 export interface Trainer {
 	name: string;
+	/** Short title, sits above the bio. */
 	role: string;
+	/** A sentence on what they teach and where it comes from. */
+	bio: string;
 	avatar: string;
 	/** Links to the author page when the trainer has one. */
 	href?: string;
@@ -303,20 +307,23 @@ export interface Trainer {
 export const TRAINERS: Trainer[] = [
 	{
 		name: 'Hussain Nagaria',
-		role: TBD,
-		avatar: '/authors/hussain-nagaria.jpg',
+		role: 'Founder & Educator',
+		bio: 'Hosts Build With Hussain. Has taught thousands of students the Frappe Framework.',
+		authorId: 'hussain-nagaria',
 		href: '/author/hussain-nagaria/',
 	},
 	{
 		name: 'Rahul Agrawal',
-		role: TBD,
-		avatar: '/authors/rahul-agrawal.jpg',
+		role: 'Senior Engineer',
+		bio: 'Has certified hundreds of participants on the Frappe Framework. Builds product at BWH and ships fast with agents.',
+		authorId: 'rahul-agrawal',
 		href: '/author/rahul-agrawal/',
 	},
 	{
 		name: 'Shivam Ghosh',
-		role: TBD,
-		avatar: '/authors/shivam-ghosh.jpg',
+		role: 'ERPNext Functional Expert',
+		bio: 'Specialises in Frappe HR, and in the newer apps — Frappe Helpdesk and Frappe CRM.',
+		authorId: 'shivam-ghosh',
 		href: '/author/shivam-ghosh/',
 	},
 ];

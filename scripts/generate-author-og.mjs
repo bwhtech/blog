@@ -29,7 +29,10 @@ function firstLine(bio) {
 }
 
 function buildHtml(author) {
-	const avatar = toDataUri(path.join(root, 'public', author.avatar));
+	// The YAML path is relative to the data file, and this card renders the
+	// avatar at 300px — larger than any variant the site builds — so it reads
+	// the original rather than a processed one.
+	const avatar = toDataUri(path.join(root, 'src/data', author.avatar));
 	const bio = firstLine(author.bio);
 
 	const css = `

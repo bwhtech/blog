@@ -5,7 +5,7 @@
 #
 # - id: your-name              # kebab-case, and the last part of your page URL
 #   name: Your Name
-#   avatar: /authors/your-name.jpg   # put the image in public/authors/
+#   avatar: ./author-avatars/your-name.jpg   # put the image in src/data/author-avatars/
 #   role: What You Do          # shown in small caps above your name
 #   bio: |                     # leave a blank line between paragraphs
 #     A line or two about you.
@@ -18,16 +18,16 @@
 
 - id: vishwajeet-singh
   name: Vishwajeet Singh
-  avatar: /authors/vishwajeet-singh.jpg
+  avatar: ./author-avatars/vishwajeet-singh.jpg
 
 - id: shivam-ghosh
   name: Shivam Ghosh
-  avatar: /authors/shivam-ghosh.jpg
+  avatar: ./author-avatars/shivam-ghosh.jpg
 
 - id: hussain-nagaria
   name: Hussain Nagaria
   role: Founder
-  avatar: /authors/hussain-nagaria.jpg
+  avatar: ./author-avatars/hussain-nagaria.jpg
   bio: Teacher and YouTuber.
   social:
     github: https://github.com/NagariaHussain
@@ -35,17 +35,17 @@
 
 - id: rahul-agrawal
   name: Rahul Agrawal
-  avatar: /authors/rahul-agrawal.jpg
+  avatar: ./author-avatars/rahul-agrawal.jpg
   bio: Software engineer interested in understanding and solving programming problems.
 
 - id: kaushal-shriwas
   name: Kaushal Shriwas
-  avatar: /authors/kaushal-shriwas.jpg
+  avatar: ./author-avatars/kaushal-shriwas.jpg
 
 - id: gajendra-nishad
   name: Gajendra Nishad
   role: Backend Engineer
-  avatar: /authors/gajendra-nishad.jpg
+  avatar: ./author-avatars/gajendra-nishad.jpg
   bio: Backend engineer who has been hooked on computers since he first saw one on a CRT monitor.
   social:
     github: https://github.com/gajjug004

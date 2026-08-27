@@ -1,4 +1,6 @@
 ---
+import { getImage } from 'astro:assets';
+import { getEntry } from 'astro:content';
 import { Avatar, Button } from 'frappe-ui';
 import ThemeSwitcher from '../components/islands/ThemeSwitcher.vue';
 import TrainingPrograms from '../components/islands/TrainingPrograms.vue';
@@ -14,6 +16,29 @@ function quoteParts({ quote, emphasis }: { quote: string; emphasis?: string }) {
 	if (at === -1 || !emphasis) return { before: quote, bold: '', after: '' };
 	return { before: quote.slice(0, at), bold: emphasis, after: quote.slice(at + emphasis.length) };
 }
+
+/**
+ * Trainers are authors, so their avatars come from the authors collection and
+ * through the image pipeline. `Avatar` takes a URL string rather than an
+ * `ImageMetadata`, so the processed variant is resolved here.
+ */
+const AVATAR_SIZE = 112; // 56px on the page, doubled for a retina screen.
+
+const trainers = await Promise.all(
+	TRAINERS.map(async (trainer) => {
+		const author = await getEntry('authors', trainer.authorId);
+		if (!author) throw new Error(`Trainer is not an author: ${trainer.authorId}`);
+
+		const avatar = await getImage({
+			src: author.data.avatar,
+			width: AVATAR_SIZE,
+			height: AVATAR_SIZE,
+			format: 'webp',
+		});
+
+		return { ...trainer, avatar: avatar.src };
+	}),
+);
 
 const title = 'Train Your Team';
 const description =
@@ -105,11 +130,10 @@ const description =
 
 		<section class="mt-24 sm:mt-32" aria-labelledby="team-title">
 			<h2 id="team-title" class="text-2xl-semibold text-ink-gray-9">Learn from the best</h2>
-			<p class="mt-4 max-w-[560px] text-p-base text-ink-gray-6">TBD</p>
 
 			<ul class="mt-10 grid gap-5 sm:grid-cols-3">
 				{
-					TRAINERS.map((trainer) => (
+					trainers.map((trainer) => (
 						<li class="rounded-6 border border-outline-gray-1 bg-surface-base p-6">
 							<Avatar class="size-14" image={trainer.avatar} label={trainer.name} />
 							<h3 class="mt-4 text-base font-medium text-ink-gray-8">
@@ -121,22 +145,18 @@ const description =
 									trainer.name
 								)}
 							</h3>
-							<p
-								class={`mt-1 text-p-sm ${trainer.role === TBD ? 'text-ink-gray-4' : 'text-ink-gray-6'}`}
-							>
-								{trainer.role}
-							</p>
+							<p class="mt-1 text-p-sm text-ink-gray-5">{trainer.role}</p>
+							<p class="mt-3 text-p-sm text-ink-gray-6">{trainer.bio}</p>
 						</li>
 					))
 				}
 			</ul>
 		</section>
 
-		<!-- No heading: an avatar over a quote already reads as a testimonial, and
-		     the label was one more line of text in a page that had too many. The
-		     accessible name stays, for anyone navigating by landmark. -->
-		<section class="mt-24 sm:mt-32" aria-label="What learners say">
-			<ul class="grid gap-5 sm:grid-cols-2">
+		<section class="mt-24 sm:mt-32" aria-labelledby="reviews-title">
+			<h2 id="reviews-title" class="text-2xl-semibold text-ink-gray-9">What learners say</h2>
+
+			<ul class="mt-10 grid gap-5 sm:grid-cols-2">
 				{
 					REVIEWS.map((review) => {
 						const { before, bold, after } = quoteParts(review);

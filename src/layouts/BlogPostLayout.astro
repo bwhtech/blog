@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import { getEntry, type CollectionEntry } from 'astro:content';
 
 import CodeBlockCopy from '../components/CodeBlockCopy.astro';
@@ -52,12 +53,13 @@ if (!authorEntry) throw new Error(`Author not found: ${author.id}`);
 				<p class="mt-3 text-p-lg text-ink-gray-6">{description}</p>
 				<div class="mt-5 flex items-center gap-2.5">
 					<a href={getAuthorRoute(authorEntry.id)} aria-label={`Posts by ${authorEntry.data.name}`}>
-						<img
+						<Image
 							class="size-7 rounded-full object-cover"
 							src={authorEntry.data.avatar}
 							alt=""
-							width="28"
-							height="28"
+							width={28}
+							height={28}
+							densities={[1, 2]}
 						/>
 					</a>
 					<div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm tabular-nums">

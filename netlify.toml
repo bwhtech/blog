@@ -240,8 +240,3 @@
   for = "/media/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/authors/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
