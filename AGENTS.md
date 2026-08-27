@@ -156,6 +156,12 @@ under `prefers-reduced-motion`.
   re-spread `$attrs` onto their root element, so a `data-cuelume-*` attribute
   written on the component does land on the real `<button>`.
 
+`src/components/islands/ProductRow.vue` is the row of product logos, in both
+the places it appears. It is an island only because frappe-ui's `Tooltip` needs
+JavaScript — it replaced a native `title`, which was slow to appear and could
+not be styled. Its `magnified` prop is the One Shot strip: padded keys, macOS
+Dock magnification from `src/utils/dock.ts`, and a note per logo.
+
 ## Likes and comments
 
 Every post page mounts `src/components/islands/PostEngagement.vue` at the foot of

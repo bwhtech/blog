@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Badge, Button, FrappeUIProvider, TabButtons } from 'frappe-ui';
 import { computed, ref } from 'vue';
-import { PRODUCTS, type Track } from '../../data/training';
+import { type Track } from '../../data/training';
+import ProductRow from './ProductRow.vue';
 import { cue } from '../../utils/sound';
 
 const props = defineProps<{ tracks: Track[] }>();
@@ -117,19 +118,7 @@ function badgeTheme(index: number) {
 
 						<!-- mt-auto: CTAs line up along the bottom however tall the card grows. -->
 						<div class="mt-auto flex flex-wrap items-center gap-3 pt-6">
-							<ul v-if="program.products?.length" class="flex items-center gap-1.5">
-								<li v-for="key in program.products" :key="key">
-									<img
-										class="size-6"
-										:src="PRODUCTS[key].src"
-										:alt="PRODUCTS[key].label"
-										:title="PRODUCTS[key].label"
-										width="24"
-										height="24"
-										loading="lazy"
-									/>
-								</li>
-							</ul>
+							<ProductRow v-if="program.products?.length" :products="program.products" />
 							<Button
 								:label="program.cta"
 								link="/meet"

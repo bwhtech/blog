@@ -2,9 +2,10 @@
 import { getImage } from 'astro:assets';
 import { getEntry } from 'astro:content';
 import { Avatar, Badge, Button } from 'frappe-ui';
+import ProductRow from '../components/islands/ProductRow.vue';
 import ThemeSwitcher from '../components/islands/ThemeSwitcher.vue';
 import TrainingPrograms from '../components/islands/TrainingPrograms.vue';
-import { FAQS, ONE_SHOT, PRODUCTS, REVIEWS, TBD, TRACKS, TRAINERS } from '../data/training';
+import { FAQS, ONE_SHOT, REVIEWS, TBD, TRACKS, TRAINERS } from '../data/training';
 import AppLayout from '../layouts/AppLayout.astro';
 
 /**
@@ -180,42 +181,11 @@ const description =
 				</p>
 			</div>
 
-			<!--
-			  A row of keys, magnified like the macOS Dock — see `magnify` in
-			  src/utils/dock.ts, which the page script below binds to `data-dock`.
-			  The `hover:` classes are what a browser running no script gets: the
-			  logo under the pointer alone, without its neighbours leaning in.
-
-			  cuelume's 150ms hover throttle turns a sweep across the row into a run
-			  of notes rather than a rattle, so the note has to fit inside 150ms or
-			  the run smears: `pulse` is 87ms and pitched, where `droplet` rang for
-			  204ms and a shimmer tail on top. The padding is what makes it playable:
-			  the logos are 24px, and 24px targets with a gap between them leave dead
-			  air between every note.
-			-->
-			<ul
-				class="mt-8 flex flex-wrap items-center gap-0.5 border-t border-outline-gray-1 pt-6"
-				data-dock
-			>
-				{
-					ONE_SHOT.products.map((key) => (
-						<li
-							class="origin-bottom cursor-default rounded-3 p-1.5 transition-transform duration-150 ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:scale-125"
-							data-cuelume-hover="pulse"
-						>
-							<img
-								class="size-6"
-								src={PRODUCTS[key].src}
-								alt={PRODUCTS[key].label}
-								title={PRODUCTS[key].label}
-								width="24"
-								height="24"
-								loading="lazy"
-							/>
-						</li>
-					))
-				}
-			</ul>
+			<!-- client:visible: the row sits well below the fold, and it is the only
+			     thing on the page that needs a tooltip. -->
+			<div class="mt-8 border-t border-outline-gray-1 pt-6">
+				<ProductRow products={ONE_SHOT.products} magnified client:visible />
+			</div>
 		</section>
 
 		<section
@@ -383,10 +353,7 @@ const description =
 	// One delegated bind for the whole page. It covers the `data-cuelume-*`
 	// attributes in the static markup above *and* the ones inside the two Vue
 	// islands, which hydrate after this runs.
-	import { magnify } from '../utils/dock';
 	import { initSound } from '../utils/sound';
 
 	initSound();
-
-	document.querySelectorAll<HTMLElement>('[data-dock]').forEach(magnify);
 </script>
