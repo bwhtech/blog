@@ -296,10 +296,7 @@ export const TRACKS: Track[] = [
 /**
  * The one thing on the page nobody has to scope: a fixed price for a single
  * session, so it is not a `Track` and has no band, no minimum and no seat
- * count.
- *
- * PLACEHOLDER RATE, like the track pricing above — confirm the figure before
- * anyone can hold us to it.
+ * count. Unlike the track rates above, the figure here is confirmed.
  */
 export const ONE_SHOT = {
 	title: 'Frappeverse One Shot',
