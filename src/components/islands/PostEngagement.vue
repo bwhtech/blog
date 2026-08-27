@@ -9,6 +9,7 @@
 import { Alert, FrappeUIProvider } from 'frappe-ui';
 import { computed, onMounted, ref } from 'vue';
 
+import { cue } from '../../utils/sound';
 import { type PublicComment, fetchEngagement, likePost, messageOf } from './engagement/api';
 import CommentForm from './engagement/CommentForm.vue';
 import CommentList from './engagement/CommentList.vue';
@@ -70,6 +71,7 @@ async function onLike() {
 	likes.value += 1;
 	liked.value = true;
 	likeBusy.value = true;
+	cue('sparkle');
 
 	try {
 		const result = await likePost(props.postId);
@@ -80,6 +82,7 @@ async function onLike() {
 	} catch {
 		likes.value = previous;
 		liked.value = false;
+		cue('error');
 	} finally {
 		likeBusy.value = false;
 	}

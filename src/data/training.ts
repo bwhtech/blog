@@ -308,7 +308,7 @@ export const ONE_SHOT = {
 	highlights: [
 		'Five hours over the whole Frappeverse, end to end',
 		'An hour of Q&A on whatever your team brings',
-		'Bring as many people as you like — the price is for the session, not the seat',
+		'Bring as many people as you like',
 	],
 	price: '$1,499',
 	priceNote: 'flat, for the session',

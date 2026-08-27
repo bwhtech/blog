@@ -2,6 +2,7 @@
 import { Avatar, Button, ErrorMessage, FormControl } from 'frappe-ui';
 import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue';
 
+import { cue } from '../../../utils/sound';
 import {
 	type FieldErrors,
 	fieldErrorsOf,
@@ -76,10 +77,12 @@ async function submit() {
 		body.value = '';
 		posted.value = true;
 		shownAt = performance.now();
+		cue('success');
 	} catch (error) {
 		const fields = fieldErrorsOf(error);
 		if (fields) fieldErrors.value = fields;
 		else formError.value = messageOf(error);
+		cue('error');
 	} finally {
 		submitting.value = false;
 	}

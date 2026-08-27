@@ -2,10 +2,22 @@
 import { Badge, Button, FrappeUIProvider, TabButtons } from 'frappe-ui';
 import { computed, ref } from 'vue';
 import { PRODUCTS, type Track } from '../../data/training';
+import { cue } from '../../utils/sound';
 
 const props = defineProps<{ tracks: Track[] }>();
 
 const activeId = ref(props.tracks[0]?.id ?? '');
+
+// Written through a setter rather than watched, so the cue fires on a switch
+// and not on a click that lands on the already-active tab.
+const activeTab = computed({
+	get: () => activeId.value,
+	set: (value: string) => {
+		if (value === activeId.value) return;
+		activeId.value = value;
+		cue('toggle');
+	},
+});
 
 const options = computed(() =>
 	props.tracks.map((track) => ({
@@ -31,7 +43,7 @@ function badgeTheme(index: number) {
 		<div class="flex flex-col gap-10">
 			<!-- Horizontal scroll so the three tabs never wrap on a narrow phone. -->
 			<div class="-mx-4 flex overflow-x-auto px-4 sm:mx-0 sm:px-0">
-				<TabButtons v-model="activeId" :options="options" variant="subtle" size="md" />
+				<TabButtons v-model="activeTab" :options="options" variant="subtle" size="md" />
 			</div>
 
 			<div v-if="active" class="flex flex-col gap-10">
@@ -77,6 +89,7 @@ function badgeTheme(index: number) {
 						-->
 						<details class="group mt-5 border-t border-outline-gray-1 pt-4">
 							<summary
+								data-cuelume-toggle
 								class="flex cursor-pointer select-none list-none items-center gap-1.5 text-sm text-ink-gray-5 transition-colors hover:text-ink-gray-8"
 							>
 								<span>What's covered</span>
@@ -117,7 +130,15 @@ function badgeTheme(index: number) {
 									/>
 								</li>
 							</ul>
-							<Button :label="program.cta" link="/meet" variant="subtle" theme="gray" size="md" />
+							<Button
+								:label="program.cta"
+								link="/meet"
+								variant="subtle"
+								theme="gray"
+								size="md"
+								data-cuelume-press
+								data-cuelume-release
+							/>
 						</div>
 					</li>
 				</ul>

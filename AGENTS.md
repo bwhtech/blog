@@ -124,6 +124,38 @@ demos under `src/components/islands/stories/` are copied from the matching file
 in `node_modules/frappe-ui/src/components/<Name>/stories/`; each names its source
 in a comment so it can be re-synced after an upgrade.
 
+## Interaction sounds
+
+`cuelume` synthesizes short interaction sounds with Web Audio — no audio files,
+no runtime dependencies. Everything goes through `src/utils/sound.ts`, never the
+package directly, because that module also sets the volume and mutes playback
+under `prefers-reduced-motion`.
+
+- `initSound()` sets that up and calls cuelume's `bind()`. It is called once,
+  from the client script in `src/pages/train-your-team.astro`. `bind()`
+  delegates from `document` in the capture phase, so it covers the Vue islands
+  on that page even though they hydrate afterwards.
+- It also builds a throwaway `AudioContext` at idle. The first one of a
+  browsing session costs ~100 ms while Chrome starts the audio device, and
+  cuelume builds its own lazily on the first sound — so without this the cost
+  lands on a click, and a tab switch visibly drops frames. Later contexts are
+  free, and closing the throwaway does not undo the warm-up.
+- Its guard is `<html data-cuelume>`, not a module variable: a page script and
+  an island are separate entry points, and two copies of the module would each
+  bind their own listeners and double every sound.
+- **Nothing sounds until the page has had a click or a keypress.** Chrome
+  refuses to start audio without a user activation, and hover and scroll are
+  not activations — so on a page nobody has clicked yet, hover cues are silent.
+  cuelume checks `navigator.userActivation.hasBeenActive` and returns rather
+  than fail. This is the platform, not a bug; do not go looking for one.
+- Declarative for chrome (`data-cuelume-press`, `-release`, `-toggle`,
+  `-hover`), imperative `cue(name)` for outcomes — a like, a posted comment, a
+  failed request — and for the two `TabButtons`, whose model setter also fires
+  for the segment that is already selected.
+- frappe-ui's `Button` and `TabButtons` both set `inheritAttrs: false` and
+  re-spread `$attrs` onto their root element, so a `data-cuelume-*` attribute
+  written on the component does land on the real `<button>`.
+
 ## Likes and comments
 
 Every post page mounts `src/components/islands/PostEngagement.vue` at the foot of

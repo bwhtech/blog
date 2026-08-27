@@ -58,9 +58,15 @@ const description =
 				<span class="text-ink-gray-7">Training</span>
 			</p>
 			<!-- The credential sits above the headline rather than below the CTAs,
-			     where it read as an orphan between the hero and the first section. -->
+			     where it read as an orphan between the hero and the first section.
+
+			     It is also the one thing on the page that sounds on hover rather than
+			     on a press: it is a credential, not a control. `cursor-default`
+			     because it is not text to select either — the default over a run of
+			     text is an I-beam, which reads as "you can edit this". -->
 			<div
-				class="mt-6 inline-flex items-center gap-2 rounded-5 border border-outline-gray-1 bg-surface-gray-1 py-1 pe-3 ps-1"
+				class="group mt-6 inline-flex cursor-default select-none items-center gap-2 rounded-5 border border-outline-gray-1 bg-surface-gray-1 py-1 pe-3 ps-1 transition-colors hover:border-outline-gray-2"
+				data-cuelume-hover="sparkle"
 			>
 				<img
 					class="size-6 rounded-2"
@@ -71,7 +77,10 @@ const description =
 					loading="lazy"
 				/>
 				<span class="text-xs text-ink-gray-6">
-					Official <strong class="font-medium text-ink-gray-7">Frappe School</strong> training partner
+					Official <strong
+						class="font-medium text-ink-gray-7 transition-colors group-hover:text-ink-gray-9"
+						>Frappe School</strong
+					> training partner
 				</span>
 			</div>
 
@@ -84,13 +93,23 @@ const description =
 			<p class="mt-5 max-w-[560px] text-p-lg text-ink-gray-6">{description}</p>
 
 			<div class="mt-11 flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
-				<Button link="/meet" label="Book A Call" variant="solid" theme="gray" size="md" />
+				<Button
+					link="/meet"
+					label="Book A Call"
+					variant="solid"
+					theme="gray"
+					size="md"
+					data-cuelume-press
+					data-cuelume-release
+				/>
 
 				<!-- An in-page jump, so it stays a plain anchor: Button's `link` prop
 				     always opens a new tab, which would break a fragment target. -->
 				<a
 					class="group inline-flex min-h-8 items-center gap-1.5 text-sm text-ink-gray-5 no-underline transition-colors hover:text-ink-gray-9"
 					href="#build-your-training"
+					data-cuelume-press
+					data-cuelume-release
 				>
 					<span>Build your own training</span>
 					<span
@@ -152,6 +171,8 @@ const description =
 					variant="outline"
 					theme="gray"
 					size="md"
+					data-cuelume-press
+					data-cuelume-release
 				/>
 				<p class="text-base text-ink-gray-8">
 					<span class="font-medium">{ONE_SHOT.price}</span>
@@ -159,10 +180,29 @@ const description =
 				</p>
 			</div>
 
-			<ul class="mt-8 flex flex-wrap items-center gap-2.5 border-t border-outline-gray-1 pt-6">
+			<!--
+			  A row of keys, magnified like the macOS Dock — see `magnify` in
+			  src/utils/dock.ts, which the page script below binds to `data-dock`.
+			  The `hover:` classes are what a browser running no script gets: the
+			  logo under the pointer alone, without its neighbours leaning in.
+
+			  cuelume's 150ms hover throttle turns a sweep across the row into a run
+			  of notes rather than a rattle, so the note has to fit inside 150ms or
+			  the run smears: `pulse` is 87ms and pitched, where `droplet` rang for
+			  204ms and a shimmer tail on top. The padding is what makes it playable:
+			  the logos are 24px, and 24px targets with a gap between them leave dead
+			  air between every note.
+			-->
+			<ul
+				class="mt-8 flex flex-wrap items-center gap-0.5 border-t border-outline-gray-1 pt-6"
+				data-dock
+			>
 				{
 					ONE_SHOT.products.map((key) => (
-						<li>
+						<li
+							class="origin-bottom cursor-default rounded-3 p-1.5 transition-transform duration-150 ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:scale-125"
+							data-cuelume-hover="pulse"
+						>
 							<img
 								class="size-6"
 								src={PRODUCTS[key].src}
@@ -190,7 +230,15 @@ const description =
 				>.
 			</p>
 			<div class="mt-6">
-				<Button link="/meet" label="Talk to us" variant="outline" theme="gray" size="md" />
+				<Button
+					link="/meet"
+					label="Talk to us"
+					variant="outline"
+					theme="gray"
+					size="md"
+					data-cuelume-press
+					data-cuelume-release
+				/>
 			</div>
 		</section>
 
@@ -199,22 +247,37 @@ const description =
 
 			<ul class="mt-10 grid gap-5 sm:grid-cols-3">
 				{
-					trainers.map((trainer) => (
-						<li class="rounded-6 border border-outline-gray-1 bg-surface-base p-6">
-							<Avatar class="size-14" image={trainer.avatar} label={trainer.name} />
-							<h3 class="mt-4 text-base font-medium text-ink-gray-8">
-								{trainer.href ? (
-									<a class="no-underline hover:underline" href={trainer.href}>
+					trainers.map((trainer) => {
+						// The whole card is the link rather than the name inside it: the
+						// name alone was a small target in a large clickable-looking box.
+						// A trainer with no author page keeps a plain, inert card.
+						const Card = trainer.href ? 'a' : 'div';
+						const link = trainer.href
+							? { href: trainer.href, 'data-cuelume-press': true, 'data-cuelume-release': true }
+							: {};
+
+						return (
+							<li class="flex">
+								{/* Hover is frappe-ui's own idiom for a raised surface: the outline
+								    steps up a stop and the card takes the `sm` elevation token. */}
+								<Card
+									class:list={[
+										'group w-full rounded-6 border border-outline-gray-1 bg-surface-base p-6 no-underline transition',
+										trainer.href &&
+											'hover:border-outline-gray-2 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3',
+									]}
+									{...link}
+								>
+									<Avatar class="size-14" image={trainer.avatar} label={trainer.name} />
+									<h3 class="mt-4 text-base font-medium text-ink-gray-8 transition-colors group-hover:text-ink-gray-9">
 										{trainer.name}
-									</a>
-								) : (
-									trainer.name
-								)}
-							</h3>
-							<p class="mt-1 text-p-sm text-ink-gray-5">{trainer.role}</p>
-							<p class="mt-3 text-p-sm text-ink-gray-6">{trainer.bio}</p>
-						</li>
-					))
+									</h3>
+									<p class="mt-1 text-p-sm text-ink-gray-5">{trainer.role}</p>
+									<p class="mt-3 text-p-sm text-ink-gray-6">{trainer.bio}</p>
+								</Card>
+							</li>
+						);
+					})
 				}
 			</ul>
 		</section>
@@ -269,7 +332,10 @@ const description =
 				{
 					FAQS.map((faq) => (
 						<details class="group">
-							<summary class="flex cursor-pointer select-none list-none items-center gap-2 rounded-4 px-2 py-4 text-base font-medium text-ink-gray-8 outline-none transition-colors duration-150 hover:text-ink-gray-9 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-outline-gray-3">
+							<summary
+								data-cuelume-toggle
+								class="flex cursor-pointer select-none list-none items-center gap-2 rounded-4 px-2 py-4 text-base font-medium text-ink-gray-8 outline-none transition-colors duration-150 hover:text-ink-gray-9 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-outline-gray-3"
+							>
 								<span class="min-w-0 flex-1">{faq.question}</span>
 								<span
 									class="lucide-chevron-down size-4 shrink-0 text-ink-gray-5 transition-transform duration-200 group-hover:text-ink-gray-8 group-open:rotate-180"
@@ -292,7 +358,15 @@ const description =
 				Get your team ready for action.
 			</h2>
 			<div class="mt-6">
-				<Button link="/meet" label="Book A Call" variant="outline" theme="gray" size="md" />
+				<Button
+					link="/meet"
+					label="Book A Call"
+					variant="outline"
+					theme="gray"
+					size="md"
+					data-cuelume-press
+					data-cuelume-release
+				/>
 			</div>
 		</section>
 
@@ -304,3 +378,15 @@ const description =
 		</section>
 	</main>
 </AppLayout>
+
+<script>
+	// One delegated bind for the whole page. It covers the `data-cuelume-*`
+	// attributes in the static markup above *and* the ones inside the two Vue
+	// islands, which hydrate after this runs.
+	import { magnify } from '../utils/dock';
+	import { initSound } from '../utils/sound';
+
+	initSound();
+
+	document.querySelectorAll<HTMLElement>('[data-dock]').forEach(magnify);
+</script>
