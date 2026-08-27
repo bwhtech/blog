@@ -1,4 +1,5 @@
 // @ts-check
+import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import vue from '@astrojs/vue';
 import { defineConfig } from 'astro/config';
@@ -22,6 +23,62 @@ function bundleDayjsEsm() {
 			if (source !== 'dayjs/esm' && !source.startsWith('dayjs/esm/')) return null;
 			// CommonJS resolution, which fills in the `/index.js` the ESM one refuses to.
 			return { id: require.resolve(source), external: false };
+		},
+	};
+}
+
+/**
+ * Reads the path redirects out of netlify.toml. Host-level rules
+ * (`https://blog.bwh.tech/*`) are skipped: they only mean anything once a
+ * request has a production hostname.
+ */
+function readNetlifyRedirects() {
+	const toml = fs.readFileSync(new URL('./netlify.toml', import.meta.url), 'utf-8');
+
+	return toml
+		.split('[[redirects]]')
+		.slice(1)
+		.map((block) => {
+			const read = (key) => block.match(new RegExp(`^\\s*${key}\\s*=\\s*"([^"]*)"`, 'm'))?.[1];
+			return { from: read('from'), to: read('to'), status: Number(read('status') ?? 301) };
+		})
+		.filter((rule) => rule.from?.startsWith('/') && rule.to);
+}
+
+/**
+ * `astro dev` knows nothing about netlify.toml, so every short link the site
+ * relies on — /meet, /school, /desk — 404s locally while working in production.
+ * This replays the file's path rules in the dev server, off the same source, so
+ * there is nothing to keep in sync. `netlify dev` serves them for real; this is
+ * for the plain 4321 server.
+ */
+function netlifyRedirects() {
+	return {
+		name: 'netlify-redirects',
+		apply: 'serve',
+		configureServer(server) {
+			const rules = readNetlifyRedirects();
+
+			// Front of the stack rather than `use()`: Astro's own handler answers
+			// every request, 404s included, so a middleware appended after it never
+			// runs for exactly the paths this exists to catch.
+			server.middlewares.stack.unshift({
+				route: '',
+				handle: (req, res, next) => {
+					const [pathname] = (req.url ?? '/').split('?');
+					const rule = rules.find(({ from }) =>
+						from.endsWith('/*')
+							? pathname.startsWith(from.slice(0, -1))
+							: pathname === from || pathname === `${from}/`,
+					);
+
+					if (!rule) return next();
+
+					const splat = rule.from.endsWith('/*') ? pathname.slice(rule.from.length - 1) : '';
+					res.writeHead(rule.status, { Location: rule.to.replace(':splat', splat) });
+					res.end();
+				},
+			});
 		},
 	};
 }
@@ -55,6 +112,7 @@ export default defineConfig({
 	vite: {
 		plugins: [
 			bundleDayjsEsm(),
+			netlifyRedirects(),
 			// Keeps `import { Button } from 'frappe-ui'` in source but resolves it to
 			// the declaring module, so dev never serves the whole barrel.
 			barrelImports(),

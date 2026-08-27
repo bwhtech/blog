@@ -23,6 +23,12 @@ override is needed because `astro dev` daemonises when spawned without a TTY, so
 Netlify sees its own dev command exit and shuts down; following the logs keeps a
 process in the foreground.
 
+The path redirects in `netlify.toml` are replayed on 4321 by the
+`netlifyRedirects` dev plugin in `astro.config.mjs`, which reads that file
+directly — so `/meet`, `/school` and the rest resolve locally instead of 404ing,
+and there is no second copy of the list to keep in sync. Host-level rules are
+skipped; only `netlify dev` can serve those.
+
 ## Commits
 
 Never add yourself as a co-author. Do not put a `Co-Authored-By` trailer, a
