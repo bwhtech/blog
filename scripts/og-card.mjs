@@ -71,8 +71,8 @@ function baseCss() {
 		overflow: hidden;
 	}
 
-	/* Faint disc bleeding off the top right corner. */
-	body::before {
+	/* Faint disc bleeding off the top right corner, on cards that ask for it. */
+	body.disc::before {
 		content: '';
 		position: absolute;
 		top: -180px;
@@ -107,19 +107,28 @@ function baseCss() {
 `;
 }
 
-/** Wraps a card's own CSS and body in the shared frame. */
-export function buildDocument({ css, body }) {
+/**
+ * Wraps a card's own CSS and body in the shared frame. `brand` and `domain`
+ * are the two corner marks and `disc` the faint circle behind the card; a card
+ * can drop any of them, and dropping both marks drops the row with them.
+ */
+export function buildDocument({ css, body, brand = true, domain = true, disc = true }) {
+	const corners =
+		brand || domain
+			? `	<div class="corners">
+		${brand ? '<div class="brand">BWH</div>' : ''}
+		${domain ? '<div class="domain">bwh.tech</div>' : ''}
+	</div>
+`
+			: '';
+
 	return `<!doctype html>
 <html>
 <head>
 <style>${baseCss()}${css}</style>
 </head>
-<body>
-	<div class="corners">
-		<div class="brand">BWH</div>
-		<div class="domain">bwh.tech</div>
-	</div>
-${body}
+<body class="${disc ? 'disc' : ''}">
+${corners}${body}
 </body>
 </html>`;
 }

@@ -13,6 +13,7 @@
     "spellcheck": "cspell --no-progress",
     "generate-og:author": "node scripts/generate-author-og.mjs",
     "generate-og:home": "node scripts/generate-home-og.mjs",
+    "generate-og:training": "node scripts/generate-training-og.mjs",
     "prepare": "husky",
     "db:migrate": "node --env-file=.env scripts/migrate-db.mjs"
   },
