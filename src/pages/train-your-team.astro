@@ -1,10 +1,10 @@
 ---
 import { getImage } from 'astro:assets';
 import { getEntry } from 'astro:content';
-import { Avatar, Button } from 'frappe-ui';
+import { Avatar, Badge, Button } from 'frappe-ui';
 import ThemeSwitcher from '../components/islands/ThemeSwitcher.vue';
 import TrainingPrograms from '../components/islands/TrainingPrograms.vue';
-import { FAQS, REVIEWS, TBD, TRACKS, TRAINERS } from '../data/training';
+import { FAQS, ONE_SHOT, PRODUCTS, REVIEWS, TBD, TRACKS, TRAINERS } from '../data/training';
 import AppLayout from '../layouts/AppLayout.astro';
 
 /**
@@ -112,9 +112,75 @@ const description =
 			</div>
 		</section>
 
+		<!--
+		  Same grey card as the rest of the page: it is a different kind of thing to
+		  buy, not a louder one, so it is set apart by the badge and the flat rate
+		  rather than by a tint.
+		-->
+		<section
+			id="frappeverse-one-shot"
+			class="mt-12 rounded-7 border border-outline-gray-1 bg-surface-gray-1 p-6 sm:mt-16 sm:p-8"
+			aria-labelledby="one-shot-title"
+		>
+			<div class="flex flex-wrap items-center gap-3">
+				<h2 id="one-shot-title" class="text-xl-semibold text-ink-gray-9">{ONE_SHOT.title}</h2>
+				<Badge label={ONE_SHOT.format} theme="gray" variant="subtle" size="md" />
+			</div>
+
+			<p class="mt-4 max-w-[560px] text-p-base text-ink-gray-6">{ONE_SHOT.blurb}</p>
+
+			<ul class="mt-6 flex flex-col gap-2.5">
+				{
+					ONE_SHOT.highlights.map((highlight) => (
+						<li class="flex gap-2 text-p-sm text-ink-gray-7">
+							<span
+								class="lucide-check size-4 shrink-0 translate-y-0.5 text-ink-gray-5"
+								aria-hidden="true"
+							/>
+							<span>{highlight}</span>
+						</li>
+					))
+				}
+			</ul>
+
+			<!-- The rate sits on the CTA line rather than in a strip of its own: it is
+			     one number, and the point of it is that nothing else qualifies it. -->
+			<div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+				<Button
+					link={ONE_SHOT.cta.href}
+					label={ONE_SHOT.cta.label}
+					variant="outline"
+					theme="gray"
+					size="md"
+				/>
+				<p class="text-base text-ink-gray-8">
+					<span class="font-medium">{ONE_SHOT.price}</span>
+					<span class="text-ink-gray-5"> {ONE_SHOT.priceNote}</span>
+				</p>
+			</div>
+
+			<ul class="mt-8 flex flex-wrap items-center gap-2.5 border-t border-outline-gray-1 pt-6">
+				{
+					ONE_SHOT.products.map((key) => (
+						<li>
+							<img
+								class="size-6"
+								src={PRODUCTS[key].src}
+								alt={PRODUCTS[key].label}
+								title={PRODUCTS[key].label}
+								width="24"
+								height="24"
+								loading="lazy"
+							/>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+
 		<section
 			id="build-your-training"
-			class="mt-24 scroll-mt-8 rounded-7 border border-outline-gray-1 bg-surface-gray-1 p-6 sm:mt-32 sm:p-8"
+			class="mt-12 scroll-mt-8 rounded-7 border border-outline-gray-1 bg-surface-gray-1 p-6 sm:mt-16 sm:p-8"
 			aria-labelledby="custom-title"
 		>
 			<h2 id="custom-title" class="text-xl-semibold text-ink-gray-9">Build Your Training</h2>

@@ -293,6 +293,44 @@ export const TRACKS: Track[] = [
 	},
 ];
 
+/**
+ * The one thing on the page nobody has to scope: a fixed price for a single
+ * session, so it is not a `Track` and has no band, no minimum and no seat
+ * count.
+ *
+ * PLACEHOLDER RATE, like the track pricing above — confirm the figure before
+ * anyone can hold us to it.
+ */
+export const ONE_SHOT = {
+	title: 'Frappeverse One Shot',
+	/** Duration, rendered as a Badge next to the heading. */
+	format: '5 hours + 1 hour Q&A',
+	blurb:
+		'Just discovered Frappeverse? This is the bird\u2019s-eye view: five hours across everything that is available, then an hour of Q&A on whatever your team wants to dig into.',
+	/** The three things that separate it from a booked programme. */
+	highlights: [
+		'Five hours over the whole Frappeverse, end to end',
+		'An hour of Q&A on whatever your team brings',
+		'Bring as many people as you like — the price is for the session, not the seat',
+	],
+	price: '$1,499',
+	priceNote: 'flat, for the session',
+	/** Everything the session passes over, as the same logo row the cards use. */
+	products: [
+		'framework',
+		'frappe-ui',
+		'cloud',
+		'erpnext',
+		'crm',
+		'helpdesk',
+		'hr',
+		'builder',
+		'insights',
+	] satisfies ProductKey[],
+	// The only CTA on the page that is not a call: it goes straight to checkout.
+	cta: { label: 'Book One Shot', href: 'https://rzp.io/rzp/frappe-crash-course' },
+};
+
 export interface Trainer {
 	name: string;
 	/** Short title, sits above the bio. */
