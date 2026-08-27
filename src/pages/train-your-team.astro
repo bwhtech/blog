@@ -59,24 +59,7 @@ const description =
 			<p class="mt-5 max-w-[560px] text-p-lg text-ink-gray-6">{description}</p>
 
 			<div class="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
-				<!-- Button's size is a prop, not a utility, so the responsive step needs
-				     two instances. `hidden` keeps the inactive one out of the a11y tree. -->
-				<Button
-					class="sm:hidden"
-					link="/meet"
-					label="Book A Call"
-					variant="solid"
-					theme="gray"
-					size="md"
-				/>
-				<Button
-					class="hidden sm:inline-flex"
-					link="/meet"
-					label="Book A Call"
-					variant="solid"
-					theme="gray"
-					size="lg"
-				/>
+				<Button link="/meet" label="Book A Call" variant="solid" theme="gray" size="md" />
 
 				<!-- An in-page jump, so it stays a plain anchor: Button's `link` prop
 				     always opens a new tab, which would break a fragment target. -->
@@ -223,23 +206,7 @@ const description =
 				Get your team ready for action.
 			</h2>
 			<div class="mt-6">
-				<!-- Same two-instance responsive step as the hero: size is a prop. -->
-				<Button
-					class="sm:hidden"
-					link="/meet"
-					label="Book A Call"
-					variant="outline"
-					theme="gray"
-					size="md"
-				/>
-				<Button
-					class="hidden sm:inline-flex"
-					link="/meet"
-					label="Book A Call"
-					variant="outline"
-					theme="gray"
-					size="lg"
-				/>
+				<Button link="/meet" label="Book A Call" variant="outline" theme="gray" size="md" />
 			</div>
 		</section>
 

@@ -44,9 +44,10 @@ function badgeTheme(index: number) {
 					</p>
 				</div>
 
-				<!-- items-start: a card that has its syllabus open should grow on its own,
-				     not stretch its neighbour into a column of empty space. -->
-				<ul class="grid items-start gap-5 sm:grid-cols-2">
+				<!-- Stretching is the grid default and stays that way: cards in a row
+				     match heights. Opening one card's syllabus grows its neighbour too,
+				     and `mt-auto` on the footer keeps both CTAs on the same line. -->
+				<ul class="grid gap-5 sm:grid-cols-2">
 					<li
 						v-for="(program, index) in active.programs"
 						:key="program.title"
