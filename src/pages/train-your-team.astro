@@ -181,29 +181,48 @@ const description =
 				</p>
 			</div>
 
-			<!-- client:visible: the row sits well below the fold, and it is the only
+			<!-- The label is not decoration: unlabelled, the row read as nine
+			     ornaments under a rule rather than as the syllabus. It borrows the
+			     type of "Add a deep dive" in the tracks above, which is the same
+			     kind of thing — a list of what else is in the box.
+
+			     client:visible: the row sits well below the fold, and it is the only
 			     thing on the page that needs a tooltip. -->
-			<div class="mt-8 border-t border-outline-gray-1 pt-6">
+			<div class="mt-8 flex flex-col gap-4 border-t border-outline-gray-1 pt-6">
+				<!-- A sentence rather than a label, so it takes the body register the
+				     other supporting copy uses, not the heavier "Add a deep dive" one. -->
+				<h3 class="text-p-sm text-ink-gray-5">Covers a variety of Frappeverse Products</h3>
 				<ProductRow products={ONE_SHOT.products} magnified client:visible />
 			</div>
 		</section>
 
+		<!--
+		  Deliberately lighter than the two blocks above it. As a filled card with
+		  the same padding and the same heading size it read as a third thing to
+		  buy, sitting beside a $1,499 session with equal billing — but there is
+		  nothing here to price. It is the way out when neither of the offers above
+		  fits, so it gets an outline and a single line: a footnote to the
+		  programmes, not a rival to them.
+		-->
 		<section
 			id="build-your-training"
-			class="mt-12 scroll-mt-8 rounded-7 border border-outline-gray-1 bg-surface-gray-1 p-6 sm:mt-16 sm:p-8"
+			class="mt-8 flex scroll-mt-8 flex-col gap-4 rounded-6 border border-outline-gray-1 px-5 py-4 sm:mt-10 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-6 sm:py-5"
 			aria-labelledby="custom-title"
 		>
-			<h2 id="custom-title" class="text-xl-semibold text-ink-gray-9">Build Your Training</h2>
-			<p class="mt-4 max-w-[520px] text-p-base text-ink-gray-6">
-				Have a custom requirement? Want to mix and match? We can build a training programme <em
-					>just for you</em
-				>.
-			</p>
-			<div class="mt-6">
+			<div>
+				<h2 id="custom-title" class="text-base font-medium text-ink-gray-8">Build Your Training</h2>
+				<p class="mt-1 max-w-[520px] text-p-sm text-ink-gray-5">
+					Have a custom requirement? Want to mix and match? We can build a training programme <em
+						>just for you</em
+					>.
+				</p>
+			</div>
+			<!-- shrink-0: the button keeps its width and the copy is what reflows. -->
+			<div class="shrink-0">
 				<Button
 					link="/meet"
 					label="Talk to us"
-					variant="outline"
+					variant="subtle"
 					theme="gray"
 					size="md"
 					data-cuelume-press

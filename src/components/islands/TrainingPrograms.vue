@@ -42,8 +42,16 @@ function badgeTheme(index: number) {
 <template>
 	<FrappeUIProvider>
 		<div class="flex flex-col gap-10">
-			<!-- Horizontal scroll so the three tabs never wrap on a narrow phone. -->
-			<div class="-mx-4 flex overflow-x-auto px-4 sm:mx-0 sm:px-0">
+			<!--
+				Horizontal scroll so the three tabs never wrap on a narrow phone. The
+				mask fades the last tab into the gutter instead of guillotining it at
+				the viewport edge, which read as a clipping bug rather than as
+				"there is more this way". It masks alpha, not colour, so it needs no
+				dark-mode counterpart. Dropped at `sm`, where the row always fits.
+			-->
+			<div
+				class="-mx-4 flex overflow-x-auto px-4 [mask-image:linear-gradient(to_right,#000_calc(100%-2.5rem),transparent)] sm:mx-0 sm:px-0 sm:[mask-image:none]"
+			>
 				<TabButtons v-model="activeTab" :options="options" variant="subtle" size="md" />
 			</div>
 
@@ -82,13 +90,23 @@ function badgeTheme(index: number) {
 						</p>
 
 						<!--
+							The spacer, not a margin, is what separates the outcome from the rule
+							below it: it grows to take up whatever slack the shorter card has, so
+							the two rules sit on the same line while both cards are closed —
+							which is how the row is first seen. `min-h-5` keeps its floor at the
+							margin it replaces. Opening one card still drops the other's rule,
+							because the group below is bottom-anchored and one of them is taller.
+						-->
+						<div class="min-h-5 grow" aria-hidden="true" />
+
+						<!--
 							The syllabus and the audience line are the two things that made this
 							card a wall of text, and neither is what someone is reading the card
 							for. They stay one click away instead of being cut: `details` gives
 							the disclosure for free, with no state and no hydration cost beyond
 							the island this already is.
 						-->
-						<details class="group mt-5 border-t border-outline-gray-1 pt-4">
+						<details class="group border-t border-outline-gray-1 pt-4">
 							<summary
 								data-cuelume-toggle
 								class="flex cursor-pointer select-none list-none items-center gap-1.5 text-sm text-ink-gray-5 transition-colors hover:text-ink-gray-8"
@@ -116,8 +134,9 @@ function badgeTheme(index: number) {
 							</div>
 						</details>
 
-						<!-- mt-auto: CTAs line up along the bottom however tall the card grows. -->
-						<div class="mt-auto flex flex-wrap items-center gap-3 pt-6">
+						<!-- The spacer above already pushed this to the bottom, so the CTAs
+						     line up however tall the card grows. -->
+						<div class="flex flex-wrap items-center gap-3 pt-6">
 							<ProductRow v-if="program.products?.length" :products="program.products" />
 							<Button
 								:label="program.cta"
