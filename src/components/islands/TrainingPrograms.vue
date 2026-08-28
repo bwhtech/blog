@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Badge, Button, FrappeUIProvider, TabButtons } from 'frappe-ui';
-import { computed, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { type Track } from '../../data/training';
 import ProductRow from './ProductRow.vue';
 import { cue } from '../../utils/sound';
@@ -30,6 +30,56 @@ const options = computed(() =>
 
 const active = computed(() => props.tracks.find((track) => track.id === activeId.value));
 
+/**
+ * The tab row scrolls sideways on a phone, and a tab cut off flat at the edge
+ * reads as a clipping bug rather than as "there is more this way". So each end
+ * that has something past it is faded out.
+ *
+ * Which end that is changes as you scroll, so it cannot be a static class: the
+ * fade has to follow `scrollLeft`. A scroll-driven CSS animation would do this
+ * with no script, but `animation-timeline` is not in Firefox yet. This is a
+ * hydrated island already, so a passive listener is the cheaper bet.
+ */
+const FADE = '2.5rem';
+
+const scroller = ref<HTMLElement | null>(null);
+const fadeStart = ref(false);
+const fadeEnd = ref(false);
+
+function readFades() {
+	const el = scroller.value;
+	if (!el) return;
+
+	// A pixel of slack: scrollLeft is fractional under a zoom or a retina scale,
+	// so an exact comparison leaves a hairline fade at a scroll that has in fact
+	// reached the end. When the row fits, both come out false and the mask is
+	// dropped entirely — which is what makes the `sm` case need no breakpoint.
+	const max = el.scrollWidth - el.clientWidth;
+	fadeStart.value = el.scrollLeft > 1;
+	fadeEnd.value = el.scrollLeft < max - 1;
+}
+
+const maskStyle = computed(() => {
+	if (!fadeStart.value && !fadeEnd.value) return { maskImage: 'none' };
+
+	const from = fadeStart.value ? `transparent, #000 ${FADE}` : '#000 0';
+	const to = fadeEnd.value ? `#000 calc(100% - ${FADE}), transparent` : '#000 100%';
+
+	return { maskImage: `linear-gradient(to right, ${from}, ${to})` };
+});
+
+// Width, not just scroll: a rotation or a resize changes whether the row
+// overflows at all, and neither fires a scroll event.
+let observer: ResizeObserver | undefined;
+
+onMounted(() => {
+	readFades();
+	observer = new ResizeObserver(readFades);
+	if (scroller.value) observer.observe(scroller.value);
+});
+
+onBeforeUnmount(() => observer?.disconnect());
+
 // Cycled per card so the programmes in a track read as siblings rather than a
 // list of the same thing. Red is left out: on a badge it reads as an error.
 const BADGE_THEMES = ['violet', 'blue', 'green', 'amber'] as const;
@@ -44,13 +94,20 @@ function badgeTheme(index: number) {
 		<div class="flex flex-col gap-10">
 			<!--
 				Horizontal scroll so the three tabs never wrap on a narrow phone. The
-				mask fades the last tab into the gutter instead of guillotining it at
-				the viewport edge, which read as a clipping bug rather than as
-				"there is more this way". It masks alpha, not colour, so it needs no
-				dark-mode counterpart. Dropped at `sm`, where the row always fits.
+				mask fades whichever end has tabs past it; see `readFades` above. It
+				masks alpha, not colour, so it needs no dark-mode counterpart.
+
+				The class is the pre-hydration state, not the live one: the island is
+				`client:visible`, so until it hydrates the only end that can have
+				anything past it is the right. `maskStyle` always resolves to a
+				`mask-image` — `none` included — so it overrides the class outright
+				rather than leaving the two to disagree.
 			-->
 			<div
+				ref="scroller"
 				class="-mx-4 flex overflow-x-auto px-4 [mask-image:linear-gradient(to_right,#000_calc(100%-2.5rem),transparent)] sm:mx-0 sm:px-0 sm:[mask-image:none]"
+				:style="maskStyle"
+				@scroll.passive="readFades"
 			>
 				<TabButtons v-model="activeTab" :options="options" variant="subtle" size="md" />
 			</div>
