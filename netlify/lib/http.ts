@@ -26,6 +26,15 @@ export function serverError(scope: string, error: unknown): Response {
 }
 
 /**
+ * A dependency answered, but not with success. A 502 rather than a 500 so the
+ * client can tell "try again in a minute" from "we broke".
+ */
+export function badGateway(scope: string, error: unknown): Response {
+	console.error(scope, error);
+	return json({ error: 'upstream_error' }, 502);
+}
+
+/**
  * `context.ip` is filled in by Netlify's edge, not by the request, so it cannot
  * be spoofed with a header. The header fallbacks exist only because it comes
  * back empty under `netlify dev`.

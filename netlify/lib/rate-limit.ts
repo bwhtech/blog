@@ -4,7 +4,7 @@ import { sha256Hex } from './http';
 export interface RateLimitOptions {
 	ip: string;
 	/** Namespaces the bucket, so a like and a comment never share a counter. */
-	action: 'like' | 'comment';
+	action: 'like' | 'comment' | 'subscribe';
 	/** Narrows the bucket further, e.g. to one post. */
 	extra?: string;
 	limit: number;

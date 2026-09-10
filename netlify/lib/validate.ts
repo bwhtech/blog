@@ -14,6 +14,8 @@ const CATEGORIES = Object.freeze([
 
 const POST_ID = /^[a-z0-9][a-z0-9-]*\/[a-z0-9][a-z0-9-]*$/;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+/** A page name the islands pass along with a signup, e.g. `blog-post`. */
+const SOURCE = /^[a-z0-9][a-z0-9-]{0,39}$/;
 const LINK = /https?:\/\/|www\./i;
 
 const TAB = 9;
@@ -53,6 +55,24 @@ export function isValidPostId(value: unknown): value is string {
 	return CATEGORIES.includes(value.split('/')[0]);
 }
 
+/** Lowercased and stripped of control characters; empty when nothing usable was sent. */
+export function normalizeEmail(value: unknown): string {
+	return stripControl(String(value ?? '')).trim().toLowerCase();
+}
+
+/**
+ * Not an RFC 5322 parse on purpose: the address is never displayed, and the
+ * one place it is acted on (Kit) validates again, so this only has to catch
+ * typos and obvious junk.
+ */
+export function isValidEmail(email: string): boolean {
+	return email.length > 0 && email.length <= 254 && EMAIL.test(email);
+}
+
+export function isValidSource(value: unknown): value is string {
+	return typeof value === 'string' && SOURCE.test(value);
+}
+
 export interface CommentFields {
 	name: string;
 	email: string;
@@ -84,14 +104,9 @@ export function validateComment(input: Record<string, unknown>): {
 		errors.name = `Please keep your name under ${NAME_MAX} characters.`;
 	else if (LINK.test(name)) errors.name = 'Please enter a name, not a link.';
 
-	// Not an RFC 5322 parse on purpose: the address is never verified and never
-	// displayed, so this only has to catch typos and obvious junk.
-	const email = stripControl(String(input.email ?? ''))
-		.trim()
-		.toLowerCase();
+	const email = normalizeEmail(input.email);
 	if (!email) errors.email = 'Please enter your email.';
-	else if (email.length > 254 || !EMAIL.test(email))
-		errors.email = 'Please enter a valid email address.';
+	else if (!isValidEmail(email)) errors.email = 'Please enter a valid email address.';
 
 	const body = stripControl(String(input.body ?? '').replace(/\r\n/g, '\n'), true)
 		.replace(/\n{3,}/g, '\n\n')

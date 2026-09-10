@@ -1,11 +1,12 @@
 ---
+import NewsletterForm from '../components/islands/NewsletterForm.vue';
 import { SITE_TITLE } from '../consts';
-import BaseLayout from '../layouts/BaseLayout.astro';
+import AppLayout from '../layouts/AppLayout.astro';
 
 const description = 'We solve problems with Frappe Framework and apps.';
 ---
 
-<BaseLayout title={SITE_TITLE} description={description} ogImage="/og/home.jpg">
+<AppLayout title={SITE_TITLE} description={description} ogImage="/og/home.jpg">
 	<main
 		id="main-content"
 		class="mx-auto flex min-h-screen w-full max-w-[820px] flex-col items-center justify-center gap-9 px-4 text-center sm:px-5"
@@ -60,6 +61,12 @@ const description = 'We solve problems with Frappe Framework and apps.';
 						stroke-width="2"></path>
 				</svg>
 			</a>
+
+			<!-- client:idle rather than visible: it is above the fold on every
+			     viewport, so an observer would fire at once anyway. -->
+			<div class="mt-4 w-full">
+				<NewsletterForm client:idle source="home" compact />
+			</div>
 		</div>
 	</main>
-</BaseLayout>
+</AppLayout>

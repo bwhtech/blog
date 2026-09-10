@@ -2,6 +2,7 @@
 import { getImage } from 'astro:assets';
 import { getEntry } from 'astro:content';
 import { Avatar, Badge, Button } from 'frappe-ui';
+import NewsletterForm from '../components/islands/NewsletterForm.vue';
 import ProductRow from '../components/islands/ProductRow.vue';
 import ThemeSwitcher from '../components/islands/ThemeSwitcher.vue';
 import TrainingPrograms from '../components/islands/TrainingPrograms.vue';
@@ -358,6 +359,14 @@ const description =
 				/>
 			</div>
 		</section>
+
+		<div class="mt-24 sm:mt-32">
+			<NewsletterForm
+				client:visible
+				source="train-your-team"
+				blurb="Cohort dates and training updates, when there are some. No spam."
+			/>
+		</div>
 
 		<section class="mt-24 flex justify-center sm:mt-32" aria-label="Colour scheme">
 			<!-- client:only: the active scheme lives in localStorage and matchMedia, so
