@@ -20,8 +20,27 @@ export const PARTNER_PLAN = {
 	format: 'Retainer',
 	blurb:
 		'Senior help on tap for the people building on Frappe: office hours, pull-request review and a private channel to ask.',
-	price: { india: '₹30,000 / month', elsewhere: '$750 / month' },
-	priceNote: '6-month minimum term, invoiced monthly',
+	/**
+	 * Two ways to pay for the same six months. Upfront is listed first and is
+	 * the default: it is five months' price for six, and there is nothing to
+	 * chase.
+	 */
+	payment: [
+		{
+			label: 'Upfront',
+			india: '₹1,50,000',
+			elsewhere: '$3,750',
+			note: 'for the full 6 months, paid before the channel opens',
+			featured: true,
+		},
+		{
+			label: 'Monthly',
+			india: '₹30,000 / month',
+			elsewhere: '$750 / month',
+			note: 'on a 6-month agreement, auto-debited',
+			featured: false,
+		},
+	],
 	includes: [
 		'Biweekly one-hour office hours with Hussain',
 		'Priority async Q&A in a private channel, answered within one business day',
@@ -35,57 +54,6 @@ export const PARTNER_PLAN = {
 	cta: { label: 'Book A Call', href: MEET },
 };
 
-export interface Program {
-	id: string;
-	title: string;
-	/** One line on what it is for. */
-	tagline: string;
-	/** Duration and shape, rendered as a Badge. */
-	format: string;
-	price: { india: string; elsewhere: string };
-	/** Anything that qualifies the rate. */
-	priceNote?: string;
-	highlights: string[];
-	/** A closing line under the list. */
-	note?: string;
-	cta: { label: string; href: string };
-}
-
-/** The two programmes a partner firm buys per seat, under the retainer or on their own. */
-export const PROGRAMS: Program[] = [
-	{
-		id: 'onboarding',
-		title: 'New Frappe Hire Onboarding',
-		tagline: 'Six weeks, self-paced, for developers new to Frappe.',
-		format: 'Self-paced · 6 weeks',
-		price: { india: '₹15,000 per seat', elsewhere: '$250 per seat' },
-		priceNote: 'Partner Plan members get 2 seats per quarter included',
-		highlights: [
-			'Prerequisites: Git, Markdown, Flask and SQL',
-			'The Frappe core curriculum',
-			'A Learning-by-Building project: backend, Tailwind frontend and an integration',
-			'Assignment review by BWH',
-			'A weekly group office hour',
-		],
-		note: 'The same track BWH uses to onboard its own engineers, and the curriculum behind the private Zero to Hero batches.',
-		cta: { label: 'Onboard a developer', href: MEET },
-	},
-	{
-		id: 'zero-to-hero',
-		title: 'Private Zero to Hero Batch',
-		tagline: 'Six weeks, live, for your own team.',
-		format: 'Live · 6 weeks',
-		price: { india: '₹50,000 per seat', elsewhere: '$1,000 per seat' },
-		priceNote: 'minimum 5 seats',
-		highlights: [
-			'Live sessions for a partner’s own team',
-			'Assignment review',
-			'Certification support',
-		],
-		cta: { label: 'See the programme', href: '/train-your-team' },
-	},
-];
-
 export interface Step {
 	title: string;
 	detail: string;
@@ -96,7 +64,7 @@ export const STEPS: Step[] = [
 	{
 		title: 'Sign and start',
 		detail:
-			'Sign the 6-month agreement and pay the first invoice. Your private channel is created within two business days.',
+			'Sign the 6-month agreement and pay, upfront or the first month. Your private channel is created within two business days.',
 	},
 	{
 		title: 'First office hour',
@@ -142,8 +110,21 @@ export const FAQS: Faq[] = [
 		answer: 'INR invoices with GST for India. USD for everyone else.',
 	},
 	{
+		question: 'How do we pay?',
+		answer:
+			'Upfront for the six months (₹1,50,000 in India, $3,750 elsewhere) or monthly (₹30,000 or $750) on a six-month agreement. Upfront is five months’ price for six. GST applies on Indian invoices.',
+	},
+	{
+		question: 'Can we switch from monthly to upfront?',
+		answer: 'Yes, at any point in the term. What you have already paid is credited against the upfront price.',
+	},
+	{
 		question: 'Can we start with one month?',
 		answer:
 			'No. The minimum is six months. The value is the standing relationship, not a one-off call.',
+	},
+	{
+		question: 'Are refunds possible?',
+		answer: 'No. You can pause once per term instead, and the term extends by the length of the pause.',
 	},
 ];
