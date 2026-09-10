@@ -1,68 +1,88 @@
 /**
  * Content for /partner.
  *
- * A first draft. Nothing here has been agreed: every rate and every FAQ answer
- * is `TBD`, rendered as a visible placeholder like on /train-your-team, so an
- * unfinished part is obvious on the page rather than only in this file.
+ * Prices are in the currency they are invoiced in: INR with GST for India,
+ * USD for everyone else. Both are written out rather than converted, so a rate
+ * change is one edit and the two never drift.
  */
-import { TBD } from './training';
 
-export { TBD };
+/** Where every call to action on the page goes. */
+export const MEET = '/meet';
 
-export interface Plan {
+/**
+ * The headline: a retainer, the way senior open-source maintainers run them.
+ * It is the one plan with a term, so it is rendered as its own card rather
+ * than as one of three equals.
+ */
+export const PARTNER_PLAN = {
+	title: 'Partner Plan',
+	/** Shape of the engagement, rendered as a Badge next to the heading. */
+	format: 'Retainer',
+	blurb:
+		'Senior help on tap for the people building on Frappe: office hours, pull-request review and a private channel to ask.',
+	price: { india: '₹30,000 / month', elsewhere: '$750 / month' },
+	priceNote: '6-month minimum term, invoiced monthly',
+	includes: [
+		'Biweekly one-hour office hours with Hussain',
+		'Priority async Q&A in a private channel, answered within one business day',
+		'Pull-request review, up to 4 PRs a month',
+		'2 seats per quarter in any public BWH cohort',
+		'Early access to all cohort recordings and the BWH Pro library',
+		'Upgrade and migration guidance, v15 to v16 and onward',
+	],
+	/** Quoted separately; the page links to where. */
+	excludes: 'Implementation work, on-call and production incident response are not included.',
+	cta: { label: 'Book A Call', href: MEET },
+};
+
+export interface Program {
 	id: string;
 	title: string;
-	/** One line on what the plan is for. */
+	/** One line on what it is for. */
 	tagline: string;
-	/** Shape of the engagement, rendered as a Badge. */
+	/** Duration and shape, rendered as a Badge. */
 	format: string;
-	/** The three things that define the plan. */
+	price: { india: string; elsewhere: string };
+	/** Anything that qualifies the rate. */
+	priceNote?: string;
 	highlights: string[];
-	/** How it is charged. `TBD` until a rate is agreed. */
-	price: string;
-	/** Label on the card's call to action. */
-	cta: string;
+	/** A closing line under the list. */
+	note?: string;
+	cta: { label: string; href: string };
 }
 
-export const PLANS: Plan[] = [
+/** The two programmes a partner firm buys per seat, under the retainer or on their own. */
+export const PROGRAMS: Program[] = [
 	{
-		id: 'engineering',
-		title: 'Engineering Partner',
-		tagline: 'We build for your clients.',
-		format: 'Project or retainer',
+		id: 'onboarding',
+		title: 'New Frappe Hire Onboarding',
+		tagline: 'Six weeks, self-paced, for developers new to Frappe.',
+		format: 'Self-paced · 6 weeks',
+		price: { india: '₹15,000 per seat', elsewhere: '$250 per seat' },
+		priceNote: 'Partner Plan members get 2 seats per quarter included',
 		highlights: [
-			'Frappe developers on your project, for a week or a year',
-			'Custom apps, integrations, upgrades and reviews',
-			'Your name in front of the client, ours behind it',
+			'Prerequisites: Git, Markdown, Flask and SQL',
+			'The Frappe core curriculum',
+			'A Learning-by-Building project: backend, Tailwind frontend and an integration',
+			'Assignment review by BWH',
+			'A weekly group office hour',
 		],
-		price: TBD,
-		cta: 'Add BWH to my team',
+		note: 'The same track BWH uses to onboard its own engineers, and the curriculum behind the private Zero to Hero batches.',
+		cta: { label: 'Onboard a developer', href: MEET },
 	},
 	{
-		id: 'training',
-		title: 'Training Partner',
-		tagline: 'We train your team and your clients.',
-		format: 'Per cohort',
+		id: 'zero-to-hero',
+		title: 'Private Zero to Hero Batch',
+		tagline: 'Six weeks, live, for your own team.',
+		format: 'Live · 6 weeks',
+		price: { india: '₹50,000 per seat', elsewhere: '$1,000 per seat' },
+		priceNote: 'minimum 5 seats',
 		highlights: [
-			'Every programme on Train Your Team, under your name or ours',
-			'Official Frappe School training partner',
-			'Remote or on-site',
+			'Live sessions for a partner’s own team',
+			'Assignment review',
+			'Certification support',
 		],
-		price: TBD,
-		cta: 'Train with BWH',
-	},
-	{
-		id: 'referral',
-		title: 'Referral Partner',
-		tagline: 'Send us work. Earn a share.',
-		format: 'No commitment',
-		highlights: [
-			'Introduce a client, we take it from there',
-			'A share of the first engagement, paid when we are paid',
-			'No minimums and no exclusivity',
-		],
-		price: TBD,
-		cta: 'Refer a client',
+		cta: { label: 'See the programme', href: '/train-your-team' },
 	},
 ];
 
@@ -72,17 +92,24 @@ export interface Step {
 }
 
 export const STEPS: Step[] = [
-	{ title: 'Book a call', detail: 'Tell us what you do and where you need help.' },
-	{ title: 'Pick a plan', detail: 'We agree the plan, the scope and the rate in writing.' },
-	{ title: 'Start', detail: 'Most engagements start within two weeks of the call.' },
+	{ title: 'Book a call', detail: 'A 30-minute call to confirm fit and team size.' },
+	{
+		title: 'Sign and start',
+		detail:
+			'Sign the 6-month agreement and pay the first invoice. Your private channel is created within two business days.',
+	},
+	{
+		title: 'First office hour',
+		detail: 'Scheduled in week one. PR review and Q&A start immediately.',
+	},
 ];
 
 /** Who the page is for, in the order a reader is most likely to be one of them. */
 export const AUDIENCE: string[] = [
-	'Frappe partners with more work than hands',
-	'Agencies adding Frappe to their stack',
-	'Consultancies that need training delivered',
-	'Product companies building on Frappe',
+	'Frappe partner firms onboarding or certifying developers',
+	'Product teams building on Frappe who need a senior reviewer',
+	'Consultancies taking on ERPNext upgrades',
+	'In-house ERPNext teams without a senior Frappe engineer',
 ];
 
 export interface Faq {
@@ -91,9 +118,32 @@ export interface Faq {
 }
 
 export const FAQS: Faq[] = [
-	{ question: 'Do you work under our brand?', answer: TBD },
-	{ question: 'How do you charge?', answer: TBD },
-	{ question: 'Where are you based, and do you travel?', answer: TBD },
-	{ question: 'Can we start with one project?', answer: TBD },
-	{ question: 'How does the referral share work?', answer: TBD },
+	{
+		question: 'Can we pause?',
+		answer: 'Yes, once per term, for up to one month, with two weeks notice.',
+	},
+	{
+		question: 'What counts as a PR review?',
+		answer:
+			'Up to 4 pull requests a month, each under about 500 changed lines, reviewed within two business days with written comments. Larger reviews are quoted.',
+	},
+	{ question: 'Do office hours roll over?', answer: 'No. Unused hours expire each month.' },
+	{
+		question: 'Who answers questions?',
+		answer: 'Hussain, with BWH senior engineers for coverage during travel or leave.',
+	},
+	{
+		question: 'Is there a certification?',
+		answer:
+			'The Partner Plan does not include Frappe School certification. It can be added at ₹15,000 per seat through BWH, an official Frappe School training partner.',
+	},
+	{
+		question: 'Which currencies?',
+		answer: 'INR invoices with GST for India. USD for everyone else.',
+	},
+	{
+		question: 'Can we start with one month?',
+		answer:
+			'No. The minimum is six months. The value is the standing relationship, not a one-off call.',
+	},
 ];

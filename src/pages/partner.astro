@@ -1,12 +1,12 @@
 ---
 import { Badge, Button } from 'frappe-ui';
 import ThemeSwitcher from '../components/islands/ThemeSwitcher.vue';
-import { AUDIENCE, FAQS, PLANS, STEPS, TBD } from '../data/partner';
+import { AUDIENCE, FAQS, MEET, PARTNER_PLAN, PROGRAMS, STEPS } from '../data/partner';
 import AppLayout from '../layouts/AppLayout.astro';
 
-const title = 'Partner with BWH';
+const title = 'BWH Partner Plan';
 const description =
-	'Work with BWH on your Frappe projects. We build, train and refer, so you can take on more.';
+	'Senior ex-Frappe-core engineers on tap for the people building on Frappe. A retainer for Frappe partner firms and in-house ERPNext teams.';
 
 // Same idiom as /train-your-team: every frappe-ui component below renders at
 // build time with no `client:*` directive. Only ThemeSwitcher hydrates.
@@ -18,20 +18,24 @@ const description =
 			<p class="text-xs-medium uppercase tracking-widest text-ink-gray-5">
 				<a class="no-underline transition-colors hover:text-ink-gray-8" href="/">BWH</a>
 				<span class="mx-1.5 text-ink-gray-4" aria-hidden="true">/</span>
-				<span class="text-ink-gray-7">Partners</span>
+				<span class="text-ink-gray-7">Partner Plan</span>
 			</p>
 
 			<h1
 				id="page-title"
 				class="mt-6 text-[32px] font-semibold leading-[1.15] tracking-tight text-ink-gray-9 sm:text-[38px] lg:text-[44px]"
 			>
-				Build with BWH.
+				Senior Frappe help, on tap.
 			</h1>
 			<p class="mt-5 max-w-[560px] text-p-lg text-ink-gray-6">{description}</p>
+			<p class="mt-4 max-w-[560px] text-p-sm text-ink-gray-5">
+				Two partner firms already run private batches with us. The Partner Plan is the standing
+				version of that.
+			</p>
 
 			<div class="mt-11 flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
 				<Button
-					link="/meet"
+					link={MEET}
 					label="Book A Call"
 					variant="solid"
 					theme="gray"
@@ -59,25 +63,90 @@ const description =
 		<section id="plans" class="mt-24 scroll-mt-8 sm:mt-32" aria-labelledby="plans-title">
 			<h2 id="plans-title" class="text-2xl-semibold text-ink-gray-9">Plans</h2>
 			<p class="mt-4 max-w-[560px] text-p-base text-ink-gray-6">
-				Three ways to work together. Pick the one that fits, or mix them.
+				One retainer, the way senior open-source maintainers run them, and two programmes for the
+				developers on your team.
 			</p>
 
+			<!--
+			  The retainer takes the One Shot card from /train-your-team: the same
+			  grey card, badge beside the heading, a single rate on the CTA line. It
+			  is the headline, so it stands alone above the two per-seat cards.
+			-->
+			<article
+				class="mt-10 rounded-7 border border-outline-gray-1 bg-surface-gray-1 p-6 sm:p-8"
+				aria-labelledby="partner-plan-title"
+			>
+				<div class="flex flex-wrap items-center gap-3">
+					<h3 id="partner-plan-title" class="text-xl-semibold text-ink-gray-9">
+						{PARTNER_PLAN.title}
+					</h3>
+					<Badge label={PARTNER_PLAN.format} theme="gray" variant="subtle" size="md" />
+				</div>
+
+				<p class="mt-4 max-w-[560px] text-p-base text-ink-gray-6">{PARTNER_PLAN.blurb}</p>
+
+				<ul class="mt-6 grid gap-2.5 sm:grid-cols-2 sm:gap-x-6">
+					{
+						PARTNER_PLAN.includes.map((item) => (
+							<li class="flex gap-2 text-p-sm text-ink-gray-7">
+								<span
+									class="lucide-check size-4 shrink-0 translate-y-0.5 text-ink-gray-5"
+									aria-hidden="true"
+								/>
+								<span>{item}</span>
+							</li>
+						))
+					}
+				</ul>
+
+				<p class="mt-5 text-p-sm text-ink-gray-5">
+					{PARTNER_PLAN.excludes} Those are quoted separately: see <a
+						class="text-ink-gray-7 underline decoration-outline-gray-3 underline-offset-2 transition-colors hover:text-ink-gray-9"
+						href="/train-your-team">Train Your Team</a
+					> or <a
+						class="text-ink-gray-7 underline decoration-outline-gray-3 underline-offset-2 transition-colors hover:text-ink-gray-9"
+						href={MEET}>talk to us</a
+					>.
+				</p>
+
+				<!-- Both rates on the CTA line, as on One Shot: the point of the number
+				     is that nothing else qualifies it beyond the term. -->
+				<div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+					<Button
+						link={PARTNER_PLAN.cta.href}
+						label={PARTNER_PLAN.cta.label}
+						variant="solid"
+						theme="gray"
+						size="md"
+						data-cuelume-press
+						data-cuelume-release
+					/>
+					<p class="text-base text-ink-gray-8">
+						<span class="font-medium">{PARTNER_PLAN.price.india}</span>
+						<span class="text-ink-gray-5"> in India · </span>
+						<span class="font-medium">{PARTNER_PLAN.price.elsewhere}</span>
+						<span class="text-ink-gray-5"> elsewhere</span>
+					</p>
+				</div>
+				<p class="mt-3 text-p-sm text-ink-gray-5">{PARTNER_PLAN.priceNote}</p>
+			</article>
+
 			<!-- The same card as the trainer cards on /train-your-team. -->
-			<ul class="mt-10 grid gap-5 sm:grid-cols-3">
+			<ul class="mt-5 grid gap-5 sm:grid-cols-2">
 				{
-					PLANS.map((plan) => (
+					PROGRAMS.map((program) => (
 						<li class="flex">
 							<div class="flex w-full flex-col rounded-6 border border-outline-gray-1 bg-surface-base p-6">
 								{/* Stacked, not inline: in a card this narrow the badge wrapped under
-								    the longer titles and the three cards no longer lined up. */}
+								    the longer titles and the cards no longer lined up. */}
 								<div class="flex flex-col items-start gap-2">
-									<h3 class="text-base font-medium text-ink-gray-8">{plan.title}</h3>
-									<Badge label={plan.format} theme="gray" variant="subtle" size="sm" />
+									<h3 class="text-base font-medium text-ink-gray-8">{program.title}</h3>
+									<Badge label={program.format} theme="gray" variant="subtle" size="sm" />
 								</div>
-								<p class="mt-1 text-p-sm text-ink-gray-5">{plan.tagline}</p>
+								<p class="mt-1 text-p-sm text-ink-gray-5">{program.tagline}</p>
 
 								<ul class="mt-5 flex flex-col gap-2.5">
-									{plan.highlights.map((highlight) => (
+									{program.highlights.map((highlight) => (
 										<li class="flex gap-2 text-p-sm text-ink-gray-7">
 											<span
 												class="lucide-check size-4 shrink-0 translate-y-0.5 text-ink-gray-5"
@@ -88,19 +157,27 @@ const description =
 									))}
 								</ul>
 
+								{program.note && <p class="mt-4 text-p-sm text-ink-gray-5">{program.note}</p>}
+
 								{/* A growing spacer, so the rate and the button line up across
 								    cards whose lists wrap differently. */}
 								<div class="flex-1" />
 
-								<p
-									class={`mt-6 border-t border-outline-gray-1 pt-4 text-sm ${plan.price === TBD ? 'text-ink-gray-4' : 'text-ink-gray-7'}`}
-								>
-									{plan.price}
-								</p>
+								<div class="mt-6 border-t border-outline-gray-1 pt-4">
+									<p class="text-sm text-ink-gray-8">
+										<span class="font-medium">{program.price.india}</span>
+										<span class="text-ink-gray-5"> in India · </span>
+										<span class="font-medium">{program.price.elsewhere}</span>
+										<span class="text-ink-gray-5"> elsewhere</span>
+									</p>
+									{program.priceNote && (
+										<p class="mt-1 text-p-sm text-ink-gray-5">{program.priceNote}</p>
+									)}
+								</div>
 								<div class="mt-4">
 									<Button
-										link="/meet"
-										label={plan.cta}
+										link={program.cta.href}
+										label={program.cta.label}
 										variant="subtle"
 										theme="gray"
 										size="md"
@@ -168,11 +245,7 @@ const description =
 									aria-hidden="true"
 								/>
 							</summary>
-							<p
-								class={`px-2 pb-5 text-p-base ${faq.answer === TBD ? 'text-ink-gray-4' : 'text-ink-gray-6'}`}
-							>
-								{faq.answer}
-							</p>
+							<p class="px-2 pb-5 text-p-base text-ink-gray-6">{faq.answer}</p>
 						</details>
 					))
 				}
@@ -180,10 +253,10 @@ const description =
 		</section>
 
 		<section class="mt-24 text-center sm:mt-32" aria-labelledby="cta-title">
-			<h2 id="cta-title" class="text-2xl-semibold text-ink-gray-9">Let's build together.</h2>
+			<h2 id="cta-title" class="text-2xl-semibold text-ink-gray-9">Senior Frappe help, on tap.</h2>
 			<div class="mt-6">
 				<Button
-					link="/meet"
+					link={MEET}
 					label="Book A Call"
 					variant="outline"
 					theme="gray"
