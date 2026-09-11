@@ -1,7 +1,7 @@
 ---
 import { Badge, Button } from 'frappe-ui';
 import ThemeSwitcher from '../components/islands/ThemeSwitcher.vue';
-import { AUDIENCE, FAQS, MEET, PARTNER_PLAN, STEPS } from '../data/partner';
+import { AUDIENCE, FAQS, MEET, PARTNER_PLAN, PLUS, STEPS } from '../data/partner';
 import AppLayout from '../layouts/AppLayout.astro';
 
 const title = 'BWH Partner Plan';
@@ -52,7 +52,7 @@ const description =
 					data-cuelume-press
 					data-cuelume-release
 				>
-					<span>See the plan</span>
+					<span>See the plans</span>
 					<span
 						class="lucide-arrow-down size-4 transition-transform group-hover:translate-y-0.5"
 						aria-hidden="true"></span>
@@ -63,7 +63,8 @@ const description =
 		<section id="plans" class="mt-24 scroll-mt-8 sm:mt-32" aria-labelledby="plans-title">
 			<h2 id="plans-title" class="text-2xl-semibold text-ink-gray-9">The plan</h2>
 			<p class="mt-4 max-w-[560px] text-p-base text-ink-gray-6">
-				One retainer, the way senior open-source maintainers run them. Training for your team is a
+				One retainer, the way senior open-source maintainers run them, and a Plus tier for teams
+				that want a private hour. Training for your team is a
 				separate thing: see <a
 					class="text-ink-gray-7 underline decoration-outline-gray-3 underline-offset-2 transition-colors hover:text-ink-gray-9"
 					href="/train-your-team">Train Your Team</a
@@ -155,6 +156,57 @@ const description =
 						data-cuelume-press
 						data-cuelume-release
 					/>
+				</div>
+			</article>
+
+			<!-- The upsell. Same card at the lighter weight, so the headline stays the headline. -->
+			<article
+				class="mt-5 rounded-6 border border-outline-gray-1 bg-surface-base p-6 sm:p-8"
+				aria-labelledby="plus-title"
+			>
+				<div class="flex flex-wrap items-center gap-3">
+					<h3 id="plus-title" class="text-base font-medium text-ink-gray-8">{PLUS.title}</h3>
+					<Badge label={PLUS.format} theme="gray" variant="subtle" size="sm" />
+				</div>
+				<p class="mt-2 text-p-sm text-ink-gray-5">{PLUS.blurb}</p>
+
+				<ul class="mt-5 flex flex-col gap-2.5">
+					{
+						PLUS.includes.map((item) => (
+							<li class="flex gap-2 text-p-sm text-ink-gray-7">
+								<span
+									class="lucide-check size-4 shrink-0 translate-y-0.5 text-ink-gray-5"
+									aria-hidden="true"
+								/>
+								<span>{item}</span>
+							</li>
+						))
+					}
+				</ul>
+
+				<div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-outline-gray-1 pt-5">
+					<Button
+						link={PLUS.cta.href}
+						label={PLUS.cta.label}
+						variant="subtle"
+						theme="gray"
+						size="md"
+						data-cuelume-press
+						data-cuelume-release
+					/>
+					<div class="text-sm text-ink-gray-8">
+						{
+							PLUS.payment.map((option, index) => (
+								<p class={index > 0 ? 'mt-1' : ''}>
+									<span class="text-ink-gray-5">{option.label}: </span>
+									<span class="font-medium">{option.india}</span>
+									<span class="text-ink-gray-5"> in India · </span>
+									<span class="font-medium">{option.elsewhere}</span>
+									<span class="text-ink-gray-5"> elsewhere, {option.note}</span>
+								</p>
+							))
+						}
+					</div>
 				</div>
 			</article>
 

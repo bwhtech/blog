@@ -19,7 +19,7 @@ export const PARTNER_PLAN = {
 	/** Shape of the engagement, rendered as a Badge next to the heading. */
 	format: 'Retainer',
 	blurb:
-		'Senior help on tap for the people building on Frappe: office hours, pull-request review and a private channel to ask.',
+		'Senior help on tap for the people building on Frappe: group office hours, pull-request review and a private channel for the confidential parts.',
 	/**
 	 * Two ways to pay for the same six months. Upfront is listed first and is
 	 * the default: it is five months' price for six, and there is nothing to
@@ -42,8 +42,8 @@ export const PARTNER_PLAN = {
 		},
 	],
 	includes: [
-		'Biweekly one-hour office hours with Hussain',
-		'Priority async Q&A in a private channel, answered within one business day',
+		'Two group office hours a month with Hussain, questions submitted ahead, recorded',
+		'A private channel for anything client-specific, answered within one business day',
 		'Pull-request review, up to 4 PRs a month',
 		'2 seats per quarter in any public BWH cohort',
 		'Early access to all cohort recordings and the BWH Pro library',
@@ -51,6 +51,31 @@ export const PARTNER_PLAN = {
 	],
 	/** Quoted separately; the page links to where. */
 	excludes: 'Implementation work, on-call and production incident response are not included.',
+	cta: { label: 'Book A Call', href: MEET },
+};
+
+/**
+ * The upsell: everything above, plus the hour that is yours alone. Rendered as
+ * a smaller card under the plan; the base plan stays the headline.
+ */
+export const PLUS = {
+	title: 'Partner Plan Plus',
+	format: 'Retainer',
+	blurb: 'For teams that want a private hour, not a shared one.',
+	payment: [
+		{ label: 'Upfront', india: '₹2,50,000', elsewhere: '$6,250', note: 'for the full 6 months' },
+		{
+			label: 'Monthly',
+			india: '₹50,000 / month',
+			elsewhere: '$1,250 / month',
+			note: 'on a 6-month agreement',
+		},
+	],
+	includes: [
+		'Everything in the Partner Plan',
+		'One private one-hour call a month with Hussain, yours alone',
+		'Pull-request review, up to 8 PRs a month',
+	],
 	cta: { label: 'Book A Call', href: MEET },
 };
 
@@ -95,7 +120,20 @@ export const FAQS: Faq[] = [
 		answer:
 			'Up to 4 pull requests a month, each under about 500 changed lines, reviewed within two business days with written comments. Larger reviews are quoted.',
 	},
-	{ question: 'Do office hours roll over?', answer: 'No. Unused hours expire each month.' },
+	{
+		question: 'Are office hours private?',
+		answer:
+			'No. The two monthly calls are shared with the other partners and recorded, so they are for framework questions, upgrades and patterns. Anything about your clients or your code goes through your private channel and PR review, which are yours alone. Partner Plan Plus adds a private hour a month.',
+	},
+	{
+		question: 'When are the office hours?',
+		answer:
+			'Fixed slots, the second and fourth Wednesday of the month at 4pm IST, so Gulf and European mornings work. Submit questions in your channel beforehand; walk-in questions come after.',
+	},
+	{
+		question: 'Do office hours roll over?',
+		answer: 'No. Recordings are shared with every partner, so a missed call is not lost. The private hour on Plus expires each month.',
+	},
 	{
 		question: 'Who answers questions?',
 		answer: 'Hussain, with BWH senior engineers for coverage during travel or leave.',
