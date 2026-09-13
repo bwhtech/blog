@@ -54,31 +54,27 @@ Post media is stored under `public/blog-media`, and author avatars are stored un
 
 The signup forms are one Vue island, `src/components/islands/NewsletterForm.vue`, mounted on
 every post, the home page and `/train-your-team`. It posts to `netlify/functions/subscribe.ts`,
-which adds the address to a Kit (kit.com) form through API v4. No Kit JavaScript is loaded.
+which sends the signup to BWH OS, the Frappe app that holds the email list. No third-party
+JavaScript is loaded.
+
+Each placement passes a `formId` (`blog-post`, `home`, `train-your-team`). Each id must match a
+Signup Form in BWH OS (`/os/forms`). The form in OS sets the tags and the success message, and
+its page shows the snippet to paste. Add `collectName` to show a first name field.
 
 The function reads two environment variables. Set them on Netlify for the production context
 (Site configuration → Environment variables, or the CLI):
 
 ```sh
-netlify env:set KIT_API_KEY "..." --secret --context production
-netlify env:set KIT_FORM_ID "123456" --context production
+netlify env:set FRAPPE_URL "https://os.example.com" --context production
+netlify env:set FRAPPE_API_TOKEN "api_key:api_secret" --secret --context production
 ```
 
-- `KIT_API_KEY`: a V4 API key, from Kit → Settings → Developer.
-- `KIT_FORM_ID`: the numeric id of the form below. It is in the form's URL in the Kit app.
+- `FRAPPE_URL`: the site that runs BWH OS, without a trailing slash.
+- `FRAPPE_API_TOKEN`: `api_key:api_secret` of a Frappe user whose only role is `OS Signup API`.
+  Make the user in Desk, give it that role, and generate the keys from the user's settings.
 
 It also rate-limits by IP through the same Turso table likes and comments use, so it needs
 `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` and `RATE_LIMIT_SALT` as well.
-
-Kit setup, once:
-
-1. Create one form. Its style does not matter; it is never embedded. The site's own form posts
-   to it, and Kit records the page it sat on (`blog-post`, `home`, `train-your-team`) as the
-   referrer.
-2. In the form's settings, turn double opt-in on and make the incentive email deliver the
-   Missing Frappe Manual PDF. The function creates subscribers as `inactive`, and only the
-   confirmation link makes them `active` — a form without double opt-in leaves them inactive.
-3. Copy the form id into `KIT_FORM_ID`.
 
 Under `astro dev` (port 4321) there is no function, so the form falls back to a stub in
 `src/components/islands/newsletter/api.ts`: any address succeeds after a short delay, and

@@ -1,22 +1,30 @@
 <!--
-  Newsletter signup, backed by netlify/functions/subscribe.ts.
+  Newsletter signup, backed by netlify/functions/subscribe.ts and BWH OS.
 
   Mounted in three places — the foot of a post, the home hero and the training
-  page — each with its own `source`, so Kit records where a subscriber came
-  from. `compact` is the hero: no card, no heading, centred.
+  page — each with its own `formId`. The form in OS decides the tags and the
+  success message. `collectName` adds a first name field; OS shows the matching
+  snippet on the form's page. `compact` is the hero: no card, no heading, centred.
 -->
 <script setup lang="ts">
 import { Button, ErrorMessage, FormControl } from 'frappe-ui';
 import { onMounted, ref, useId } from 'vue';
 
 import { cue } from '../../utils/sound';
-import { messageOf, subscribe } from './newsletter/api';
+import { currentPage, messageOf, subscribe } from './newsletter/api';
 
 const props = withDefaults(
-	defineProps<{ source: string; heading?: string; blurb?: string; compact?: boolean }>(),
+	defineProps<{
+		formId: string;
+		collectName?: boolean;
+		heading?: string;
+		blurb?: string;
+		compact?: boolean;
+	}>(),
 	{
 		heading: 'Letters from BWH',
 		blurb: "Frappe engineering notes, what we're building, and when the next cohort opens. No spam.",
+		collectName: false,
 		compact: false,
 	},
 );
@@ -24,6 +32,8 @@ const props = withDefaults(
 const headingId = useId();
 
 const email = ref('');
+const firstName = ref('');
+const successMessage = ref('');
 /** The honeypot. Named so browser autofill leaves it alone; see CommentForm. */
 const hpUrl = ref('');
 const state = ref<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -41,7 +51,13 @@ async function submit() {
 	errorMessage.value = '';
 
 	try {
-		await subscribe({ email: email.value, source: props.source, hp_url: hpUrl.value });
+		successMessage.value = await subscribe({
+			email: email.value,
+			form_id: props.formId,
+			first_name: props.collectName ? firstName.value : '',
+			hp_url: hpUrl.value,
+			...currentPage(),
+		});
 		state.value = 'success';
 		cue('success');
 	} catch (error) {
@@ -81,11 +97,22 @@ async function submit() {
 				role="status"
 			>
 				<LucideMailCheck class="size-4 shrink-0 text-ink-gray-5" aria-hidden="true" />
-				<span>Check your inbox to confirm.</span>
+				<span>{{ successMessage }}</span>
 			</p>
 
 			<form v-else class="flex flex-col gap-3" novalidate @submit.prevent="submit">
 				<div class="flex flex-col gap-2 sm:flex-row">
+					<FormControl
+						v-if="collectName"
+						v-model="firstName"
+						class="sm:w-40"
+						type="text"
+						size="md"
+						placeholder="First name"
+						aria-label="First name"
+						autocomplete="given-name"
+						:disabled="state === 'submitting'"
+					/>
 					<FormControl
 						v-model="email"
 						class="flex-1"

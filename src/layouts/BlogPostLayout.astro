@@ -101,7 +101,7 @@ if (!authorEntry) throw new Error(`Author not found: ${author.id}`);
 			<!-- Between the body and the comments: the reader has just finished the
 			     post, which is when the ask lands best. -->
 			<div class="mt-16">
-				<NewsletterForm client:visible={{ rootMargin: '300px' }} source="blog-post" />
+				<NewsletterForm client:visible={{ rootMargin: '300px' }} formId="blog-post" />
 			</div>
 			<!-- client:visible: nothing is fetched until the reader nears the end of
 			     the post. The margin starts the request just before it scrolls in. -->

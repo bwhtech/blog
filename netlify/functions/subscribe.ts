@@ -9,15 +9,22 @@ import {
 	readJson,
 	serverError,
 } from '../lib/http';
-import { KitError, subscribe } from '../lib/kit';
+import { FrappeError, subscribe } from '../lib/frappe';
 import { consumeAll } from '../lib/rate-limit';
-import { isValidEmail, isValidSource, normalizeEmail } from '../lib/validate';
+import {
+	isValidEmail,
+	isValidFormId,
+	normalizeEmail,
+	normalizeFirstName,
+	normalizeSourceUrl,
+	pickUtm,
+} from '../lib/validate';
 
 /**
- * Newsletter signup. The browser posts an address and the page it came from;
- * both go to Kit. The reply is deliberately terse — `{ ok: true }` — so nothing
- * about the list, such as whether the address was already on it, reaches the
- * client.
+ * Newsletter signup. The browser posts an address, the BWH OS form id, the page
+ * it came from and any UTM tags; all of it goes to BWH OS. The reply is
+ * `{ ok: true, message }` for a new and a known address alike, so nothing about
+ * the list reaches the client.
  */
 export default async (req: Request, context: Context): Promise<Response> => {
 	if (req.method !== 'POST') return methodNotAllowed(['POST']);
@@ -28,18 +35,18 @@ export default async (req: Request, context: Context): Promise<Response> => {
 	const email = normalizeEmail(body.email);
 	if (!isValidEmail(email)) return json({ error: 'invalid_email' }, 400);
 
-	const source = body.source;
-	if (!isValidSource(source)) return json({ error: 'invalid_source' }, 400);
+	const formId = body.form_id;
+	if (!isValidFormId(formId)) return json({ error: 'invalid_form' }, 400);
 
 	// The same off-screen field the comment form carries. A filled one gets the
 	// success reply and nothing else, so a bot has no signal to retune against.
 	if (typeof body.hp_url === 'string' && body.hp_url.trim() !== '') {
-		console.warn('subscribe:rejected', { source, reason: 'honeypot' });
-		return json({ ok: true });
+		console.warn('subscribe:rejected', { formId, reason: 'honeypot' });
+		return json({ ok: true, message: '' });
 	}
 
+	const ip = clientIp(req, context);
 	try {
-		const ip = clientIp(req, context);
 		const limit = await consumeAll([
 			{ ip, action: 'subscribe', limit: 5, windowSec: 10 * 60 },
 			{ ip, action: 'subscribe', limit: 20, windowSec: 24 * 60 * 60 },
@@ -50,13 +57,21 @@ export default async (req: Request, context: Context): Promise<Response> => {
 	}
 
 	try {
-		await subscribe(email, source);
-		return json({ ok: true });
+		const message = await subscribe({
+			formId,
+			email,
+			firstName: normalizeFirstName(body.first_name),
+			sourceUrl: normalizeSourceUrl(body.source_url),
+			utm: pickUtm(body.utm),
+			consentIp: ip,
+		});
+		return json({ ok: true, message });
 	} catch (error) {
-		if (!(error instanceof KitError)) return serverError('subscribe:config', error);
-		// Kit checks addresses harder than isValidEmail does. Its 422 is the
+		if (!(error instanceof FrappeError)) return serverError('subscribe:config', error);
+		// OS checks addresses harder than isValidEmail does. That rejection is the
 		// reader's typo, not an outage, so it is reported as one.
-		if (error.status === 422) return json({ error: 'invalid_email' }, 400);
-		return badGateway('subscribe:kit', error);
+		if (error.type === 'InvalidEmailAddressError') return json({ error: 'invalid_email' }, 400);
+		if (error.type === 'FormClosedError') return json({ error: 'form_closed' }, 400);
+		return badGateway('subscribe:frappe', error);
 	}
 };

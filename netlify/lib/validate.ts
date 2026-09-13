@@ -14,8 +14,11 @@ const CATEGORIES = Object.freeze([
 
 const POST_ID = /^[a-z0-9][a-z0-9-]*\/[a-z0-9][a-z0-9-]*$/;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-/** A page name the islands pass along with a signup, e.g. `blog-post`. */
-const SOURCE = /^[a-z0-9][a-z0-9-]{0,39}$/;
+/** A BWH OS signup form id, e.g. `blog-post`. OS allows single hyphens only; OS checks again. */
+const FORM_ID = /^[a-z0-9][a-z0-9-]{0,59}$/;
+const UTM_KEYS = Object.freeze(['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']);
+const UTM_VALUE_MAX = 100;
+const SOURCE_URL_MAX = 500;
 const LINK = /https?:\/\/|www\./i;
 
 const TAB = 9;
@@ -62,15 +65,48 @@ export function normalizeEmail(value: unknown): string {
 
 /**
  * Not an RFC 5322 parse on purpose: the address is never displayed, and the
- * one place it is acted on (Kit) validates again, so this only has to catch
+ * one place it is acted on (BWH OS) validates again, so this only has to catch
  * typos and obvious junk.
  */
 export function isValidEmail(email: string): boolean {
 	return email.length > 0 && email.length <= 254 && EMAIL.test(email);
 }
 
-export function isValidSource(value: unknown): value is string {
-	return typeof value === 'string' && SOURCE.test(value);
+export function isValidFormId(value: unknown): value is string {
+	return typeof value === 'string' && FORM_ID.test(value);
+}
+
+/** Optional. Empty when nothing usable was sent; a link in place of a name counts as nothing. */
+export function normalizeFirstName(value: unknown): string {
+	const name = stripControl(String(value ?? '')).trim();
+	if (name.length > NAME_MAX || LINK.test(name)) return '';
+	return name;
+}
+
+/** Only http(s) URLs, without the fragment. Anything else is dropped rather than rejected. */
+export function normalizeSourceUrl(value: unknown): string {
+	if (typeof value !== 'string' || value.length > SOURCE_URL_MAX) return '';
+	try {
+		const url = new URL(value);
+		if (url.protocol !== 'https:' && url.protocol !== 'http:') return '';
+		url.hash = '';
+		return url.toString();
+	} catch {
+		return '';
+	}
+}
+
+/** Keeps the five standard UTM keys with short string values. Undefined when none are left. */
+export function pickUtm(value: unknown): Record<string, string> | undefined {
+	if (!value || typeof value !== 'object') return undefined;
+	const utm: Record<string, string> = {};
+	for (const key of UTM_KEYS) {
+		const raw = (value as Record<string, unknown>)[key];
+		if (typeof raw !== 'string') continue;
+		const cleaned = stripControl(raw).trim().slice(0, UTM_VALUE_MAX);
+		if (cleaned) utm[key] = cleaned;
+	}
+	return Object.keys(utm).length > 0 ? utm : undefined;
 }
 
 export interface CommentFields {
