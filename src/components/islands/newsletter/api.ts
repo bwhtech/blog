@@ -2,8 +2,8 @@ import { ApiError, ApiUnavailableError, call, postJson } from '../http';
 
 export interface SubscribeDraft {
 	email: string;
-	/** The BWH OS signup form. It decides the tags and the success message. */
-	form_id: string;
+	/** Where the form sits. The function maps it to a BWH OS signup form. */
+	placement: Placement;
 	first_name: string;
 	/** The page the form sat on. */
 	source_url: string;
@@ -11,6 +11,8 @@ export interface SubscribeDraft {
 	/** Off-screen field a person never sees. Always sent, always empty for humans. */
 	hp_url: string;
 }
+
+export type Placement = 'blog-post' | 'home' | 'train-your-team';
 
 const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
 const FALLBACK_MESSAGE = 'Thanks for subscribing!';

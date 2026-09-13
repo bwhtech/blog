@@ -9,11 +9,10 @@ import {
 	readJson,
 	serverError,
 } from '../lib/http';
-import { FrappeError, subscribe } from '../lib/frappe';
+import { FrappeError, formIdFor, isPlacement, subscribe } from '../lib/frappe';
 import { consumeAll } from '../lib/rate-limit';
 import {
 	isValidEmail,
-	isValidFormId,
 	normalizeEmail,
 	normalizeFirstName,
 	normalizeSourceUrl,
@@ -21,8 +20,9 @@ import {
 } from '../lib/validate';
 
 /**
- * Newsletter signup. The browser posts an address, the BWH OS form id, the page
- * it came from and any UTM tags; all of it goes to BWH OS. The reply is
+ * Newsletter signup. The browser posts an address, the placement of the form,
+ * the page it came from and any UTM tags. The placement picks the BWH OS form
+ * from the environment, and all of it goes to BWH OS. The reply is
  * `{ ok: true, message }` for a new and a known address alike, so nothing about
  * the list reaches the client.
  */
@@ -35,13 +35,13 @@ export default async (req: Request, context: Context): Promise<Response> => {
 	const email = normalizeEmail(body.email);
 	if (!isValidEmail(email)) return json({ error: 'invalid_email' }, 400);
 
-	const formId = body.form_id;
-	if (!isValidFormId(formId)) return json({ error: 'invalid_form' }, 400);
+	const placement = body.placement;
+	if (!isPlacement(placement)) return json({ error: 'invalid_form' }, 400);
 
 	// The same off-screen field the comment form carries. A filled one gets the
 	// success reply and nothing else, so a bot has no signal to retune against.
 	if (typeof body.hp_url === 'string' && body.hp_url.trim() !== '') {
-		console.warn('subscribe:rejected', { formId, reason: 'honeypot' });
+		console.warn('subscribe:rejected', { placement, reason: 'honeypot' });
 		return json({ ok: true, message: '' });
 	}
 
@@ -58,7 +58,7 @@ export default async (req: Request, context: Context): Promise<Response> => {
 
 	try {
 		const message = await subscribe({
-			formId,
+			formId: formIdFor(placement),
 			email,
 			firstName: normalizeFirstName(body.first_name),
 			sourceUrl: normalizeSourceUrl(body.source_url),

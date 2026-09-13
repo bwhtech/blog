@@ -14,8 +14,6 @@ const CATEGORIES = Object.freeze([
 
 const POST_ID = /^[a-z0-9][a-z0-9-]*\/[a-z0-9][a-z0-9-]*$/;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-/** A BWH OS signup form id, e.g. `blog-post`. OS allows single hyphens only; OS checks again. */
-const FORM_ID = /^[a-z0-9][a-z0-9-]{0,59}$/;
 const UTM_KEYS = Object.freeze(['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']);
 const UTM_VALUE_MAX = 100;
 const SOURCE_URL_MAX = 500;
@@ -70,10 +68,6 @@ export function normalizeEmail(value: unknown): string {
  */
 export function isValidEmail(email: string): boolean {
 	return email.length > 0 && email.length <= 254 && EMAIL.test(email);
-}
-
-export function isValidFormId(value: unknown): value is string {
-	return typeof value === 'string' && FORM_ID.test(value);
 }
 
 /** Optional. Empty when nothing usable was sent; a link in place of a name counts as nothing. */

@@ -2,7 +2,8 @@
   Newsletter signup, backed by netlify/functions/subscribe.ts and BWH OS.
 
   Mounted in three places — the foot of a post, the home hero and the training
-  page — each with its own `formId`. The form in OS decides the tags and the
+  page — each with its own `placement`. The function maps a placement to a form in
+  BWH OS through an environment variable. The form in OS decides the tags and the
   success message. `collectName` adds a first name field; OS shows the matching
   snippet on the form's page. `compact` is the hero: no card, no heading, centred.
 -->
@@ -11,11 +12,11 @@ import { Button, ErrorMessage, FormControl } from 'frappe-ui';
 import { onMounted, ref, useId } from 'vue';
 
 import { cue } from '../../utils/sound';
-import { currentPage, messageOf, subscribe } from './newsletter/api';
+import { currentPage, messageOf, subscribe, type Placement } from './newsletter/api';
 
 const props = withDefaults(
 	defineProps<{
-		formId: string;
+		placement: Placement;
 		collectName?: boolean;
 		heading?: string;
 		blurb?: string;
@@ -53,7 +54,7 @@ async function submit() {
 	try {
 		successMessage.value = await subscribe({
 			email: email.value,
-			form_id: props.formId,
+			placement: props.placement,
 			first_name: props.collectName ? firstName.value : '',
 			hp_url: hpUrl.value,
 			...currentPage(),

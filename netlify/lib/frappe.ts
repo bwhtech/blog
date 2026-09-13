@@ -7,6 +7,19 @@
  */
 const METHOD = '/api/v2/method/bwh_os.mailing.api.subscribe';
 
+/**
+ * Each place the form is mounted, and the environment variable that holds its
+ * BWH OS form id. The browser names the placement, never the form, so it cannot
+ * sign anyone up to a form the site does not show.
+ */
+const FORM_ID_ENV = Object.freeze({
+	'blog-post': 'OS_FORM_BLOG_POST',
+	home: 'OS_FORM_HOME',
+	'train-your-team': 'OS_FORM_TRAIN_YOUR_TEAM',
+});
+
+export type Placement = keyof typeof FORM_ID_ENV;
+
 export interface Signup {
 	formId: string;
 	email: string;
@@ -44,6 +57,17 @@ export async function subscribe(signup: Signup): Promise<string> {
 	if (!response.ok) throw new FrappeError(response.status, await readErrorType(response));
 	const payload = (await response.json()) as { data?: { message?: string } };
 	return payload.data?.message ?? '';
+}
+
+export function isPlacement(value: unknown): value is Placement {
+	return typeof value === 'string' && Object.hasOwn(FORM_ID_ENV, value);
+}
+
+export function formIdFor(placement: Placement): string {
+	const name = FORM_ID_ENV[placement];
+	const formId = process.env[name];
+	if (!formId) throw new Error(`${name} is not set`);
+	return formId;
 }
 
 function config(): { url: string; token: string } {
