@@ -16,12 +16,12 @@ const description = 'We solve problems with Frappe Framework and apps.';
 			<h1
 				class="max-w-[650px] text-[34px] font-semibold leading-[1.1] tracking-tight text-ink-gray-9 sm:text-[52px]"
 			>
-				Bunch of Problem Solvers.
+				Bunch of <em>Problem Solvers</em>.
 			</h1>
 			<p class="max-w-[480px] text-p-lg text-ink-gray-6">We solve it, with Frappe.</p>
 		</div>
 
-		<div class="flex flex-col items-center gap-6">
+		<div class="flex w-full flex-col items-center gap-6">
 			<svg
 				aria-hidden="true"
 				class="text-ink-gray-4"
@@ -64,8 +64,8 @@ const description = 'We solve problems with Frappe Framework and apps.';
 
 			<!-- client:idle rather than visible: it is above the fold on every
 			     viewport, so an observer would fire at once anyway. -->
-			<div class="mt-4 w-full">
-				<NewsletterForm client:idle placement="home" compact />
+			<div class="mt-4 w-full max-w-[560px]">
+				<NewsletterForm client:idle placement="home" />
 			</div>
 		</div>
 	</main>

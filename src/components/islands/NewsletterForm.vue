@@ -4,8 +4,7 @@
   Mounted in three places — the foot of a post, the home hero and the training
   page — each with its own `placement`. The function maps a placement to a form in
   BWH OS through an environment variable. The form in OS decides the tags and the
-  success message. `collectName` adds a first name field; OS shows the matching
-  snippet on the form's page. `compact` is the hero: no card, no heading, centred.
+  success message. The card fills its container; the page sets the width.
 -->
 <script setup lang="ts">
 import { Button, ErrorMessage, FormControl } from 'frappe-ui';
@@ -17,16 +16,12 @@ import { currentPage, messageOf, subscribe, type Placement } from './newsletter/
 const props = withDefaults(
 	defineProps<{
 		placement: Placement;
-		collectName?: boolean;
 		heading?: string;
 		blurb?: string;
-		compact?: boolean;
 	}>(),
 	{
-		heading: 'Letters from BWH',
-		blurb: "Frappe engineering notes, what we're building, and when the next cohort opens. No spam.",
-		collectName: false,
-		compact: false,
+		heading: 'BWH Newsletter',
+		blurb: 'Be the first to hear about latest stuff from Frappeverse: products, tutorials, and much more.',
 	},
 );
 
@@ -55,7 +50,7 @@ async function submit() {
 		successMessage.value = await subscribe({
 			email: email.value,
 			placement: props.placement,
-			first_name: props.collectName ? firstName.value : '',
+			first_name: firstName.value,
 			hp_url: hpUrl.value,
 			...currentPage(),
 		});
@@ -73,81 +68,75 @@ async function submit() {
 	<!-- No FrappeUIProvider: it only hosts the toaster and the dialog stack,
 	     neither of which this form uses, and a post page already has one. -->
 	<section
-		:class="
-			compact
-				? 'flex flex-col items-center text-center'
-				: 'rounded-6 border border-outline-gray-2 bg-surface-base p-5 sm:p-6'
-		"
+		class="w-full overflow-hidden rounded-7 border border-outline-gray-2 bg-surface-elevation-1 text-left shadow-sm"
 		:aria-labelledby="headingId"
 	>
-		<h2
-			:id="headingId"
-			:class="compact ? 'text-sm font-medium text-ink-gray-7' : 'text-lg font-medium text-ink-gray-8'"
-		>
-			{{ heading }}
-		</h2>
-		<p v-if="!compact" class="mt-1 text-p-sm text-ink-gray-5">{{ blurb }}</p>
+		<form novalidate @submit.prevent="submit">
+			<div class="flex flex-col gap-5 p-5 sm:p-6">
+				<h2 :id="headingId" class="text-lg font-medium text-ink-gray-8">{{ heading }}</h2>
 
-		<!-- Reserved height, so the card does not shrink when the form gives way
-		     to the one-line confirmation. -->
-		<div :class="['min-h-8', compact ? 'mt-4 w-full max-w-[420px]' : 'mt-5']">
-			<p
-				v-if="state === 'success'"
-				class="flex h-8 items-center gap-2 text-base text-ink-gray-7"
-				:class="compact && 'justify-center'"
-				role="status"
+				<!-- Reserved height, so the card does not shrink when the fields give
+				     way to the one-line confirmation. -->
+				<p
+					v-if="state === 'success'"
+					class="flex min-h-[52px] items-center gap-2 text-base text-ink-gray-7"
+					role="status"
+				>
+					<LucideMailCheck class="size-4 shrink-0 text-ink-gray-5" aria-hidden="true" />
+					<span>{{ successMessage }}</span>
+				</p>
+
+				<template v-else>
+					<div class="grid gap-3 sm:grid-cols-2">
+						<FormControl
+							v-model="firstName"
+							type="text"
+							size="md"
+							label="First name"
+							placeholder="Jane"
+							autocomplete="given-name"
+							:disabled="state === 'submitting'"
+						/>
+						<FormControl
+							v-model="email"
+							type="email"
+							size="md"
+							label="Email"
+							placeholder="you@example.com"
+							autocomplete="email"
+							required
+							:disabled="state === 'submitting'"
+						/>
+					</div>
+
+					<!-- Off-screen rather than display:none, which some bots skip. Not
+					     sr-only either, which a screen reader would read out. -->
+					<div v-if="mounted" class="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+						<label>
+							Leave this empty
+							<input v-model="hpUrl" type="text" name="hp_url" tabindex="-1" autocomplete="off" />
+						</label>
+					</div>
+
+					<ErrorMessage v-if="errorMessage" :message="errorMessage" />
+				</template>
+			</div>
+
+			<div
+				class="flex flex-col gap-3 border-t border-outline-gray-1 bg-surface-gray-1 px-5 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-6"
 			>
-				<LucideMailCheck class="size-4 shrink-0 text-ink-gray-5" aria-hidden="true" />
-				<span>{{ successMessage }}</span>
-			</p>
-
-			<form v-else class="flex flex-col gap-3" novalidate @submit.prevent="submit">
-				<div class="flex flex-col gap-2 sm:flex-row">
-					<FormControl
-						v-if="collectName"
-						v-model="firstName"
-						class="sm:w-40"
-						type="text"
-						size="md"
-						placeholder="First name"
-						aria-label="First name"
-						autocomplete="given-name"
-						:disabled="state === 'submitting'"
-					/>
-					<FormControl
-						v-model="email"
-						class="flex-1"
-						type="email"
-						size="md"
-						placeholder="you@example.com"
-						aria-label="Email address"
-						autocomplete="email"
-						required
-						:disabled="state === 'submitting'"
-					/>
-					<Button
-						variant="solid"
-						theme="gray"
-						size="md"
-						type="submit"
-						label="Subscribe"
-						:loading="state === 'submitting'"
-					/>
-				</div>
-
-				<!-- Off-screen rather than display:none, which some bots skip. Not
-				     sr-only either, which a screen reader would read out. -->
-				<div v-if="mounted" class="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
-					<label>
-						Leave this empty
-						<input v-model="hpUrl" type="text" name="hp_url" tabindex="-1" autocomplete="off" />
-					</label>
-				</div>
-
-				<ErrorMessage :message="errorMessage" />
-			</form>
-		</div>
-
-		<p v-if="compact" class="mt-3 text-p-sm text-ink-gray-5">{{ blurb }}</p>
+				<p class="text-p-sm text-ink-gray-5 sm:max-w-[340px]">{{ blurb }}</p>
+				<Button
+					v-if="state !== 'success'"
+					class="shrink-0"
+					variant="outline"
+					theme="gray"
+					size="md"
+					type="submit"
+					label="Subscribe"
+					:loading="state === 'submitting'"
+				/>
+			</div>
+		</form>
 	</section>
 </template>
