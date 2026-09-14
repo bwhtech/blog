@@ -1,16 +1,14 @@
 import type { Context } from '@netlify/functions';
 
-import { avatarTheme } from '../lib/avatar';
-import { db } from '../lib/db';
-import { clientIp, json, methodNotAllowed, rateLimited, readJson, serverError } from '../lib/http';
-import { consumeAll } from '../lib/rate-limit';
+import { addComment, FrappeError } from '../lib/frappe';
+import { badGateway, clientIp, json, methodNotAllowed, rateLimited, readJson, serverError } from '../lib/http';
 import { isValidPostId, validateComment } from '../lib/validate';
-import type { PublicComment } from './engagement';
+import { type PublicComment, toPublicComment } from './engagement';
 
 /** A form filled faster than this was not filled by a person reading the post. */
 const MIN_ELAPSED_MS = 3000;
-/** Sanity ceiling per post, well above any thread this blog will see. */
-const MAX_PER_POST = 500;
+/** OS does not say when its window ends. Its shortest comment window is 10 minutes. */
+const RETRY_AFTER_SEC = 10 * 60;
 
 /**
  * Checks the two bot signals the form carries: an off-screen field a person
@@ -58,40 +56,19 @@ export default async (req: Request, context: Context): Promise<Response> => {
 	if (!fields) return json({ error: 'validation_failed', fields: errors }, 400);
 
 	try {
-		const ip = clientIp(req, context);
-		const limit = await consumeAll([
-			{ ip, action: 'comment', limit: 3, windowSec: 10 * 60 },
-			{ ip, action: 'comment', limit: 10, windowSec: 24 * 60 * 60 },
-		]);
-		if (!limit.allowed) return rateLimited(limit.retryAfter);
-
-		// The cap is part of the INSERT rather than a preceding SELECT, so it
-		// cannot be raced and cannot reject a row that was already written:
-		// over the cap the SELECT yields no source row, so nothing is inserted
-		// and RETURNING comes back empty.
-		const insertResult = await db().execute({
-			sql: `INSERT INTO comments (post_id, name, email, body)
-			      SELECT ?, ?, ?, ?
-			       WHERE (SELECT COUNT(*) FROM comments WHERE post_id = ? AND hidden = 0) < ?
-			   RETURNING id, created_at`,
-			args: [postId, fields.name, fields.email, fields.body, postId, MAX_PER_POST],
-		});
-
-		const row = insertResult.rows[0];
-		if (!row) return rateLimited(60 * 60);
-		return json(
-			{
-				comment: {
-					id: Number(row.id),
-					name: fields.name,
-					body: fields.body,
-					createdAt: Number(row.created_at),
-					avatarTheme: await avatarTheme(fields.email),
-				} satisfies PublicComment,
-			},
-			201,
-		);
+		const stored = await addComment({ postId, ...fields, ip: clientIp(req, context) });
+		return json({ comment: await toPublicComment(stored) }, 201);
 	} catch (error) {
-		return serverError('comment:write', error);
+		if (!(error instanceof FrappeError)) return serverError('comment:write', error);
+		// Covers the per-IP windows and the cap on comments for one post.
+		if (error.rateLimited) return rateLimited(RETRY_AFTER_SEC);
+		// OS checks addresses harder than isValidEmail does.
+		if (error.type === 'InvalidEmailAddressError') {
+			return json(
+				{ error: 'validation_failed', fields: { email: 'Please enter a valid email address.' } },
+				400,
+			);
+		}
+		return badGateway('comment:frappe', error);
 	}
 };

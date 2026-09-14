@@ -1,11 +1,12 @@
 /**
- * The BWH OS call a newsletter signup needs. OS is a Frappe app; the list, the
- * forms and their tags live there.
+ * The BWH OS calls the functions need. OS is a Frappe app; the email list, the
+ * likes and the comments live there.
  *
  * Authenticated as a Frappe API user whose only role is `OS Signup API`, so a
- * leaked token can add subscribers and nothing else.
+ * leaked token can add subscribers, comments and likes, and nothing else.
+ * Every write passes the reader's IP, because OS rate-limits by it.
  */
-const METHOD = '/api/v2/method/bwh_os.mailing.api.subscribe';
+const METHOD_PREFIX = '/api/v2/method/';
 
 /**
  * Each place the form is mounted, and the environment variable that holds its
@@ -29,6 +30,16 @@ export interface Signup {
 	consentIp: string;
 }
 
+/** A visible comment as OS stores it. The email never leaves the functions. */
+export interface StoredComment {
+	id: number;
+	name: string;
+	email: string;
+	body: string;
+	/** Unix seconds. */
+	created_at: number;
+}
+
 export class FrappeError extends Error {
 	constructor(
 		readonly status: number,
@@ -37,26 +48,49 @@ export class FrappeError extends Error {
 	) {
 		super(`frappe responded with ${status}: ${type || 'no detail'}`);
 	}
+
+	/** OS counts requests per reader IP and answers 429 over the limit. */
+	get rateLimited(): boolean {
+		return this.status === 429;
+	}
 }
 
 /** Returns the form's success message. */
 export async function subscribe(signup: Signup): Promise<string> {
-	const { url, token } = config();
-	const response = await fetch(`${url}${METHOD}`, {
-		method: 'POST',
-		headers: { 'content-type': 'application/json', authorization: `token ${token}` },
-		body: JSON.stringify({
-			form_id: signup.formId,
-			email: signup.email,
-			first_name: signup.firstName || null,
-			source_url: signup.sourceUrl || null,
-			utm: signup.utm ?? null,
-			consent_ip: signup.consentIp,
-		}),
+	const data = await post<{ message?: string }>('bwh_os.mailing.api.subscribe', {
+		form_id: signup.formId,
+		email: signup.email,
+		first_name: signup.firstName || null,
+		source_url: signup.sourceUrl || null,
+		utm: signup.utm ?? null,
+		consent_ip: signup.consentIp,
 	});
-	if (!response.ok) throw new FrappeError(response.status, await readErrorType(response));
-	const payload = (await response.json()) as { data?: { message?: string } };
-	return payload.data?.message ?? '';
+	return data.message ?? '';
+}
+
+export function getEngagement(postId: string): Promise<{ likes: number; comments: StoredComment[] }> {
+	return get('bwh_os.blog.api.get_engagement', { post_id: postId });
+}
+
+export function addComment(comment: {
+	postId: string;
+	name: string;
+	email: string;
+	body: string;
+	ip: string;
+}): Promise<StoredComment> {
+	return post('bwh_os.blog.api.add_comment', {
+		post_id: comment.postId,
+		name: comment.name,
+		email: comment.email,
+		body: comment.body,
+		ip: comment.ip,
+	});
+}
+
+/** Returns the new like total. */
+export function likePost(postId: string, ip: string): Promise<number> {
+	return post('bwh_os.blog.api.like_post', { post_id: postId, ip });
 }
 
 export function isPlacement(value: unknown): value is Placement {
@@ -68,6 +102,29 @@ export function formIdFor(placement: Placement): string {
 	const formId = process.env[name];
 	if (!formId) throw new Error(`${name} is not set`);
 	return formId;
+}
+
+function get<T>(method: string, params: Record<string, string>): Promise<T> {
+	return request(`${method}?${new URLSearchParams(params)}`, { method: 'GET' });
+}
+
+function post<T>(method: string, body: Record<string, unknown>): Promise<T> {
+	return request(method, {
+		method: 'POST',
+		headers: { 'content-type': 'application/json' },
+		body: JSON.stringify(body),
+	});
+}
+
+async function request<T>(path: string, init: RequestInit): Promise<T> {
+	const { url, token } = config();
+	const response = await fetch(`${url}${METHOD_PREFIX}${path}`, {
+		...init,
+		headers: { ...init.headers, authorization: `token ${token}` },
+	});
+	if (!response.ok) throw new FrappeError(response.status, await readErrorType(response));
+	const payload = (await response.json()) as { data: T };
+	return payload.data;
 }
 
 function config(): { url: string; token: string } {

@@ -75,13 +75,14 @@ netlify env:set OS_FORM_TRAIN_YOUR_TEAM "train-your-team" --context production
 
 - `FRAPPE_URL`: the site that runs BWH OS, without a trailing slash.
 - `FRAPPE_API_TOKEN`: `api_key:api_secret` of a Frappe user whose only role is `OS Signup API`.
+  The role lets the user add subscribers, comments, and likes, and nothing else.
   Make the user in Desk, give it that role, and generate the keys from the user's settings.
 - `OS_FORM_BLOG_POST`, `OS_FORM_HOME`, `OS_FORM_TRAIN_YOUR_TEAM`: the Signup Form id for the
   foot of each post, the home page and `/train-your-team`. A new placement needs a new entry in
   `FORM_ID_ENV` in `netlify/lib/frappe.ts`.
 
-It also rate-limits by IP through the same Turso table likes and comments use, so it needs
-`TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` and `RATE_LIMIT_SALT` as well.
+The likes and comments functions use the same `FRAPPE_URL` and `FRAPPE_API_TOKEN`. BWH OS
+stores the likes and comments and rate-limits every call by the reader's IP.
 
 Under `astro dev` (port 4321) there is no function, so the form falls back to a stub in
 `src/components/islands/newsletter/api.ts`: any address succeeds after a short delay, and

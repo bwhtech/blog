@@ -10,7 +10,7 @@ Manage the background server with `astro dev stop`, `astro dev status`, and `ast
 
 That server knows nothing about `netlify/functions/`, so likes and comments fall
 back to an in-memory stub (`src/components/islands/engagement/api.ts`). To
-exercise the real functions and Turso, run Netlify's proxy in front of it:
+exercise the real functions and BWH OS, run Netlify's proxy in front of it:
 
 ```
 astro dev --background            # 4321
@@ -170,8 +170,9 @@ pages carry the islands stylesheet that the other 27 pages do not — a delibera
 trade, paid once per visitor because all posts share one immutably cached asset.
 
 The backend is three Netlify functions in `netlify/functions/`, sharing
-`netlify/lib/`, over a Turso (libSQL) database whose schema lives in
-`db/schema.sql` and is applied with `npm run db:migrate`.
+`netlify/lib/`. They call BWH OS, the Frappe app that stores the likes and the
+comments (`BWH Blog Post` and `BWH Blog Comment`, in `bwh_os/blog/api.py`). You
+hide and delete comments in OS at `/os/blog/comments`.
 
 Things worth knowing before changing any of it:
 
@@ -179,17 +180,16 @@ Things worth knowing before changing any of it:
   `[...slug].astro` as `postId`. `netlify/lib/validate.ts` keeps its own copy of
   the category list, because a bundled function cannot import `src/consts.ts` —
   adding a category means adding it in both places.
-- **`@libsql/client/web`, never bare `@libsql/client`.** The default entry pulls
-  a native addon that esbuild cannot inline. The import appears in exactly one
-  file, `netlify/lib/db.ts`.
+- **OS does the rate limits.** Every write passes the reader's IP
+  (`clientIp`), and OS counts requests per IP. A 429 from OS becomes a 429 here.
 - **The email is dropped in exactly one place**, `toPublicComment` in
   `netlify/functions/engagement.ts`. It is never sent to the browser; it only
   seeds an avatar colour.
 - **Comment bodies are plain text**, rendered as a Vue interpolation. No
   markdown, no `v-html`, so there is nothing to sanitise. Keep it that way.
 - **localStorage is not the like control.** It stops the same browser
-  double-liking; the per-IP-per-post window in `netlify/lib/rate-limit.ts` is
-  what actually bounds abuse. Likes are one-way — there is no decrement endpoint
+  double-liking; the per-IP-per-post limit in OS is what actually bounds
+  abuse. Likes are one-way — there is no decrement endpoint
   on purpose.
 - **Comments are invisible to search engines** and absent from `rss.xml` and OG
   cards, because the build has no knowledge of them. Accepted, not overlooked.
@@ -197,13 +197,9 @@ Things worth knowing before changing any of it:
   and `rounded-xl` all resolve to nothing; the scale is `rounded-1` (4px)
   through `rounded-9`, plus `rounded-full`.
 
-Secrets are `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` and `RATE_LIMIT_SALT`.
-Locally they live in a gitignored `.env` and point at the development database;
-production uses a separate one and its values exist only on Netlify:
-
-```
-netlify env:set TURSO_DATABASE_URL "libsql://..." --secret --context production
-```
+The functions use the same `FRAPPE_URL` and `FRAPPE_API_TOKEN` as the
+newsletter signup (see README, "Newsletter"). Locally they live in a gitignored
+`.env`; production values exist only on Netlify.
 
 Two CLI quirks cost an hour, so they are worth writing down. `--secret` requires
 an explicit `--context`; and passing `--scope` alongside `--context` is rejected
@@ -216,7 +212,7 @@ cannot reach the browser regardless.
 Only the production context has values. Deploy previews and branch deploys have
 none, so the engagement endpoints return 500 there and the island renders its
 error state — set the development credentials on those contexts if you would
-rather previews worked against the dev database.
+rather previews worked against a dev OS site.
 
 ## Documentation
 

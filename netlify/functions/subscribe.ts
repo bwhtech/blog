@@ -10,7 +10,6 @@ import {
 	serverError,
 } from '../lib/http';
 import { FrappeError, formIdFor, isPlacement, subscribe } from '../lib/frappe';
-import { consumeAll } from '../lib/rate-limit';
 import {
 	isValidEmail,
 	normalizeEmail,
@@ -45,17 +44,6 @@ export default async (req: Request, context: Context): Promise<Response> => {
 		return json({ ok: true, message: '' });
 	}
 
-	const ip = clientIp(req, context);
-	try {
-		const limit = await consumeAll([
-			{ ip, action: 'subscribe', limit: 5, windowSec: 10 * 60 },
-			{ ip, action: 'subscribe', limit: 20, windowSec: 24 * 60 * 60 },
-		]);
-		if (!limit.allowed) return rateLimited(limit.retryAfter);
-	} catch (error) {
-		return serverError('subscribe:rate-limit', error);
-	}
-
 	try {
 		const message = await subscribe({
 			formId: formIdFor(placement),
@@ -63,11 +51,13 @@ export default async (req: Request, context: Context): Promise<Response> => {
 			firstName: normalizeFirstName(body.first_name),
 			sourceUrl: normalizeSourceUrl(body.source_url),
 			utm: pickUtm(body.utm),
-			consentIp: ip,
+			consentIp: clientIp(req, context),
 		});
 		return json({ ok: true, message });
 	} catch (error) {
 		if (!(error instanceof FrappeError)) return serverError('subscribe:config', error);
+		// OS rate-limits by the consent IP. Its shortest window is 10 minutes.
+		if (error.rateLimited) return rateLimited(10 * 60);
 		// OS checks addresses harder than isValidEmail does. That rejection is the
 		// reader's typo, not an outage, so it is reported as one.
 		if (error.type === 'InvalidEmailAddressError') return json({ error: 'invalid_email' }, 400);

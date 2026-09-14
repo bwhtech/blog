@@ -3,7 +3,7 @@
  *
  * This is a UX affordance, not a security control: clearing site data or
  * opening a private window resets it. What actually bounds abuse is the
- * per-IP-per-post window in netlify/lib/rate-limit.ts.
+ * per-IP-per-post limit in BWH OS (bwh_os.blog.api.like_post).
  */
 const KEY = 'bwh.liked-posts.v1';
 
