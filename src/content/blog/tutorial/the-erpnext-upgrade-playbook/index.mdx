@@ -1,0 +1,42 @@
+---
+title: "The ERPNext Upgrade Playbook"
+description: "A comprehensive guide on how to upgrade an ERPNext instance through a major version."
+author: hussain-nagaria
+tags: [ERPNext, Version Upgrade, Tutorial]
+pubDate: 2026-09-17
+image: './og.png'
+# The post carries its own signup form, so the card at the foot stays off.
+newsletter: false
+---
+
+import NewsletterForm from '../../../../components/islands/NewsletterForm.vue';
+
+This is probably one of the most asked questions I get when I meet the community during conferences or training: "What is the process of upgrading ERPNext/Frappe instance from vX to vY?"
+
+This time, I decided to create a comprehensive guide which you can use as a reference to get an major version upgrade done, for your Frappe/ERPNext instance.
+
+The playbook **contains the exact process** that I would use to upgrade ERPNext from v15 to v16. But the core processes remains the same for any upgrade, e.g. v14 to v15.
+
+### Concrete Example
+
+I have used a realistic example with multiple custom apps and 17 months of data! We will debug and resolve the issues together.
+
+I have not assumed you use [Frappe Cloud](https://frappe.io/cloud) so that you use this playbook even if you are self-hosting.
+
+### Agent Skill
+
+*But Hussain, Coding agents are doing things these days, isn't it?* I know, I know. I have also bundled an agent skill that you can start using right now to assist you with the upgrade process.
+
+<div class="not-prose my-8">
+	<NewsletterForm
+		client:visible={{ rootMargin: '300px' }}
+		placement="upgrade-playbook"
+		heading="Download the ERPNext Upgrade Playbook"
+		blurb="No spam, only helpful emails 🙂"
+		submitLabel="Get the playbook"
+		requireName
+		nameLabel="Your name"
+	/>
+</div>
+
+Hope you find it useful!

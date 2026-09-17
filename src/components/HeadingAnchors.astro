@@ -8,6 +8,10 @@
 		);
 
 		for (const heading of headings) {
+			// An island embedded in the body — the lead magnet form — sits in the
+			// prose but is not part of it, and its own heading gets no anchor.
+			if (heading.closest('.not-prose')) continue;
+
 			heading.setAttribute('data-anchor-ready', 'true');
 			heading.append(createAnchorLink(heading.id));
 		}

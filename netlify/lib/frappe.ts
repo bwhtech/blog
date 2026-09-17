@@ -19,7 +19,16 @@ const FORM_ID_ENV = Object.freeze({
 	'train-your-team': 'OS_FORM_TRAIN_YOUR_TEAM',
 });
 
-export type Placement = keyof typeof FORM_ID_ENV;
+/**
+ * Placements whose form id is fixed here rather than read from the environment.
+ * A lead magnet ships with one post and one form, so a variable per post would
+ * mean a Netlify change for every post; the id is content, not configuration.
+ */
+const FORM_ID_FIXED = Object.freeze({
+	'upgrade-playbook': 'upgrade-playbook',
+});
+
+export type Placement = keyof typeof FORM_ID_ENV | keyof typeof FORM_ID_FIXED;
 
 export interface Signup {
 	formId: string;
@@ -94,11 +103,16 @@ export function likePost(postId: string, ip: string): Promise<number> {
 }
 
 export function isPlacement(value: unknown): value is Placement {
-	return typeof value === 'string' && Object.hasOwn(FORM_ID_ENV, value);
+	return (
+		typeof value === 'string' &&
+		(Object.hasOwn(FORM_ID_ENV, value) || Object.hasOwn(FORM_ID_FIXED, value))
+	);
 }
 
 export function formIdFor(placement: Placement): string {
-	const name = FORM_ID_ENV[placement];
+	if (placement in FORM_ID_FIXED) return FORM_ID_FIXED[placement as keyof typeof FORM_ID_FIXED];
+
+	const name = FORM_ID_ENV[placement as keyof typeof FORM_ID_ENV];
 	const formId = process.env[name];
 	if (!formId) throw new Error(`${name} is not set`);
 	return formId;

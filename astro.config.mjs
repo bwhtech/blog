@@ -1,6 +1,7 @@
 // @ts-check
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
+import mdx from '@astrojs/mdx';
 import vue from '@astrojs/vue';
 import { defineConfig } from 'astro/config';
 import { barrelImports, lucideIcons } from 'frappe-ui/vite';
@@ -91,6 +92,9 @@ export default defineConfig({
 	},
 	integrations: [
 		vue({ devtools: false }),
+		// A post that has to mount a component in the middle of its body is written
+		// as index.mdx; every other post stays plain Markdown.
+		mdx(),
 	],
 	markdown: {
 		syntaxHighlight: {

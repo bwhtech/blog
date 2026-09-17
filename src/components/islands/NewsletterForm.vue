@@ -18,10 +18,19 @@ const props = withDefaults(
 		placement: Placement;
 		heading?: string;
 		blurb?: string;
+		/** The submit button. A lead magnet form asks for the download, not a subscription. */
+		submitLabel?: string;
+		/** A lead magnet is addressed to someone, so its form insists on a name. */
+		requireName?: boolean;
+		/** The field still fills `first_name`; only what the reader is asked changes. */
+		nameLabel?: string;
 	}>(),
 	{
 		heading: 'BWH Newsletter',
 		blurb: 'Be the first to hear about latest stuff from Frappeverse: products, tutorials, and much more.',
+		submitLabel: 'Subscribe',
+		requireName: false,
+		nameLabel: 'First name',
 	},
 );
 
@@ -43,6 +52,17 @@ onMounted(() => {
 
 async function submit() {
 	if (state.value === 'submitting') return;
+
+	// The form carries `novalidate`, so the browser reports nothing and every
+	// empty field has to be caught here. An empty address is OS's to reject; an
+	// empty name never reaches it.
+	if (props.requireName && !firstName.value.trim()) {
+		errorMessage.value = `Please enter ${props.nameLabel.toLowerCase()}.`;
+		state.value = 'error';
+		cue('error');
+		return;
+	}
+
 	state.value = 'submitting';
 	errorMessage.value = '';
 
@@ -73,13 +93,26 @@ async function submit() {
 	>
 		<form novalidate @submit.prevent="submit">
 			<div class="flex flex-col gap-5 p-5 sm:p-6">
-				<h2 :id="headingId" class="text-lg font-medium text-ink-gray-8">{{ heading }}</h2>
+				<!-- Not an <h2>: mounted in a post body this sits inside `.prose-v3`,
+				     whose heading rules are plain descendant selectors that outrank the
+				     card's own classes and add the article's 32px heading margin. The
+				     role keeps it a level-2 heading for a screen reader. -->
+				<div
+					:id="headingId"
+					class="text-lg font-medium text-ink-gray-8"
+					role="heading"
+					aria-level="2"
+				>
+					{{ heading }}
+				</div>
 
 				<!-- Reserved height, so the card does not shrink when the fields give
-				     way to the one-line confirmation. -->
+				     way to the one-line confirmation, and `flex-1` hands the block any
+				     height left over — the confirmation then sits in the middle of the
+				     space the fields had rather than against the heading. -->
 				<p
 					v-if="state === 'success'"
-					class="flex min-h-[52px] items-center gap-2 text-base text-ink-gray-7"
+					class="flex min-h-[54px] flex-1 items-center gap-2 text-base text-ink-gray-7"
 					role="status"
 				>
 					<LucideMailCheck class="size-4 shrink-0 text-ink-gray-5" aria-hidden="true" />
@@ -92,9 +125,10 @@ async function submit() {
 							v-model="firstName"
 							type="text"
 							size="md"
-							label="First name"
+							:label="nameLabel"
 							placeholder="Jane"
 							autocomplete="given-name"
+							:required="requireName"
 							:disabled="state === 'submitting'"
 						/>
 						<FormControl
@@ -133,7 +167,7 @@ async function submit() {
 					theme="gray"
 					size="md"
 					type="submit"
-					label="Subscribe"
+					:label="submitLabel"
 					:loading="state === 'submitting'"
 				/>
 			</div>

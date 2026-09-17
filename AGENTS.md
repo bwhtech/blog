@@ -85,6 +85,27 @@ UPDATE post_likes SET post_id = 'new/slug' WHERE post_id = 'old/slug';
 UPDATE comments   SET post_id = 'new/slug' WHERE post_id = 'old/slug';
 ```
 
+## Lead magnet posts
+
+A post that gives something away — `tutorial/the-erpnext-upgrade-playbook` is the first — carries
+the signup form in its own body rather than at the foot:
+
+- The post is `index.mdx`, not `index.md`, so it can import
+  `src/components/islands/NewsletterForm.vue` and mount it where the form belongs. `@astrojs/mdx`
+  is registered for exactly this; every other post stays plain Markdown.
+- The form sits in a `<div class="not-prose">`. Without it the typography plugin restyles the
+  card's own heading and text, and `HeadingAnchors.astro` hangs a `#` anchor off its `<h2>` —
+  which is why that script skips anything inside `.not-prose`.
+- The frontmatter sets `newsletter: false`. The flag is in the content schema and defaults to
+  true; `BlogPostLayout.astro` reads it to drop the signup card at the foot, so the reader sees
+  one form rather than two.
+- The `placement` names a fixed BWH OS form id in `FORM_ID_FIXED` (`netlify/lib/frappe.ts`),
+  not an environment variable — see the README.
+- **OS delivers the file, not the site.** The Signup Form in OS links a Lead Magnet, whose PDF
+  is a private file. Signing up sends the welcome email, and the download link in it carries the
+  subscriber's token. Nothing in this repo has the file or a link to it, so the only way to the
+  PDF is through an address that has confirmed it wants the list.
+
 A ` ```mermaid ` code block becomes a diagram. Astro leaves the block
 unhighlighted (`markdown.syntaxHighlight.excludeLangs` in `astro.config.mjs`)
 and `src/components/Mermaid.astro` renders it in the browser, matching the

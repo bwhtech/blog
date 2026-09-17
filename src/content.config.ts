@@ -30,9 +30,9 @@ const authors = defineCollection({
 const blog = defineCollection({
 	loader: glob({
 		base: './src/content/blog',
-		pattern: '**/index.md',
+		pattern: '**/index.{md,mdx}',
 		// A post is a folder, so the id is the folder path: `<category>/<slug>`.
-		generateId: ({ entry }) => entry.replace(/\/index\.md$/, ''),
+		generateId: ({ entry }) => entry.replace(/\/index\.mdx?$/, ''),
 	}),
 	schema: ({ image }) =>
 		z.object({
@@ -44,6 +44,9 @@ const blog = defineCollection({
 			updatedDate: z.coerce.date().optional(),
 			image: image().optional(),
 			draft: z.boolean().default(false),
+			/** The signup card at the foot of the post. Turn it off for a post that
+			    carries its own form in the body, so the reader is not shown two. */
+			newsletter: z.boolean().default(true),
 		}),
 });
 

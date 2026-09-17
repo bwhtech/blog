@@ -81,6 +81,12 @@ netlify env:set OS_FORM_TRAIN_YOUR_TEAM "train-your-team" --context production
   foot of each post, the home page and `/train-your-team`. A new placement needs a new entry in
   `FORM_ID_ENV` in `netlify/lib/frappe.ts`.
 
+A lead magnet form is the exception: it belongs to one post, so its form id is fixed in
+`FORM_ID_FIXED` in the same file rather than in an environment variable, and a new one is a
+code change and not a Netlify change. The post embeds the form itself and sets
+`newsletter: false` in its frontmatter, which drops the signup card at the foot so the reader
+is not shown two forms. See "Lead magnet posts" in AGENTS.md.
+
 The likes and comments functions use the same `FRAPPE_URL` and `FRAPPE_API_TOKEN`. BWH OS
 stores the likes and comments and rate-limits every call by the reader's IP.
 

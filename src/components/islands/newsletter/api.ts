@@ -12,7 +12,11 @@ export interface SubscribeDraft {
 	hp_url: string;
 }
 
-export type Placement = 'blog-post' | 'home' | 'train-your-team';
+/**
+ * Keep in step with the placements in netlify/lib/frappe.ts. The last one is a
+ * lead magnet form, whose OS form id is fixed in that file.
+ */
+export type Placement = 'blog-post' | 'home' | 'train-your-team' | 'upgrade-playbook';
 
 const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
 const FALLBACK_MESSAGE = 'Thanks for subscribing!';

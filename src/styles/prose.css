@@ -148,6 +148,13 @@
 	margin-block: 0 16px;
 }
 
+/* A Vue island mounted in the body — the lead magnet form — is chrome, not
+   prose, and lays itself out. The typography plugin honours `not-prose` on its
+   own; these rules are plain descendant selectors, so they have to be told. */
+.prose-v3 .not-prose :is(p, ul, ol, li, blockquote, figure) {
+	margin: 0;
+}
+
 .prose-v3 blockquote p,
 .prose-v3 figure p {
 	margin-block: 0;

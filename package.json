@@ -20,6 +20,7 @@
     "src/content/blog/**/*.{md,mdx}": "cspell --no-must-find-files"
   },
   "dependencies": {
+    "@astrojs/mdx": "^7.0.8",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/vue": "^7.0.2",
     "astro": "^7.1.6",
