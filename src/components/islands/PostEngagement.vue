@@ -9,6 +9,7 @@
 import { Alert, FrappeUIProvider } from 'frappe-ui';
 import { computed, onMounted, ref } from 'vue';
 
+import { track } from '../../utils/analytics';
 import { cue } from '../../utils/sound';
 import { type PublicComment, fetchEngagement, likePost, messageOf } from './engagement/api';
 import CommentForm from './engagement/CommentForm.vue';
@@ -79,6 +80,8 @@ async function onLike() {
 		// Persisted only after the server agrees, so a failed request never
 		// leaves this browser believing it liked a post it did not.
 		markLiked(props.postId);
+		// After the server agrees, so the count here matches the one in OS.
+		track('Post Like', { post: props.postId });
 	} catch {
 		likes.value = previous;
 		liked.value = false;

@@ -2,6 +2,7 @@
 import { Avatar, Button, ErrorMessage, FormControl } from 'frappe-ui';
 import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue';
 
+import { track } from '../../../utils/analytics';
 import { cue } from '../../../utils/sound';
 import {
 	type FieldErrors,
@@ -78,6 +79,7 @@ async function submit() {
 		posted.value = true;
 		shownAt = performance.now();
 		cue('success');
+		track('Comment Posted', { post: props.postId });
 	} catch (error) {
 		const fields = fieldErrorsOf(error);
 		if (fields) fieldErrors.value = fields;

@@ -203,6 +203,8 @@ function badgeTheme(index: number) {
 								size="md"
 								data-cuelume-press
 								data-cuelume-release
+								data-s-event="Book a Call"
+								:data-s-event-props="`source=training;track=${active.id};program=${program.title}`"
 							/>
 						</div>
 					</li>

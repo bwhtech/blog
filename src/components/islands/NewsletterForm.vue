@@ -10,6 +10,7 @@
 import { Button, ErrorMessage, FormControl } from 'frappe-ui';
 import { onMounted, ref, useId } from 'vue';
 
+import { track } from '../../utils/analytics';
 import { cue } from '../../utils/sound';
 import { currentPage, messageOf, subscribe, type Placement } from './newsletter/api';
 
@@ -76,6 +77,9 @@ async function submit() {
 		});
 		state.value = 'success';
 		cue('success');
+		// The placement is the whole point of the event: a signup from the foot
+		// of a post and one from a lead magnet are not the same conversion.
+		track('Newsletter Signup', { placement: props.placement });
 	} catch (error) {
 		errorMessage.value = messageOf(error);
 		state.value = 'error';
