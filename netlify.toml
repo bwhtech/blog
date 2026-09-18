@@ -212,7 +212,7 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://assets.onedollarstats.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self' data:; frame-src https://www.youtube.com; connect-src 'self' https://collector.onedollarstats.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://assets.onedollarstats.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://collector.onedollarstats.com; media-src 'self'; font-src 'self' data:; frame-src https://www.youtube.com; connect-src 'self' https://collector.onedollarstats.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
     Permissions-Policy = "camera=(), geolocation=(), microphone=()"
     Referrer-Policy = "strict-origin-when-cross-origin"
     X-Content-Type-Options = "nosniff"
