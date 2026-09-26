@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>5 Small UI/UX Things</title>
+<style>
+  @font-face { font-family: Inter; src: url(Inter.var.woff2) format("woff2"); font-weight: 100 900; }
+  @page { size: 420mm 594mm; margin: 0; }
+
+  :root {
+    --paper: #fafaf8;
+    --ink: #171717;
+    --ink-2: #525252;
+    --ink-3: #a3a3a3;
+    --line: #e5e5e5;
+    --accent: #0289f7;
+    --bad: #e03636;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--paper); }
+  body {
+    width: 420mm; height: 594mm; overflow: hidden;
+    font-family: Inter, sans-serif; color: var(--ink);
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+    padding: 30mm 30mm 24mm;
+    display: flex; flex-direction: column;
+  }
+
+  /* Header */
+  .eyebrow { display: flex; align-items: center; gap: 4mm; font-size: 5mm; font-weight: 500; color: var(--ink-2); letter-spacing: .02em; }
+  .eyebrow svg { width: 9mm; height: 9mm; }
+  h1 { margin-top: 14mm; font-size: 40mm; line-height: .92; font-weight: 700; letter-spacing: -.045em; }
+  h1 .num { color: var(--accent); }
+  .lede { margin-top: 9mm; font-size: 8mm; line-height: 1.3; color: var(--ink-2); font-weight: 400; letter-spacing: -.01em; max-width: 250mm; }
+
+  /* Rules */
+  ol { list-style: none; margin-top: 16mm; flex: 1; display: flex; flex-direction: column; }
+  li {
+    flex: 1; display: grid; grid-template-columns: 26mm 1fr 128mm; column-gap: 8mm; align-items: center;
+    border-top: .5mm solid var(--ink);
+  }
+  li:last-child { border-bottom: .5mm solid var(--ink); }
+  .n { align-self: start; padding-top: 7mm; font-size: 16mm; font-weight: 700; line-height: 1; letter-spacing: -.04em; color: var(--accent); font-variant-numeric: tabular-nums; }
+  h2 { font-size: 11mm; line-height: 1.04; font-weight: 650; letter-spacing: -.03em; }
+  .body p { margin-top: 3.5mm; font-size: 5.2mm; line-height: 1.4; color: var(--ink-2); max-width: 150mm; }
+  .body q { display: block; margin-top: 3mm; font-size: 4.6mm; color: var(--ink-3); font-style: italic; quotes: "\201C" "\201D"; }
+
+  /* Illustrations */
+  .fig { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 5mm; }
+  .panel { position: relative; height: 50mm; border-radius: 3mm; background: #fff; border: .35mm solid var(--line); padding: 5mm; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2.5mm; }
+  .tag { position: absolute; top: 3mm; left: 3.5mm; font-size: 3.2mm; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .tag.x { color: var(--bad); }
+  .tag.ok { color: var(--accent); }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; height: 8.5mm; padding: 0 3.6mm; border-radius: 2mm; font-size: 3.8mm; font-weight: 500; white-space: nowrap; }
+  .btn.solid { background: var(--ink); color: #fff; }
+  .btn.subtle { background: #f0f0f0; color: var(--ink); }
+  .btn.ghost { color: var(--ink); }
+  .btn.off { background: #f0f0f0; color: #c4c4c4; }
+  .row { display: flex; gap: 1.5mm; align-items: center; }
+  .field { width: 44mm; height: 8mm; border-radius: 2mm; background: #f3f3f3; font-size: 3.6mm; display: flex; align-items: center; padding: 0 3mm; color: var(--ink); justify-content: space-between; }
+  .hint { font-size: 3.2mm; color: var(--bad); display: flex; gap: 1.5mm; align-items: center; }
+
+  .nav { display: flex; flex-direction: column; gap: 1.6mm; font-size: 3.9mm; align-self: stretch; padding: 3mm 3mm 0; }
+  .nav b { font-weight: 600; font-size: 4.2mm; margin-bottom: .8mm; }
+  .nav s { color: var(--bad); text-decoration-thickness: .35mm; }
+  .nav .cut { color: var(--ink-3); }
+
+  .hashes { font-size: 4.2mm; line-height: 1.55; align-self: stretch; padding: 3mm 3mm 0; }
+  .hashes div { display: flex; gap: 8mm; }
+  .hashes span:first-child { color: var(--ink-3); font-family: Inter, sans-serif; }
+  .mono span:last-child { font-family: "DejaVu Sans Mono", monospace; font-size: 3.9mm; }
+
+  .photo { width: 30mm; height: 30mm; border-radius: 50%; background: var(--accent); position: relative; overflow: hidden; }
+  .photo::after { content: ""; position: absolute; left: 50%; top: 22%; width: 34%; height: 34%; border-radius: 50%; background: #fff; transform: translateX(-50%); }
+  .photo::before { content: ""; position: absolute; left: 50%; top: 62%; width: 64%; height: 60%; border-radius: 50%; background: #fff; transform: translateX(-50%); }
+  .photo.squash { width: 46mm; height: 22mm; }
+  .cap { font-family: "DejaVu Sans Mono", monospace; font-size: 3.3mm; color: var(--ink-2); }
+
+  /* Footer */
+  footer { margin-top: 14mm; display: grid; grid-template-columns: 1fr auto; column-gap: 14mm; align-items: end; }
+  .epilog { font-size: 6.4mm; line-height: 1.35; font-weight: 500; letter-spacing: -.015em; max-width: 230mm; }
+  .epilog span { color: var(--ink-2); font-weight: 400; }
+  .credit { margin-top: 6mm; font-size: 4.2mm; color: var(--ink-2); }
+  .qr { display: flex; gap: 5mm; align-items: end; }
+  .qr img { width: 34mm; height: 34mm; display: block; }
+  .qr .url { font-size: 3.8mm; line-height: 1.45; color: var(--ink-2); text-align: right; }
+  .qr .url b { display: block; color: var(--ink); font-weight: 600; font-size: 4.4mm; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#171717"/><path fill="#f8f8f8" d="M8 8h7.5c3.3 0 5.5 1.6 5.5 4.4 0 1.6-.8 2.8-2.1 3.5 1.8.6 2.8 1.9 2.8 3.8 0 3-2.4 4.8-6 4.8H8V8Zm7.1 6.5c1.5 0 2.4-.6 2.4-1.8 0-1.1-.9-1.7-2.4-1.7h-3.6v3.5h3.6Zm.4 7c1.7 0 2.7-.7 2.7-2 0-1.3-1-2-2.7-2h-4v4h4Z"/></svg>
+    Build With Hussain &nbsp;·&nbsp; Tips &amp; Tricks
+  </div>
+  <h1><span class="num">5</span> small UI/UX<br>things.</h1>
+  <p class="lede">Lessons picked up in code reviews at Frappe. Each one is tiny. Together they make a big difference.</p>
+</header>
+
+<ol>
+  <li>
+    <div class="n">01</div>
+    <div class="body">
+      <h2>Don’t disable the button.<br>Tell them why.</h2>
+      <p>A greyed-out action leaves people guessing. Keep it enabled, and on click say exactly what they need to do.</p>
+    </div>
+    <div class="fig">
+      <div class="panel"><span class="tag x">Don’t</span>
+        <div class="field">main <span>▾</span></div>
+        <span class="btn off">Switch branch</span>
+      </div>
+      <div class="panel"><span class="tag ok">Do</span>
+        <div class="field">main <span>▾</span></div>
+        <span class="btn solid">Switch branch</span>
+        <span class="hint">Pick a branch other than main</span>
+      </div>
+    </div>
+  </li>
+
+  <li>
+    <div class="n">02</div>
+    <div class="body">
+      <h2>One primary action<br>per view.</h2>
+      <p>Ask what the person is here to do. That gets the primary button. Everything else is secondary or tertiary.</p>
+    </div>
+    <div class="fig">
+      <div class="panel"><span class="tag x">Don’t</span>
+        <div class="row" style="gap:1.5mm"><span class="btn solid">Visit</span><span class="btn solid">Update</span><span class="btn solid">Login</span></div>
+      </div>
+      <div class="panel"><span class="tag ok">Do</span>
+        <div class="row"><span class="btn ghost">Visit</span><span class="btn subtle">Login</span><span class="btn solid">Update</span></div>
+      </div>
+    </div>
+  </li>
+
+  <li>
+    <div class="n">03</div>
+    <div class="body">
+      <h2>Cut redundant labels.</h2>
+      <p>Proximity already gives the context. If you are inside “Manage Event”, the tabs don’t need to say “Manage” again.</p>
+    </div>
+    <div class="fig">
+      <div class="panel"><span class="tag x">Don’t</span>
+        <div class="nav"><b>Manage Event</b><span>Manage RSVP</span><span>Manage Tickets</span><span>Download Attendee List</span></div>
+      </div>
+      <div class="panel"><span class="tag ok">Do</span>
+        <div class="nav"><b>Manage Event</b><span>Overview</span><span>Tickets</span><span>Attendees &nbsp;<span class="cut">↓</span></span></div>
+      </div>
+    </div>
+  </li>
+
+  <li>
+    <div class="n">04</div>
+    <div class="body">
+      <h2>Monospace for<br>fixed-length strings.</h2>
+      <p>Commit hashes, IDs, codes: same number of characters, same width. The column lines up on its own.</p>
+    </div>
+    <div class="fig">
+      <div class="panel"><span class="tag x">Don’t</span>
+        <div class="hashes"><div><span>v15</span><span>a1b2c3d</span></div><div><span>v14</span><span>1f1i7l1</span></div><div><span>v13</span><span>w4mw0e2</span></div></div>
+      </div>
+      <div class="panel"><span class="tag ok">Do</span>
+        <div class="hashes mono"><div><span>v15</span><span>a1b2c3d</span></div><div><span>v14</span><span>1f1i7l1</span></div><div><span>v13</span><span>w4mw0e2</span></div></div>
+      </div>
+    </div>
+  </li>
+
+  <li>
+    <div class="n">05</div>
+    <div class="body">
+      <h2>Never break<br>aspect ratios.</h2>
+      <p>Lock proportions when you resize, and style images to survive any size a CMS throws at them.</p>
+      <q>The biggest crime against humanity. — Rushabh</q>
+    </div>
+    <div class="fig">
+      <div class="panel"><span class="tag x">Don’t</span>
+        <div class="photo squash"></div>
+      </div>
+      <div class="panel"><span class="tag ok">Do</span>
+        <div class="photo"></div>
+        <span class="cap">aspect-ratio: 1 / 1;</span>
+      </div>
+    </div>
+  </li>
+</ol>
+
+<footer>
+  <div>
+    <p class="epilog">Tricks like these aren’t taught in college. <span>We learn them by building in the wild and asking for feedback.</span></p>
+    <p class="credit">Hussain Nagaria — with thanks to Faris and Shariq</p>
+  </div>
+  <div class="qr">
+    <div class="url"><b>Read the full post</b>bwh.tech/blog/tips-and-tricks<br>/five-ui-ux-things</div>
+    <img src="qr.svg" alt="QR code linking to the post">
+  </div>
+</footer>
+
+</body>
+</html>
