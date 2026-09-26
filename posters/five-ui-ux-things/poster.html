@@ -49,7 +49,7 @@
   /* Illustrations */
   .fig { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 5mm; }
   .panel { position: relative; height: 50mm; border-radius: 3mm; background: #fff; border: .35mm solid var(--line); padding: 5mm; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2.5mm; }
-  .tag { position: absolute; top: 3mm; left: 3.5mm; font-size: 3.2mm; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .tag { position: absolute; top: 3mm; left: 3.5mm; font-size: 3.6mm; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
   .tag.x { color: var(--bad); }
   .tag.ok { color: var(--accent); }
 
@@ -60,7 +60,7 @@
   .btn.off { background: #f0f0f0; color: #c4c4c4; }
   .row { display: flex; gap: 1.5mm; align-items: center; }
   .field { width: 44mm; height: 8mm; border-radius: 2mm; background: #f3f3f3; font-size: 3.6mm; display: flex; align-items: center; padding: 0 3mm; color: var(--ink); justify-content: space-between; }
-  .hint { font-size: 3.2mm; color: var(--bad); display: flex; gap: 1.5mm; align-items: center; }
+  .hint { font-size: 3.6mm; color: var(--bad); display: flex; gap: 1.5mm; align-items: center; }
 
   .nav { display: flex; flex-direction: column; gap: 1.6mm; font-size: 3.9mm; align-self: stretch; padding: 3mm 3mm 0; }
   .nav b { font-weight: 600; font-size: 4.2mm; margin-bottom: .8mm; }
@@ -76,7 +76,7 @@
   .photo::after { content: ""; position: absolute; left: 50%; top: 22%; width: 34%; height: 34%; border-radius: 50%; background: #fff; transform: translateX(-50%); }
   .photo::before { content: ""; position: absolute; left: 50%; top: 62%; width: 64%; height: 60%; border-radius: 50%; background: #fff; transform: translateX(-50%); }
   .photo.squash { width: 46mm; height: 22mm; }
-  .cap { font-family: "DejaVu Sans Mono", monospace; font-size: 3.3mm; color: var(--ink-2); }
+  .cap { font-family: "DejaVu Sans Mono", monospace; font-size: 3.7mm; color: var(--ink-2); }
 
   /* Footer */
   footer { margin-top: 14mm; display: grid; grid-template-columns: 1fr auto; column-gap: 14mm; align-items: end; }
@@ -115,7 +115,7 @@
       <div class="panel"><span class="tag ok">Do</span>
         <div class="field">main <span>▾</span></div>
         <span class="btn solid">Switch branch</span>
-        <span class="hint">Pick a branch other than main</span>
+        <span class="hint">Pick a different branch</span>
       </div>
     </div>
   </li>
