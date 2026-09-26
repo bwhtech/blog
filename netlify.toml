@@ -92,6 +92,12 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/open-source"
+  to = "https://github.com/bwhtech"
+  status = 301
+  force = true
+
 # Posts used to sit at the site root, before the root became the landing page.
 [[redirects]]
   from = "/announcements/*"
