@@ -4,7 +4,7 @@ description: "Open Source eCommerce Platform powered by ERPNext"
 author: hussain-nagaria
 tags: [Announcements, Commera, ERPNext]
 pubDate: 2026-09-28
-image: "./merchant-dashboard.png"
+image: "./og.png"
 ---
 
 The dots have finally started to connect. What started as a simple custom eCommerce app for a client has now become the base for a **solid eCommerce platform** backed by ERPNext!
@@ -26,9 +26,6 @@ For the **developers**, try to build your own payment gateway, theme, or shippin
 If you have a use case or a customer who wants to set up an online store backed by ERPNext, we are happy to help you set it up on a call and answer any queries. You can book a call using [this link](https://cal.com/rl0007/commera-onboarding).
 
 ### Themes
-
-![Default theme in Commera](./storefront.png)
-
 
 Every online store is different and needs to be unique. Instead of building a few hard-coded themes or variables, **we built a theming engine** powered by Jinja. You can build a custom Frappe app that brings its own theme (can extend the base theme or could be completely new!) backed by Commera's extensibility.
 
