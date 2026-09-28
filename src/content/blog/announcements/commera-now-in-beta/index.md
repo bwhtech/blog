@@ -71,3 +71,5 @@ You can check the public roadmap [here](https://github.com/orgs/bwhtech/projects
 
 Feel free to ask any questions or share suggestions you might have in the comments below.
 
+
+Join the [Commera community on Telegram](https://t.me/commera_by_bwh) to follow along, get help and share feedback.
