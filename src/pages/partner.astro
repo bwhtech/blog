@@ -1,0 +1,303 @@
+---
+import { Badge, Button } from 'frappe-ui';
+import ThemeSwitcher from '../components/islands/ThemeSwitcher.vue';
+import { AUDIENCE, FAQS, MEET, PARTNER_PLAN, PLUS, STEPS } from '../data/partner';
+import AppLayout from '../layouts/AppLayout.astro';
+
+const title = 'BWH Partner Plan';
+const description =
+	'Senior ex-Frappe-core engineers on tap for the people building on Frappe. A retainer for Frappe partner firms and in-house ERPNext teams.';
+
+// Same idiom as /train-your-team: every frappe-ui component below renders at
+// build time with no `client:*` directive. Only ThemeSwitcher hydrates.
+---
+
+<AppLayout title={title} description={description} ogImage="/og/home.jpg">
+	<main id="main-content" class="mx-auto w-full max-w-[820px] px-4 pb-32 pt-14 sm:px-5 sm:pt-24">
+		<section class="flex flex-col items-center text-center" aria-labelledby="page-title">
+			<p class="text-xs-medium uppercase tracking-widest text-ink-gray-5">
+				<a class="no-underline transition-colors hover:text-ink-gray-8" href="/">BWH</a>
+				<span class="mx-1.5 text-ink-gray-4" aria-hidden="true">/</span>
+				<span class="text-ink-gray-7">Partner Plan</span>
+			</p>
+
+			<h1
+				id="page-title"
+				class="mt-6 text-[32px] font-semibold leading-[1.15] tracking-tight text-ink-gray-9 sm:text-[38px] lg:text-[44px]"
+			>
+				Senior Frappe help, on tap.
+			</h1>
+			<p class="mt-5 max-w-[560px] text-p-lg text-ink-gray-6">{description}</p>
+			<p class="mt-4 max-w-[560px] text-p-sm text-ink-gray-5">
+				Two partner firms already run private batches with us. The Partner Plan is the standing
+				version of that.
+			</p>
+
+			<div class="mt-11 flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
+				<Button
+					link={MEET}
+					label="Book A Call"
+					variant="solid"
+					theme="gray"
+					size="md"
+					data-cuelume-press
+					data-cuelume-release
+				/>
+
+				<!-- An in-page jump, so it stays a plain anchor: Button's `link` prop
+				     always opens a new tab, which would break a fragment target. -->
+				<a
+					class="group inline-flex min-h-8 items-center gap-1.5 text-sm text-ink-gray-5 no-underline transition-colors hover:text-ink-gray-9"
+					href="#plans"
+					data-cuelume-press
+					data-cuelume-release
+				>
+					<span>See the plans</span>
+					<span
+						class="lucide-arrow-down size-4 transition-transform group-hover:translate-y-0.5"
+						aria-hidden="true"></span>
+				</a>
+			</div>
+		</section>
+
+		<section id="plans" class="mt-24 scroll-mt-8 sm:mt-32" aria-labelledby="plans-title">
+			<h2 id="plans-title" class="text-2xl-semibold text-ink-gray-9">The plan</h2>
+			<p class="mt-4 max-w-[560px] text-p-base text-ink-gray-6">
+				One retainer, the way senior open-source maintainers run them, and a Plus tier for teams
+				that want a private hour. Training for your team is a
+				separate thing: see <a
+					class="text-ink-gray-7 underline decoration-outline-gray-3 underline-offset-2 transition-colors hover:text-ink-gray-9"
+					href="/train-your-team">Train Your Team</a
+				>.
+			</p>
+
+			<!--
+			  The retainer takes the One Shot card from /train-your-team: the same
+			  grey card, badge beside the heading. The two ways to pay sit under the
+			  includes list, upfront first, so the number a reader sees first is the
+			  one we want them to pick.
+			-->
+			<article
+				class="mt-10 rounded-7 border border-outline-gray-1 bg-surface-gray-1 p-6 sm:p-8"
+				aria-labelledby="partner-plan-title"
+			>
+				<div class="flex flex-wrap items-center gap-3">
+					<h3 id="partner-plan-title" class="text-xl-semibold text-ink-gray-9">
+						{PARTNER_PLAN.title}
+					</h3>
+					<Badge label={PARTNER_PLAN.format} theme="gray" variant="subtle" size="md" />
+				</div>
+
+				<p class="mt-4 max-w-[560px] text-p-base text-ink-gray-6">{PARTNER_PLAN.blurb}</p>
+
+				<ul class="mt-6 grid gap-2.5 sm:grid-cols-2 sm:gap-x-6">
+					{
+						PARTNER_PLAN.includes.map((item) => (
+							<li class="flex gap-2 text-p-sm text-ink-gray-7">
+								<span
+									class="lucide-check size-4 shrink-0 translate-y-0.5 text-ink-gray-5"
+									aria-hidden="true"
+								/>
+								<span>{item}</span>
+							</li>
+						))
+					}
+				</ul>
+
+				<p class="mt-5 text-p-sm text-ink-gray-5">
+					{PARTNER_PLAN.excludes} Those are quoted separately: see <a
+						class="text-ink-gray-7 underline decoration-outline-gray-3 underline-offset-2 transition-colors hover:text-ink-gray-9"
+						href="/train-your-team">Train Your Team</a
+					> or <a
+						class="text-ink-gray-7 underline decoration-outline-gray-3 underline-offset-2 transition-colors hover:text-ink-gray-9"
+						href={MEET}>talk to us</a
+					>.
+				</p>
+
+				<ul class="mt-8 grid gap-4 sm:grid-cols-2">
+					{
+						PARTNER_PLAN.payment.map((option) => (
+							<li
+								class:list={[
+									'rounded-6 border p-5',
+									option.featured
+										? 'border-outline-gray-2 bg-surface-base'
+										: 'border-outline-gray-1 bg-surface-gray-1',
+								]}
+							>
+								<div class="flex items-center gap-2">
+									<p class="text-sm font-medium text-ink-gray-8">{option.label}</p>
+									{option.featured && (
+										<Badge label="Recommended" theme="gray" variant="subtle" size="sm" />
+									)}
+								</div>
+								<p class="mt-3 text-base text-ink-gray-8">
+									<span class="font-medium">{option.india}</span>
+									<span class="text-ink-gray-5"> in India · </span>
+									<span class="font-medium">{option.elsewhere}</span>
+									<span class="text-ink-gray-5"> elsewhere</span>
+								</p>
+								<p class="mt-1 text-p-sm text-ink-gray-5">{option.note}</p>
+							</li>
+						))
+					}
+				</ul>
+				<p class="mt-3 text-p-sm text-ink-gray-5">
+					Upfront is five months’ price for six. GST applies on Indian invoices.
+				</p>
+
+				<div class="mt-8">
+					<Button
+						link={PARTNER_PLAN.cta.href}
+						label={PARTNER_PLAN.cta.label}
+						variant="solid"
+						theme="gray"
+						size="md"
+						data-cuelume-press
+						data-cuelume-release
+					/>
+				</div>
+			</article>
+
+			<!-- The upsell. Same card at the lighter weight, so the headline stays the headline. -->
+			<article
+				class="mt-5 rounded-6 border border-outline-gray-1 bg-surface-base p-6 sm:p-8"
+				aria-labelledby="plus-title"
+			>
+				<div class="flex flex-wrap items-center gap-3">
+					<h3 id="plus-title" class="text-base font-medium text-ink-gray-8">{PLUS.title}</h3>
+					<Badge label={PLUS.format} theme="gray" variant="subtle" size="sm" />
+				</div>
+				<p class="mt-2 text-p-sm text-ink-gray-5">{PLUS.blurb}</p>
+
+				<ul class="mt-5 flex flex-col gap-2.5">
+					{
+						PLUS.includes.map((item) => (
+							<li class="flex gap-2 text-p-sm text-ink-gray-7">
+								<span
+									class="lucide-check size-4 shrink-0 translate-y-0.5 text-ink-gray-5"
+									aria-hidden="true"
+								/>
+								<span>{item}</span>
+							</li>
+						))
+					}
+				</ul>
+
+				<div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-outline-gray-1 pt-5">
+					<Button
+						link={PLUS.cta.href}
+						label={PLUS.cta.label}
+						variant="subtle"
+						theme="gray"
+						size="md"
+						data-cuelume-press
+						data-cuelume-release
+					/>
+					<div class="text-sm text-ink-gray-8">
+						{
+							PLUS.payment.map((option, index) => (
+								<p class={index > 0 ? 'mt-1' : ''}>
+									<span class="text-ink-gray-5">{option.label}: </span>
+									<span class="font-medium">{option.india}</span>
+									<span class="text-ink-gray-5"> in India · </span>
+									<span class="font-medium">{option.elsewhere}</span>
+									<span class="text-ink-gray-5"> elsewhere, {option.note}</span>
+								</p>
+							))
+						}
+					</div>
+				</div>
+			</article>
+
+		</section>
+
+		<section class="mt-24 sm:mt-32" aria-labelledby="how-title">
+			<h2 id="how-title" class="text-2xl-semibold text-ink-gray-9">How it works</h2>
+
+			<ol class="mt-10 grid gap-5 sm:grid-cols-3">
+				{
+					STEPS.map((step, index) => (
+						<li class="rounded-6 border border-outline-gray-1 bg-surface-base p-6">
+							<p class="text-xs-medium uppercase tracking-widest text-ink-gray-5">Step {index + 1}</p>
+							<h3 class="mt-3 text-base font-medium text-ink-gray-8">{step.title}</h3>
+							<p class="mt-1 text-p-sm text-ink-gray-6">{step.detail}</p>
+						</li>
+					))
+				}
+			</ol>
+		</section>
+
+		<section class="mt-24 sm:mt-32" aria-labelledby="who-title">
+			<h2 id="who-title" class="text-2xl-semibold text-ink-gray-9">Who it is for</h2>
+
+			<ul class="mt-8 flex flex-col gap-3">
+				{
+					AUDIENCE.map((item) => (
+						<li class="flex gap-2 text-p-base text-ink-gray-7">
+							<span
+								class="lucide-check size-4 shrink-0 translate-y-1 text-ink-gray-5"
+								aria-hidden="true"
+							/>
+							<span>{item}</span>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+
+		<section class="mt-24 sm:mt-32" aria-labelledby="faq-title">
+			<h2 id="faq-title" class="text-2xl-semibold text-ink-gray-9">FAQs</h2>
+
+			{/* Same disclosure list as /train-your-team; see the note there on why
+			    this is styled after frappe-ui's Accordion rather than using it. */}
+			<div class="mt-10 divide-y divide-outline-gray-1">
+				{
+					FAQS.map((faq) => (
+						<details class="group">
+							<summary
+								data-cuelume-toggle
+								class="flex cursor-pointer select-none list-none items-center gap-2 rounded-4 px-2 py-4 text-base font-medium text-ink-gray-8 outline-none transition-colors duration-150 hover:text-ink-gray-9 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-outline-gray-3"
+							>
+								<span class="min-w-0 flex-1">{faq.question}</span>
+								<span
+									class="lucide-chevron-down size-4 shrink-0 text-ink-gray-5 transition-transform duration-200 group-hover:text-ink-gray-8 group-open:rotate-180"
+									aria-hidden="true"
+								/>
+							</summary>
+							<p class="px-2 pb-5 text-p-base text-ink-gray-6">{faq.answer}</p>
+						</details>
+					))
+				}
+			</div>
+		</section>
+
+		<section class="mt-24 text-center sm:mt-32" aria-labelledby="cta-title">
+			<h2 id="cta-title" class="text-2xl-semibold text-ink-gray-9">Senior Frappe help, on tap.</h2>
+			<div class="mt-6">
+				<Button
+					link={MEET}
+					label="Book A Call"
+					variant="outline"
+					theme="gray"
+					size="md"
+					data-cuelume-press
+					data-cuelume-release
+				/>
+			</div>
+		</section>
+
+		<section class="mt-24 flex justify-center sm:mt-32" aria-label="Colour scheme">
+			<!-- client:only: see /train-your-team. -->
+			<ThemeSwitcher client:only="vue" />
+		</section>
+	</main>
+</AppLayout>
+
+<script>
+	// One delegated bind for the whole page, covering the static markup above
+	// and the island that hydrates after this runs.
+	import { initSound } from '../utils/sound';
+
+	initSound();
+</script>
