@@ -1,7 +1,7 @@
 ---
 title: "The Learn-Apply Cycle"
 description: "The shorter the Learn-Apply Cycle, the faster and better you grasp the concept."
-author: hussain-nagaria
+authors: [hussain-nagaria]
 tags: [Thoughts, Learning]
 pubDate: 2024-01-16
 image: "./the-learn-apply-cycle.png"

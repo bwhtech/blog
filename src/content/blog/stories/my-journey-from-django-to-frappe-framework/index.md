@@ -1,7 +1,7 @@
 ---
 title: "My Journey from Django to Frappe Framework"
 description: "Sharing my journey and lessons learned."
-author: rahul-agrawal
+authors: [rahul-agrawal]
 tags: [Stories, Frappe Framework, Django]
 pubDate: 2025-06-17
 image: "./frame-1.png"

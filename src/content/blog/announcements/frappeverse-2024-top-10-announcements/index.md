@@ -1,7 +1,7 @@
 ---
 title: "Frappeverse 2024: Top 10 Announcements!"
 description: "Amazing new products, existing products got more powerful, and more!"
-author: hussain-nagaria
+authors: [hussain-nagaria]
 tags: [Announcements, Frappeverse]
 pubDate: 2024-10-22
 image: "./fv-2024-top-10.jpg"

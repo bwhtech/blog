@@ -1,7 +1,7 @@
 ---
 title: "Automating the boring stuff w/ OpenClaw & ERPNext"
 description: "Learn how we automated our manual book-keeping and operational processes with an AI agent named Donna"
-author: hussain-nagaria
+authors: [hussain-nagaria]
 tags: [Automations, ERPNext, OpenClaw, Hermes Agent]
 pubDate: 2026-08-13
 image: ./og.png

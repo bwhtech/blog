@@ -1,7 +1,7 @@
 ---
 title: "How I Became a Computer Engineer"
 description: "From sitting outside a coaching class as a kid, to writing backend code for a living. This is the full story, one computer at a time."
-author: gajendra-nishad
+authors: [gajendra-nishad]
 tags: [Stories, Career]
 pubDate: 2026-08-12
 image: "./waiting-outside-the-computer-class.png"

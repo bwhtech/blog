@@ -1,7 +1,7 @@
 ---
 title: "How I ended up @ Mini Frappe"
 description: "I was on my way to pursue CA, but life had other plans. Few turns later, here I am, building something exciting with friends at BWH Studios."
-author: shivam-ghosh
+authors: [shivam-ghosh]
 tags: [Stories, Career]
 pubDate: 2025-08-04
 image: "./whatsapp-image-2025-08-01-at-14-59-41.jpeg"

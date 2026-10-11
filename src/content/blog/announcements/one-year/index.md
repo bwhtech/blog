@@ -1,7 +1,7 @@
 ---
 title: "BWH turns One."
 description: "Quick thoughts on the new beginnings and what's ahead for BWH!"
-author: hussain-nagaria
+authors: [hussain-nagaria]
 tags: [Announcements, BWH]
 pubDate: 2024-04-20
 image: "./bwh-at-1.png"

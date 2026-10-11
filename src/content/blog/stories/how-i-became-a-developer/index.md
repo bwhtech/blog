@@ -1,7 +1,7 @@
 ---
 title: "From Being Afraid of Computers to Becoming a Software Developer"
 description: "I feared computers so much I planned my whole life around avoiding them. Here's what changed."
-author: vishwajeet-singh
+authors: [vishwajeet-singh]
 tags: [Stories, Career]
 pubDate: 2026-07-30
 image: "./bhavesh-milan-friends-photo.png"

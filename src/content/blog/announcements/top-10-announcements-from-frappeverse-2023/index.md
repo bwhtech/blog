@@ -1,7 +1,7 @@
 ---
 title: "Top 10 Announcements from Frappeverse 2023"
 description: "New Design System, New Products, New Features, and much more!"
-author: hussain-nagaria
+authors: [hussain-nagaria]
 tags: [Announcements, Frappeverse]
 pubDate: 2023-09-19
 image: "./frappeverse-top-10-thumbnail.png"

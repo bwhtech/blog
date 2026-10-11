@@ -33,22 +33,31 @@ npm run build
 
 ## Content
 
-Posts are local Markdown files in `src/content/blog`. Every post must reference an author and include at least one tag:
+Posts are local Markdown files in `src/content/blog`. To start one, run:
+
+```sh
+npm run new -- <category> "<title>"
+npm run new -- tutorial "Webhooks in Frappe" --tags "Frappe Framework, Webhooks"
+```
+
+This makes `src/content/blog/<category>/<slug>/index.md` with the frontmatter filled in and a one-line placeholder body. The post starts with `draft: true`, so it does not show on the site until you remove that line. The options are `--slug`, `--author` (comma-separated for more than one; default `hussain-nagaria`), `--tags` (default: the category name), and `--mdx`.
+
+Every post must list at least one author and one tag:
 
 ```yaml
 ---
 title: Example post
 description: A short summary.
-author: hussain-nagaria
+authors: [hussain-nagaria, shivam-ghosh]
 tags: [Frappe Framework, Tutorial]
 pubDate: 2026-11-13
-image: /blog-media/example/cover.png
+image: ./cover.png
 ---
 ```
 
-Author records live in `src/data/authors.json`. Their `id` values are referenced from post frontmatter and validated by Astro's content schema.
+Author records live in `src/data/authors.yaml`. Their `id` values are referenced from post frontmatter and validated by Astro's content schema. `authors` is in byline order, and every author is shown the same way: the post header shows each avatar and linked name, and the post lists show every name.
 
-Post media is stored under `public/blog-media`, and author avatars are stored under `public/authors`. The site does not fetch content or media from the original LMS at build time or runtime.
+Images sit in the post's own folder and are referenced with a relative path, such as `./cover.png`, so Astro resizes them and a broken path fails the build. GIFs and videos go in `public/media/<post-slug>/`. Author avatars are in `src/data/author-avatars/`. The site does not fetch content or media from the original LMS at build time or runtime.
 
 ## Newsletter
 

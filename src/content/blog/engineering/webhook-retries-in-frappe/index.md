@@ -1,7 +1,7 @@
 ---
 title: "Adding real retries to Frappe Framework Webhooks"
 description: "A failed webhook used to vanish after three attempts in five seconds. This is the redesign, how the retries are scheduled and deduplicated, and a one-line bug that taught me more than the feature did."
-author: kaushal-shriwas
+authors: [kaushal-shriwas]
 tags: [Engineering, Frappe Framework, Webhooks]
 pubDate: 2026-08-07
 image: "./cover.png"

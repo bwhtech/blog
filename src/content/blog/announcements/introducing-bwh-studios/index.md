@@ -1,7 +1,7 @@
 ---
 title: "Introducing BWH Studios"
 description: "Leaving Frappe, but not leaving Frappe."
-author: hussain-nagaria
+authors: [hussain-nagaria]
 tags: [Announcements, BWH Studios]
 pubDate: 2025-07-14
 image: "./bwh-studios-blog.png"

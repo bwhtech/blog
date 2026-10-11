@@ -1,7 +1,7 @@
 ---
 title: "System Console Is Your Friend."
 description: "Improve your iteration speed by starting in Console!"
-author: hussain-nagaria
+authors: [hussain-nagaria]
 tags: ["Tips & Tricks", Frappe Framework]
 pubDate: 2023-12-21
 image: "./system-console-meta.png"

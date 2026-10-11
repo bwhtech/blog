@@ -38,7 +38,8 @@ const blog = defineCollection({
 		z.object({
 			title: z.string(),
 			description: z.string(),
-			author: reference('authors'),
+			/** In byline order. A post by more than one person lists them all. */
+			authors: z.array(reference('authors')).min(1),
 			tags: z.array(z.string()).min(1),
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),

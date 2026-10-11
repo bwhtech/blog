@@ -1,7 +1,7 @@
 ---
 title: "Stop using get_doc for everything!"
 description: "Well, there are other methods too 😉"
-author: hussain-nagaria
+authors: [hussain-nagaria]
 tags: ["Tips & Tricks", Frappe Framework]
 pubDate: 2023-09-26
 image: "./su_get_doc_everything_meta.png"

@@ -51,6 +51,14 @@ src/content/blog/<category>/<post-slug>/
 The category folder must have a matching entry in `CATEGORIES` in `src/consts.ts`.
 The build fails otherwise. Tags are only tags; they no longer decide the URL.
 
+`npm run new -- <category> "<title>"` scaffolds the folder and frontmatter as a
+draft (`scripts/new-post.mjs`; options in the README).
+
+`authors` is a list of ids from `src/data/authors.yaml`, in byline order. Every
+author gets the same treatment — an avatar and a linked name in the post header,
+the full name list on post cards — and a shared post appears on each author's
+page. Do not single out a "main" author.
+
 Images referenced with a relative path go through Astro's image pipeline: they
 are resized, converted to WebP, and a broken path fails the build. Use markdown
 image syntax, not a raw `<img>` tag, or the path will not be resolved. To keep a

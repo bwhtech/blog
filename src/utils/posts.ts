@@ -1,4 +1,4 @@
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, getEntries, type CollectionEntry } from 'astro:content';
 
 import { CATEGORIES, type CategorySlug } from '../consts';
 
@@ -39,7 +39,33 @@ export function getAuthorRoute(authorId: string) {
 export async function getPostsByAuthor(authorId: string) {
 	const posts = await getPublishedPosts();
 
-	return posts.filter((post) => post.data.author.id === authorId);
+	return posts.filter((post) => post.data.authors.some((author) => author.id === authorId));
+}
+
+/** Resolves a post's `authors` references, in byline order. */
+export async function getPostAuthors(references: CollectionEntry<'blog'>['data']['authors']) {
+	const authors: (CollectionEntry<'authors'> | undefined)[] = await getEntries(references);
+	const missing = references.find((_, index) => !authors[index]);
+
+	if (missing) throw new Error(`Author not found: ${missing.id}`);
+
+	return authors as CollectionEntry<'authors'>[];
+}
+
+const nameList = new Intl.ListFormat('en', { type: 'conjunction' });
+
+/** "Ana", "Ana and Ben", "Ana, Ben, and Cy". */
+export function formatAuthorNames(authors: CollectionEntry<'authors'>[]) {
+	return nameList.format(authors.map((author) => author.data.name));
+}
+
+/** The same list split into authors and the joining words, so each name can be marked up. */
+export function getAuthorNameParts(authors: CollectionEntry<'authors'>[]) {
+	let next = 0;
+
+	return nameList
+		.formatToParts(authors.map((author) => author.data.name))
+		.map((part) => (part.type === 'element' ? { author: authors[next++] } : { text: part.value }));
 }
 
 export async function getPublishedPosts() {

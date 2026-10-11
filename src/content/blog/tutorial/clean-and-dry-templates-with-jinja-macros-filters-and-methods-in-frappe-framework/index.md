@@ -1,7 +1,7 @@
 ---
 title: "Clean and DRY Templates with Jinja Macros, Filters, and Methods in Frappe Framework"
 description: "Let's learn some Jinja techniques!"
-author: hussain-nagaria
+authors: [hussain-nagaria]
 tags: [Tutorial, Frappe Framework, Jinja]
 pubDate: 2023-11-13
 image: "./jinja_techniques_article_meta.png"

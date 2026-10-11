@@ -1,0 +1,28 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+import { getAuthorNameParts, getAuthorRoute } from '../utils/posts';
+
+interface Props {
+	authors: CollectionEntry<'authors'>[];
+	/** Link each name to its author page. Off inside a card that is already a link. */
+	linked?: boolean;
+	nameClass?: string;
+}
+
+const { authors, linked = false, nameClass } = Astro.props;
+---
+
+{
+	getAuthorNameParts(authors).map((part) =>
+		'text' in part ? (
+			part.text
+		) : linked ? (
+			<a class={nameClass} href={getAuthorRoute(part.author.id)}>
+				{part.author.data.name}
+			</a>
+		) : (
+			<span class={nameClass}>{part.author.data.name}</span>
+		),
+	)
+}

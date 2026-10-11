@@ -1,7 +1,7 @@
 ---
 title: "BWH, 2024 recap."
 description: "Let's recap the past year and imagine what is to come!"
-author: hussain-nagaria
+authors: [hussain-nagaria]
 tags: [Thoughts, BWH]
 pubDate: 2025-01-08
 image: "./bwh-2024-thumbnail.png"

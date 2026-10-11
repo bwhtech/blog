@@ -1,7 +1,7 @@
 ---
 title: "5 Small UI/UX things"
 description: "Few of the small UI/UX lessons I picked up at Frappe that make a big difference."
-author: hussain-nagaria
+authors: [hussain-nagaria]
 tags: ["Tips & Tricks", UI/UX]
 pubDate: 2024-04-23
 image: "./small-stuff-og.png"

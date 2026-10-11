@@ -1,7 +1,7 @@
 ---
 title: "The Frappeverse 2026 Experience"
 description: "This changes everything."
-author: hussain-nagaria
+authors: [hussain-nagaria]
 tags: [Stories, Frappeverse]
 pubDate: 2026-08-24
 image: "./the-future.jpeg"

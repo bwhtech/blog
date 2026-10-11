@@ -1,7 +1,7 @@
 ---
 title: "Commera, now in beta"
 description: "Open Source eCommerce Platform powered by ERPNext"
-author: hussain-nagaria
+authors: [hussain-nagaria]
 tags: [Announcements, Commera, ERPNext]
 pubDate: 2026-09-28
 image: "./og.png"
