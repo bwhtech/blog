@@ -52,7 +52,7 @@ const authorEntries = await getPostAuthors(authors);
 				<h1 class="text-4xl-semibold text-ink-gray-9">{title}</h1>
 				<p class="mt-3 text-p-lg text-ink-gray-6">{description}</p>
 				<!-- Two rows at every width: the avatars beside the names, then the dates. -->
-				<div class="mt-5 flex flex-col gap-y-2 text-sm tabular-nums">
+				<div class="mt-5 flex flex-col gap-y-4 text-sm tabular-nums">
 					<div class="flex items-center gap-2.5">
 						<!-- Every author gets the same avatar and the same link. The ring is the
 						     page colour, so overlapping avatars read as separate circles. -->
@@ -82,21 +82,18 @@ const authorEntries = await getPostAuthors(authors);
 							/>
 						</span>
 					</div>
-					<div class="flex flex-wrap gap-x-2 text-ink-gray-4">
+					<p class="text-ink-gray-4">
 						<FormattedDate date={pubDate} />
 						{
 							updatedDate && (
 								<>
-									<span aria-hidden="true">·</span>
-									<span>
-										Updated <FormattedDate date={updatedDate} />
-									</span>
+									, updated <FormattedDate date={updatedDate} />
 								</>
 							)
 						}
-					</div>
+					</p>
 				</div>
-				<ul class="mt-4 flex flex-wrap gap-1.5" aria-label="Tags">
+				<ul class="mt-6 flex flex-wrap gap-1.5" aria-label="Tags">
 					{
 						tags.map((tag) => (
 							<li class="rounded-1 bg-surface-gray-2 px-2 py-1 text-xs text-ink-gray-6">{tag}</li>
