@@ -36,11 +36,18 @@ npm run build
 Posts are local Markdown files in `src/content/blog`. To start one, run:
 
 ```sh
-npm run new -- <category> "<title>"
+npm run new
+```
+
+It asks for each part in turn: the category, title, folder name, description, authors, tags, and Markdown or MDX. Authors and tags are lists you tick with Space. If you pick more than one author, it asks for the byline order. It shows the frontmatter before it writes anything. The post starts with `draft: true`, so it does not show on the site until you remove that line.
+
+To skip the questions, for example in a script, give the category and title:
+
+```sh
 npm run new -- tutorial "Webhooks in Frappe" --tags "Frappe Framework, Webhooks"
 ```
 
-This makes `src/content/blog/<category>/<slug>/index.md` with the frontmatter filled in and a one-line placeholder body. The post starts with `draft: true`, so it does not show on the site until you remove that line. The options are `--slug`, `--author` (comma-separated for more than one; default `hussain-nagaria`), `--tags` (default: the category name), and `--mdx`.
+The options are `--slug`, `--author` (comma-separated for more than one; default `hussain-nagaria`), `--tags` (default: the category name), and `--mdx`. Without a category and title, the same options become the wizard's starting answers.
 
 Every post must list at least one author and one tag:
 

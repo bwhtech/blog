@@ -1,28 +1,26 @@
 /**
- * Scaffolds a post: the folder, an index.md with frontmatter, and a one-line
+ * Starts a post: the folder, an index.md with frontmatter, and a one-line
  * placeholder body. The post starts as a draft, so it can be committed before
  * it is ready without showing up on the site.
  *
- *   npm run new -- <category> "<title>"
+ *   npm run new                         # asks for everything, step by step
+ *   npm run new -- <category> "<title>" # no questions, for scripts
  *   npm run new -- tutorial "Webhooks in Frappe" --tags "Frappe Framework, Webhooks"
  *
- * Options:
+ * Options (with a category and title they are the answers; without, the
+ * wizard starts from them):
  *   --slug <slug>      folder name, if the one made from the title is too long
  *   --author "<a, b>"  ids from src/data/authors.yaml, in byline order
  *                      (default: hussain-nagaria)
  *   --tags "<a, b>"    comma-separated (default: the category's label)
  *   --mdx              write index.mdx, for a post that mounts a component
  */
-import fs from 'node:fs';
-import path from 'node:path';
 import { parseArgs } from 'node:util';
 
-import { parse as parseYaml } from 'yaml';
+import { Blog, NewPost, slugify, splitList } from './new-post/blog.mjs';
+import { finish, Wizard } from './new-post/wizard.mjs';
 
-import { CATEGORIES } from '../src/consts.ts';
-import { root } from './og-card.mjs';
-
-const usage = 'Usage: npm run new -- <category> "<title>" [--slug s] [--author "a, b"] [--tags "a, b"] [--mdx]';
+const usage = 'Usage: npm run new [-- <category> "<title>" [--slug s] [--author "a, b"] [--tags "a, b"] [--mdx]]';
 
 const { values, positionals } = parseArgs({
 	allowPositionals: true,
@@ -34,64 +32,52 @@ const { values, positionals } = parseArgs({
 	},
 });
 
+const blog = new Blog();
 const [category, title] = positionals;
-if (!category || !title) fail(usage);
-if (!(category in CATEGORIES)) {
-	fail(`Unknown category "${category}". Pick one of: ${Object.keys(CATEGORIES).join(', ')}`);
+const answers = {
+	category,
+	title,
+	slug: values.slug,
+	authors: splitList(values.author),
+	tags: values.tags && splitList(values.tags),
+	mdx: values.mdx,
+};
+
+if (category && title) {
+	const post = fromFlags(answers);
+	post.write();
+	console.log(`✓ ${post.relativeFile}`);
+	console.log(`  URL: ${post.url} (a draft until you remove \`draft: true\`)`);
+} else {
+	const post = await fromWizard(answers);
+	post.write();
+	finish(post);
 }
 
-const knownAuthors = parseYaml(fs.readFileSync(path.join(root, 'src/data/authors.yaml'), 'utf8'));
-const authors = splitList(values.author);
-const unknown = authors.find((id) => !knownAuthors.some((a) => a.id === id));
-if (!authors.length) fail('Pass at least one author.');
-if (unknown) {
-	fail(`Unknown author "${unknown}". Pick from: ${knownAuthors.map((a) => a.id).join(', ')}`);
+function fromFlags(answers) {
+	if (!(answers.category in blog.categories)) {
+		fail(`Unknown category "${answers.category}". Pick one of: ${Object.keys(blog.categories).join(', ')}`);
+	}
+	if (!answers.authors.length) fail('Pass at least one author.');
+	const unknown = answers.authors.find((id) => !blog.hasAuthor(id));
+	if (unknown) fail(`Unknown author "${unknown}". Pick from: ${blog.authors.map((a) => a.id).join(', ')}`);
+
+	const slug = answers.slug ?? slugify(answers.title);
+	if (!slug) fail('The title has no letters or digits to make a slug from. Pass --slug.');
+	if (blog.hasPost(answers.category, slug)) fail(`src/content/blog/${answers.category}/${slug} already exists.`);
+
+	return new NewPost({
+		...answers,
+		slug,
+		description: '',
+		tags: answers.tags ?? [blog.categories[answers.category]],
+	});
 }
 
-const slug = values.slug ?? slugify(title);
-if (!slug) fail('The title has no letters or digits to make a slug from. Pass --slug.');
-
-const dir = path.join(root, 'src/content/blog', category, slug);
-if (fs.existsSync(dir)) fail(`${path.relative(root, dir)} already exists.`);
-
-const tags = values.tags ? splitList(values.tags) : [CATEGORIES[category]];
-
-const frontmatter = [
-	'---',
-	`title: ${JSON.stringify(title)}`,
-	'description: "TODO"',
-	`authors: [${authors.join(', ')}]`,
-	`tags: [${tags.map((t) => JSON.stringify(t)).join(', ')}]`,
-	`pubDate: ${today()}`,
-	'draft: true',
-	'---',
-].join('\n');
-
-const file = path.join(dir, values.mdx ? 'index.mdx' : 'index.md');
-fs.mkdirSync(dir, { recursive: true });
-fs.writeFileSync(file, `${frontmatter}\n\nWrite the post here.\n`);
-
-console.log(`✓ ${path.relative(root, file)}`);
-console.log(`  URL: /blog/${category}/${slug}/ (a draft until you remove \`draft: true\`)`);
-
-function splitList(text) {
-	return text.split(',').map((item) => item.trim()).filter(Boolean);
-}
-
-function slugify(text) {
-	return text
-		.normalize('NFKD')
-		.replace(/\p{M}/gu, '')
-		.toLowerCase()
-		.replace(/[^a-z0-9]+/g, '-')
-		.replace(/^-+|-+$/g, '');
-}
-
-/** The local date, so a post started late in the evening is not dated tomorrow. */
-function today() {
-	const d = new Date();
-	const pad = (n) => String(n).padStart(2, '0');
-	return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+function fromWizard(answers) {
+	// Prompts need a terminal; a script or CI job has to pass the arguments.
+	if (!process.stdin.isTTY) fail(usage);
+	return new Wizard(blog, { ...answers, authors: answers.authors.filter((id) => blog.hasAuthor(id)) }).run();
 }
 
 function fail(message) {

@@ -51,8 +51,11 @@ src/content/blog/<category>/<post-slug>/
 The category folder must have a matching entry in `CATEGORIES` in `src/consts.ts`.
 The build fails otherwise. Tags are only tags; they no longer decide the URL.
 
-`npm run new -- <category> "<title>"` scaffolds the folder and frontmatter as a
-draft (`scripts/new-post.mjs`; options in the README).
+`npm run new` scaffolds the folder and frontmatter as a draft. In a terminal it
+is a step-by-step wizard (`@clack/prompts`, in `scripts/new-post/wizard.mjs`);
+with a category and title as arguments it asks nothing, for scripts. clack's
+multiselect echoes picks back in list order, whatever order they were ticked in,
+so the byline order is asked for separately.
 
 `authors` is a list of ids from `src/data/authors.yaml`, in byline order. Every
 author gets the same treatment — an avatar and a linked name in the post header,

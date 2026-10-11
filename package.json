@@ -12,7 +12,7 @@
     "astro": "astro",
     "spellcheck": "cspell --no-progress",
     "new": "node scripts/new-post.mjs",
-		"generate-og:author": "node scripts/generate-author-og.mjs",
+    "generate-og:author": "node scripts/generate-author-og.mjs",
     "generate-og:home": "node scripts/generate-home-og.mjs",
     "generate-og:training": "node scripts/generate-training-og.mjs",
     "prepare": "husky"
@@ -32,6 +32,7 @@
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
+    "@clack/prompts": "^1.8.1",
     "@netlify/functions": "^6.0.0",
     "autoprefixer": "^10.5.4",
     "cspell": "^10.0.1",
