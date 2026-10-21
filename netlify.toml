@@ -249,3 +249,16 @@
   for = "/media/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Renamed the day it was published.
+[[redirects]]
+  from = "/blog/engineering/building-commera-s-plugin-system/"
+  to = "/blog/engineering/building-commera-plugin-system/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/blog/building-commera-s-plugin-system/"
+  to = "/blog/engineering/building-commera-plugin-system/"
+  status = 301
+  force = true
