@@ -107,8 +107,8 @@ export default defineConfig({
 			// Dual themes emit --shiki-light / --shiki-dark custom properties instead of
 			// a hardcoded inline colour. src/styles/prose.css picks one per colour scheme.
 			themes: {
-				light: 'github-light',
-				dark: 'github-dark',
+				light: 'github-light-default',
+				dark: 'github-dark-default',
 			},
 			defaultColor: false,
 		},

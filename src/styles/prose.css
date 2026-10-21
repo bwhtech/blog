@@ -114,12 +114,28 @@
 }
 
 /*
+ * Code blocks wear GitHub's colours, the same as frappe-ui's own editor code
+ * block (molecules/editor/extensions/code-block/CodeBlockComponent.css):
+ * #f6f8fa with a hairline border in light, #0d1117 in dark.
+ *
  * Shiki runs with `defaultColor: false` (see astro.config.mjs), so highlighted
  * blocks carry no colour of their own — each token exposes a --shiki-light and a
- * --shiki-dark custom property and the stylesheet picks one. The surface comes
- * from --tw-prose-pre-bg, so a code block sits on the same Frappe surface as
- * inline code in both colour schemes.
+ * --shiki-dark custom property and the stylesheet picks one. The switch is
+ * html[data-theme], not a media query: the site's theme toggle can disagree
+ * with the OS, and a media query would then put light tokens on a dark surface.
  */
+.prose-v3 {
+	--tw-prose-pre-bg: #f6f8fa;
+}
+
+html[data-theme='dark'] .prose-v3 {
+	--tw-prose-pre-bg: #0d1117;
+}
+
+.prose-v3 pre.astro-code {
+	border: 1px solid var(--outline-gray-2);
+}
+
 .prose-v3 .astro-code,
 .prose-v3 .astro-code span {
 	color: var(--shiki-light);
@@ -128,14 +144,12 @@
 	text-decoration: var(--shiki-light-text-decoration, inherit);
 }
 
-@media (prefers-color-scheme: dark) {
-	.prose-v3 .astro-code,
-	.prose-v3 .astro-code span {
-		color: var(--shiki-dark);
-		font-style: var(--shiki-dark-font-style, inherit);
-		font-weight: var(--shiki-dark-font-weight, inherit);
-		text-decoration: var(--shiki-dark-text-decoration, inherit);
-	}
+html[data-theme='dark'] .prose-v3 .astro-code,
+html[data-theme='dark'] .prose-v3 .astro-code span {
+	color: var(--shiki-dark);
+	font-style: var(--shiki-dark-font-style, inherit);
+	font-weight: var(--shiki-dark-font-weight, inherit);
+	text-decoration: var(--shiki-dark-text-decoration, inherit);
 }
 
 .prose-v3 blockquote {
