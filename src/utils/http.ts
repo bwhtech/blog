@@ -1,5 +1,6 @@
 /**
- * The fetch wrapper the islands share for calling `netlify/functions/`.
+ * The fetch wrapper for calling `netlify/functions/`, shared by the newsletter
+ * island and the likes and comments script.
  *
  * Same-origin and identical in every environment, which is why the raw
  * functions path is used rather than a prettier /api/* rewrite: nothing has to

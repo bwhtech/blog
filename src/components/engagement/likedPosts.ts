@@ -11,7 +11,7 @@ const KEY = 'bwh.liked-posts.v1';
  * Safari in private browsing and cookie-blocking extensions throw on any
  * localStorage access, so every call is guarded. Losing the set degrades to a
  * heart that does not persist across reloads, which is survivable; an
- * uncaught exception would take the whole island down, which is not.
+ * uncaught exception would take likes and comments down, which is not.
  */
 function read(): string[] {
 	try {

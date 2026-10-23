@@ -1,4 +1,4 @@
-import { ApiError, ApiUnavailableError, call, postJson } from '../http';
+import { ApiError, ApiUnavailableError, call, postJson } from '../../utils/http';
 
 export type AvatarTheme = 'gray' | 'blue' | 'green' | 'amber' | 'red' | 'violet';
 
@@ -31,7 +31,7 @@ export interface CommentDraft {
 /**
  * In-memory stand-in used only under `astro dev`, where there is no function to
  * call. It is behind import.meta.env.DEV, so Vite eliminates it from the
- * production bundle; in production ApiUnavailableError surfaces as the island's
+ * production bundle; in production ApiUnavailableError surfaces as the section's
  * error state instead.
  */
 const stub = new Map<string, Engagement>();

@@ -4,11 +4,11 @@ import type { CollectionEntry } from 'astro:content';
 
 import AuthorNames from '../components/AuthorNames.astro';
 import CodeBlockCopy from '../components/CodeBlockCopy.astro';
+import PostEngagement from '../components/engagement/PostEngagement.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import HeadingAnchors from '../components/HeadingAnchors.astro';
 import Mermaid from '../components/Mermaid.astro';
 import NewsletterForm from '../components/islands/NewsletterForm.vue';
-import PostEngagement from '../components/islands/PostEngagement.vue';
 import { formatAuthorNames, getAuthorRoute, getPostAuthors } from '../utils/posts';
 import AppLayout from './AppLayout.astro';
 
@@ -117,9 +117,7 @@ const authorEntries = await getPostAuthors(authors);
 					</div>
 				)
 			}
-			<!-- client:visible: nothing is fetched until the reader nears the end of
-			     the post. The margin starts the request just before it scrolls in. -->
-			<PostEngagement client:visible={{ rootMargin: '300px' }} postId={postId} />
+			<PostEngagement postId={postId} />
 		</article>
 	</main>
 </AppLayout>

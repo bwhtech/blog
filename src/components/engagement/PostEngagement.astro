@@ -1,0 +1,362 @@
+---
+/**
+ * Likes and comments at the foot of a blog post.
+ *
+ * Plain markup and a small script, not a Vue island: the classes are the ones
+ * frappe-ui's Avatar, FormControl, Button, Alert, Skeleton and Tooltip render,
+ * copied so the section looks the same without shipping Vue or frappe-ui. The
+ * tokens are CSS variables, so dark mode needs nothing extra.
+ *
+ * The pieces the script creates at run time live in <template> elements below,
+ * so their classes stay in this file and the main Tailwind pass picks them up.
+ */
+interface Props {
+	/** `<category>/<slug>`, the key likes and comments are stored under. */
+	postId: string;
+}
+
+const { postId } = Astro.props;
+
+const inputClass =
+	'border border-[--surface-gray-2] bg-surface-gray-2 placeholder-ink-gray-4 hover:border-outline-elevation-2 hover:bg-surface-gray-3 focus:bg-surface-base focus:border-outline-gray-4 focus:shadow-sm focus:ring-0 text-ink-gray-8 transition-colors w-full';
+const textInputClass = `text-base rounded-4 h-7 py-1.5 ps-2 pe-2 ${inputClass} dark:[color-scheme:dark]`;
+const avatarRootClass = 'relative inline-block shrink-0 w-6 h-6 rounded-full';
+const avatarFallbackClass =
+	'flex h-full w-full items-center justify-center uppercase select-none font-medium text-base rounded-full';
+const skeletonClass = 'animate-pulse bg-surface-gray-3';
+const fieldErrorClass = 'text-p-sm whitespace-pre-line text-ink-red-5';
+---
+
+<section
+	class="mt-16 border-t border-outline-gray-1 pt-10"
+	aria-labelledby="engagement-heading"
+	data-engagement
+	data-post-id={postId}
+>
+	<div class="mb-6 flex items-center justify-between gap-4">
+		<h2 id="engagement-heading" class="text-lg font-medium text-ink-gray-8">
+			Comments{' '}<span class="text-ink-gray-5" data-count></span>
+		</h2>
+		<!-- Shape follows the reaction pills in Gameplan and Helpdesk. The script
+		     swaps the colour classes when the post is liked. -->
+		<button
+			type="button"
+			class="group flex items-center gap-1.5 rounded-full bg-surface-gray-2 px-2.5 py-1 text-sm text-ink-gray-6 transition hover:bg-surface-gray-3 disabled:cursor-default"
+			aria-pressed="false"
+			aria-label="Like this post, 0 so far"
+			data-like
+		>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.5"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				class="size-4 transition-transform group-hover:text-ink-red-4 motion-safe:duration-200"
+				aria-hidden="true"
+				data-heart
+			>
+				<path
+					d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"
+				></path>
+			</svg>
+			<span class="font-medium tabular-nums" data-like-count>0</span>
+		</button>
+	</div>
+
+	<!-- Reserved height, so the section does not jump when the fetch lands. The
+	     skeleton is in the built HTML; the script replaces it. -->
+	<div class="min-h-[7rem]" data-body>
+		<div role="status" aria-label="Loading comments" class="flex flex-col">
+			{
+				['w-3/5', 'w-4/5'].map((lastLine) => (
+					<div class="grid w-full grid-cols-[30px_minmax(0,_1fr)] gap-3">
+						<div class="flex justify-center">
+							<div class:list={[skeletonClass, 'size-6 rounded-full']} aria-hidden="true" />
+						</div>
+						<div class="mb-5 min-w-0">
+							<div class="flex h-8 items-center justify-between gap-2">
+								<div class:list={[skeletonClass, 'h-3.5 w-28 rounded-1']} aria-hidden="true" />
+								<div class:list={[skeletonClass, 'h-3 w-16 rounded-1']} aria-hidden="true" />
+							</div>
+							<div class="flex flex-col gap-1.5 rounded-4 bg-surface-gray-1 px-3 py-3">
+								<div class:list={[skeletonClass, 'h-3 w-full rounded-1']} aria-hidden="true" />
+								<div class:list={[skeletonClass, 'h-3 rounded-1', lastLine]} aria-hidden="true" />
+							</div>
+						</div>
+					</div>
+				))
+			}
+		</div>
+	</div>
+
+	<template data-template="error">
+		<div role="alert" class="flex h-10 items-center rounded-6 bg-surface-gray-1 py-1.5 pl-3.5 pr-1.5">
+			<div class="mr-2 flex size-4 shrink-0 items-center justify-center">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" class="size-4 text-ink-red-5" aria-hidden="true">
+					<path
+						d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1ZM10.8535 5.14648C10.6583 4.95122 10.3417 4.95122 10.1465 5.14648L8 7.29297L5.85352 5.14648C5.65825 4.95122 5.34175 4.95122 5.14648 5.14648C4.95122 5.34175 4.95122 5.65825 5.14648 5.85352L7.29297 8L5.14648 10.1465C4.95122 10.3417 4.95122 10.6583 5.14648 10.8535C5.34175 11.0488 5.65825 11.0488 5.85352 10.8535L8 8.70703L10.1465 10.8535C10.3417 11.0488 10.6583 11.0488 10.8535 10.8535C11.0488 10.6583 11.0488 10.3417 10.8535 10.1465L8.70703 8L10.8535 5.85352C11.0488 5.65825 11.0488 5.34175 10.8535 5.14648Z"
+						fill="currentColor"></path>
+				</svg>
+			</div>
+			<div class="min-w-0 flex-1 truncate text-base-medium text-ink-gray-8">Comments could not be loaded</div>
+		</div>
+	</template>
+
+	<!-- The rail layout from frappe/ui's ActivityTimeline: a 30px gutter with the
+	     connector line and the avatar, then the header row and the body. -->
+	<template data-template="list">
+		<ul class="flex flex-col"></ul>
+	</template>
+
+	<template data-template="comment">
+		<li class="grid w-full grid-cols-[30px_minmax(0,_1fr)] gap-3">
+			<!-- The connector line is a pseudo-element behind the avatar, which paints
+			     its own background to punch a hole in it. -->
+			<div
+				class="relative flex justify-center after:absolute after:start-[50%] after:top-3 after:z-0 after:border-s after:border-outline-gray-2"
+				data-rail
+			>
+				<div class="relative z-10 flex h-8 items-center justify-center bg-surface-base">
+					<div class={avatarRootClass}>
+						<div class={avatarFallbackClass} data-avatar></div>
+					</div>
+				</div>
+			</div>
+			<div class="mb-5 min-w-0">
+				<div class="flex h-8 items-center justify-between gap-2">
+					<span class="truncate text-base font-medium text-ink-gray-8" data-name></span>
+					<!-- Tooltip with the absolute date. Right-aligned rather than centred
+					     like frappe-ui's, so the hidden bubble can never widen the page on
+					     a phone. -->
+					<span class="group/time relative flex shrink-0">
+						<time class="whitespace-nowrap text-sm text-ink-gray-5" data-time></time>
+						<span
+							role="tooltip"
+							class="pointer-events-none invisible absolute bottom-full right-0 z-[100] mb-1 whitespace-nowrap rounded-4 bg-surface-gray-10 px-2 py-1 text-xs text-ink-base shadow-xl [transition-property:visibility] group-hover/time:visible group-hover/time:delay-500"
+							data-time-tooltip></span>
+						<svg
+							width="8"
+							height="4"
+							viewBox="0 0 30 10"
+							preserveAspectRatio="none"
+							class="pointer-events-none invisible absolute bottom-full left-1/2 z-[100] -translate-x-1/2 fill-surface-gray-10 [transition-property:visibility] group-hover/time:visible group-hover/time:delay-500"
+							aria-hidden="true"
+						>
+							<polygon points="0,0 30,0 15,10"></polygon>
+						</svg>
+					</span>
+				</div>
+				<!-- Plain text, set with textContent. No markdown and no innerHTML. -->
+				<p
+					class="whitespace-pre-wrap break-words rounded-4 bg-surface-gray-1 px-3 py-[7.5px] text-base text-ink-gray-7"
+					data-body-text
+				>
+				</p>
+			</div>
+		</li>
+	</template>
+
+	<!-- Shown in place of the form while a post has no comments, modelled on
+	     Gameplan's collapsed comment button. -->
+	<template data-template="prompt">
+		<button
+			type="button"
+			class="flex w-full items-center gap-3 rounded-6 border border-outline-gray-2 bg-surface-base px-3 py-3 text-left transition hover:border-outline-gray-3 hover:bg-surface-gray-1"
+		>
+			<div class={avatarRootClass}>
+				<div class:list={[avatarFallbackClass, 'bg-surface-gray-2 text-ink-gray-5']}>
+					<span data-initial></span>
+					<span class="h-4 w-4" data-icon>
+						<span class="flex size-full items-center justify-center">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class="size-3"
+								aria-hidden="true"
+							>
+								<path
+									d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"
+								></path>
+							</svg>
+						</span>
+					</span>
+				</div>
+			</div>
+			<span class="min-w-0 flex-1 truncate text-base text-ink-gray-5">Leave a comment</span>
+		</button>
+	</template>
+
+	<template data-template="form">
+		<form class="rounded-6 border border-outline-gray-2 bg-surface-base p-4">
+			<div class="mb-4 flex items-center gap-2">
+				<div class={avatarRootClass}>
+					<div class:list={[avatarFallbackClass, 'bg-surface-gray-2 text-ink-gray-5']}>
+						<span data-initial></span>
+						<span class="h-4 w-4" data-icon>
+							<span class="flex size-full items-center justify-center">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="size-3"
+									aria-hidden="true"
+								>
+									<path
+										d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"
+									></path>
+								</svg>
+							</span>
+						</span>
+					</div>
+				</div>
+				<span class="min-w-0 flex-1 truncate text-base font-medium text-ink-gray-8" data-heading>
+					Leave a comment
+				</span>
+			</div>
+
+			<div class="flex flex-col gap-4">
+				<div class="grid gap-4 sm:grid-cols-2">
+					<div class="space-y-1.5">
+						<label for="comment-name" class="block text-base text-ink-gray-5">
+							Name <span class="select-none text-ink-red-5" aria-hidden="true">*</span><span class="sr-only">(required)</span>
+						</label>
+						<input
+							id="comment-name"
+							name="name"
+							type="text"
+							placeholder="Ada Lovelace"
+							autocomplete="name"
+							required
+							class={textInputClass}
+						/>
+						<div id="comment-name-error" role="alert" class={fieldErrorClass} hidden></div>
+					</div>
+					<div class="space-y-1.5">
+						<label for="comment-email" class="block text-base text-ink-gray-5">
+							Email <span class="select-none text-ink-red-5" aria-hidden="true">*</span><span class="sr-only">(required)</span>
+						</label>
+						<input
+							id="comment-email"
+							name="email"
+							type="email"
+							placeholder="ada@example.com"
+							autocomplete="email"
+							required
+							aria-describedby="comment-email-description"
+							class={textInputClass}
+						/>
+						<p id="comment-email-description" class="text-p-sm text-ink-gray-5">Never shown publicly.</p>
+						<div id="comment-email-error" role="alert" class={fieldErrorClass} hidden></div>
+					</div>
+				</div>
+
+				<div class="space-y-1.5">
+					<label for="comment-body" class="block text-base text-ink-gray-5">
+						Comment <span class="select-none text-ink-red-5" aria-hidden="true">*</span><span class="sr-only">(required)</span>
+					</label>
+					<textarea
+						id="comment-body"
+						name="body"
+						placeholder="Share what you think."
+						rows="4"
+						maxlength="2000"
+						required
+						class:list={['text-p-base rounded-4 min-h-9 block py-1.5 px-2', inputClass]}></textarea>
+					<div id="comment-body-error" role="alert" class={fieldErrorClass} hidden></div>
+				</div>
+
+				<!-- The honeypot. Off-screen rather than display:none, which some bots
+				     skip, and not sr-only, which a screen reader would read out. Named
+				     so that password managers leave it alone. -->
+				<div class="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+					<label>
+						Leave this empty
+						<input type="text" name="hp_url" tabindex="-1" autocomplete="off" />
+					</label>
+				</div>
+
+				<div role="alert" class="whitespace-pre-line text-sm text-ink-red-7" hidden data-form-error></div>
+
+				<div class="flex items-center justify-between gap-3">
+					<span class="text-p-sm text-ink-gray-5" data-status></span>
+					<button
+						type="submit"
+						class="inline-flex h-7 shrink-0 items-center justify-center gap-2 rounded-4 bg-surface-gray-10 px-2 text-base text-ink-base transition-colors hover:bg-surface-gray-9 active:bg-surface-gray-8"
+					>
+						<svg class="spinner size-4 shrink-0" width="16" height="16" aria-hidden="true" hidden data-spinner></svg>
+						<span class="truncate">Post</span>
+					</button>
+				</div>
+			</div>
+		</form>
+	</template>
+</section>
+
+<script>
+	import { PostEngagement } from './engagement';
+
+	for (const section of document.querySelectorAll<HTMLElement>('[data-engagement]')) {
+		new PostEngagement(section).start();
+	}
+</script>
+
+<style>
+	/* frappe-ui's Spinner: it spins the gradient angle, not the element, so the
+	   ring never wobbles. Copied from Spinner.vue. */
+	@property --spinner-angle {
+		syntax: '<angle>';
+		inherits: false;
+		initial-value: 0deg;
+	}
+
+	.spinner {
+		--thickness: 14.7%;
+		--mask-thickness: 29.4%;
+		--paint-size: calc(100% - 2 * 7.5%);
+		background-image:
+			radial-gradient(
+				calc(var(--thickness) / 2) calc(var(--thickness) / 2) at
+					calc(50% + (50% - var(--thickness) / 2) * sin(var(--spinner-angle)))
+					calc(50% - (50% - var(--thickness) / 2) * cos(var(--spinner-angle))),
+				currentColor 92%,
+				transparent
+			),
+			conic-gradient(from var(--spinner-angle), transparent 32%, currentColor 92%, currentColor 100%);
+		background-size: var(--paint-size) var(--paint-size);
+		background-position: center;
+		background-repeat: no-repeat;
+		mask: radial-gradient(
+				farthest-side,
+				transparent calc(100% - var(--mask-thickness)),
+				#000 calc(100% - var(--mask-thickness)),
+				#000 calc(100% - 0.5px),
+				transparent 100%
+			)
+			center / var(--paint-size) var(--paint-size) no-repeat;
+		animation: spinner-rotate 0.7s linear infinite;
+	}
+
+	@keyframes spinner-rotate {
+		to {
+			--spinner-angle: 360deg;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.spinner {
+			animation-duration: 1.6s;
+		}
+	}
+</style>

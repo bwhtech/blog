@@ -9,7 +9,7 @@ astro dev --background
 Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
 
 That server knows nothing about `netlify/functions/`, so likes and comments fall
-back to an in-memory stub (`src/components/islands/engagement/api.ts`). To
+back to an in-memory stub (`src/components/engagement/api.ts`). To
 exercise the real functions and BWH OS, run Netlify's proxy in front of it:
 
 ```
@@ -196,10 +196,17 @@ Dock magnification from `src/utils/dock.ts`, and a note per logo.
 
 ## Likes and comments
 
-Every post page mounts `src/components/islands/PostEngagement.vue` at the foot of
-the article. It is why `BlogPostLayout.astro` uses `AppLayout`, and why post
-pages carry the islands stylesheet that the other 27 pages do not — a deliberate
-trade, paid once per visitor because all posts share one immutably cached asset.
+Every post page mounts `src/components/engagement/PostEngagement.astro` at the
+foot of the article. It is not a Vue island: the markup is static, and a ~3 kB
+script (`engagement.ts`, `CommentForm.ts`) fetches, likes and posts. The pieces
+it builds at run time are `<template>` elements in the `.astro` file, so their
+classes are in the main Tailwind pass.
+
+The classes are the ones frappe-ui's Avatar, FormControl, Button, Alert,
+Skeleton and Tooltip render, copied by hand. After a frappe-ui upgrade, compare
+against the components in `node_modules/frappe-ui/src/components/` if the look
+of those has changed. Two deliberate differences: the time tooltip is CSS
+only, and right-aligned so its hidden bubble cannot widen the page on a phone.
 
 The backend is three Netlify functions in `netlify/functions/`, sharing
 `netlify/lib/`. They call BWH OS, the Frappe app that stores the likes and the
@@ -217,8 +224,8 @@ Things worth knowing before changing any of it:
 - **The email is dropped in exactly one place**, `toPublicComment` in
   `netlify/functions/engagement.ts`. It is never sent to the browser; it only
   seeds an avatar colour.
-- **Comment bodies are plain text**, rendered as a Vue interpolation. No
-  markdown, no `v-html`, so there is nothing to sanitise. Keep it that way.
+- **Comment bodies are plain text**, set with `textContent`. No markdown, no
+  `innerHTML`, so there is nothing to sanitise. Keep it that way.
 - **localStorage is not the like control.** It stops the same browser
   double-liking; the per-IP-per-post limit in OS is what actually bounds
   abuse. Likes are one-way — there is no decrement endpoint
