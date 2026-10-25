@@ -1,6 +1,9 @@
 import type { Context } from '@netlify/functions';
 
-/** Responses are never cached: a commenter must see their own comment on reload. */
+/**
+ * Browsers never cache a response, so a commenter sees their own comment on
+ * reload. The engagement GET adds a CDN-only cache on top; see cache.ts.
+ */
 const HEADERS = {
 	'content-type': 'application/json; charset=utf-8',
 	'cache-control': 'no-store',

@@ -1,6 +1,7 @@
 import type { Context } from '@netlify/functions';
 
 import { type AvatarTheme, avatarTheme } from '../lib/avatar';
+import { engagementCacheHeaders } from '../lib/cache';
 import { FrappeError, getEngagement, type StoredComment } from '../lib/frappe';
 import { badGateway, json, methodNotAllowed, serverError } from '../lib/http';
 import { isValidPostId } from '../lib/validate';
@@ -41,11 +42,15 @@ export default async (req: Request, _context: Context): Promise<Response> => {
 
 	try {
 		const engagement = await getEngagement(postId);
-		return json({
-			postId,
-			likes: engagement.likes,
-			comments: await Promise.all(engagement.comments.map(toPublicComment)),
-		});
+		return json(
+			{
+				postId,
+				likes: engagement.likes,
+				comments: await Promise.all(engagement.comments.map(toPublicComment)),
+			},
+			200,
+			engagementCacheHeaders(postId),
+		);
 	} catch (error) {
 		if (error instanceof FrappeError) return badGateway('engagement:frappe', error);
 		return serverError('engagement:read', error);

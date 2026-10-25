@@ -1,5 +1,6 @@
 import type { Context } from '@netlify/functions';
 
+import { purgeEngagement } from '../lib/cache';
 import { FrappeError, likePost } from '../lib/frappe';
 import { badGateway, clientIp, json, methodNotAllowed, rateLimited, readJson, serverError } from '../lib/http';
 import { isValidPostId } from '../lib/validate';
@@ -26,6 +27,7 @@ export default async (req: Request, context: Context): Promise<Response> => {
 		// Returns the new total so the client can reconcile its optimistic
 		// increment against what actually landed.
 		const likes = await likePost(postId, clientIp(req, context));
+		await purgeEngagement(postId);
 		return json({ postId, likes });
 	} catch (error) {
 		if (!(error instanceof FrappeError)) return serverError('like:write', error);

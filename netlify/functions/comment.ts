@@ -1,5 +1,6 @@
 import type { Context } from '@netlify/functions';
 
+import { purgeEngagement } from '../lib/cache';
 import { addComment, FrappeError } from '../lib/frappe';
 import { badGateway, clientIp, json, methodNotAllowed, rateLimited, readJson, serverError } from '../lib/http';
 import { isValidPostId, validateComment } from '../lib/validate';
@@ -57,6 +58,7 @@ export default async (req: Request, context: Context): Promise<Response> => {
 
 	try {
 		const stored = await addComment({ postId, ...fields, ip: clientIp(req, context) });
+		await purgeEngagement(postId);
 		return json({ comment: await toPublicComment(stored) }, 201);
 	} catch (error) {
 		if (!(error instanceof FrappeError)) return serverError('comment:write', error);

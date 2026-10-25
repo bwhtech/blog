@@ -226,6 +226,12 @@ Things worth knowing before changing any of it:
   seeds an avatar colour.
 - **Comment bodies are plain text**, set with `textContent`. No markdown, no
   `innerHTML`, so there is nothing to sanitise. Keep it that way.
+- **The GET is cached on Netlify's CDN for 60 seconds** (`netlify/lib/cache.ts`),
+  and every like and comment purges that post's entry by cache tag, so a
+  commenter still sees their own comment on reload. A comment hidden or deleted
+  in OS is not a write the functions see, so it stays visible for up to a
+  minute. The browser starts the GET on page load, not when the reader reaches
+  the comments, so the skeleton is rarely seen.
 - **localStorage is not the like control.** It stops the same browser
   double-liking; the per-IP-per-post limit in OS is what actually bounds
   abuse. Likes are one-way — there is no decrement endpoint

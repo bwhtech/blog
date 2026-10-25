@@ -1,8 +1,9 @@
 /**
  * Drives the likes and comments section rendered by PostEngagement.astro.
  *
- * The like button works as soon as the script runs. The single GET waits until
- * the reader nears the end of the post, as `client:visible` did for the island.
+ * The single GET starts as soon as the script runs, not when the reader nears
+ * the end: by the time they get there the data has landed, so they never see
+ * the skeleton. It costs one request for readers who never scroll down.
  */
 import { track } from '../../utils/analytics';
 import { cue } from '../../utils/sound';
@@ -46,7 +47,7 @@ export class PostEngagement {
 		this.liked = hasLiked(this.postId);
 		this.renderLike();
 		this.likeButton.addEventListener('click', () => this.like());
-		this.whenNearlyVisible(() => this.load());
+		this.load();
 	}
 
 	private async load() {
@@ -184,19 +185,6 @@ export class PostEngagement {
 
 	private updateCount() {
 		this.find('[data-count]').textContent = this.comments.length ? `(${this.comments.length})` : '';
-	}
-
-	/** The margin starts the request just before the section scrolls in. */
-	private whenNearlyVisible(callback: () => void) {
-		const observer = new IntersectionObserver(
-			(entries) => {
-				if (!entries.some((entry) => entry.isIntersecting)) return;
-				observer.disconnect();
-				callback();
-			},
-			{ rootMargin: '300px' },
-		);
-		observer.observe(this.section);
 	}
 
 	private clone(name: string): DocumentFragment {
