@@ -948,17 +948,19 @@ const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b bor
 	boot();
 
 	// The focal moment: arcs draw out from Jagdalpur to the field. It waits for
-	// the small home marker to be in view, so it plays on screen at any height.
+	// the southernmost pin, a small target, so every arc draws on screen at
+	// any viewport height.
 	const map = document.querySelector<SVGSVGElement>('[data-map]');
 	const homeMarker = map?.querySelector('.mis-home');
-	if (map && homeMarker && motionAllowed()) {
+	const southern = map?.querySelector('[data-pin="ernakulam"]');
+	if (map && homeMarker && southern && motionAllowed()) {
 		once(
-			homeMarker,
+			southern,
 			() => {
 				animate(homeMarker, { transform: ['scale(0.6)', 'scale(1)'] }, { duration: 0.45, ease: EASE_OUT });
 				animate(map.querySelectorAll('.mis-arc'), { strokeDashoffset: [1, 0] }, { duration: 0.9, ease: EASE_OUT, delay: stagger(0.12, { startDelay: 0.25 }) });
 			},
-			0.6,
+			1,
 		);
 	}
 
