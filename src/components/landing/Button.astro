@@ -16,7 +16,7 @@ type Props = {
 } & HTMLAttributes<'button'> &
 	Omit<HTMLAttributes<'a'>, 'type'>;
 
-const { variant = 'subtle', size = 'md', href, class: className, ...rest } = Astro.props;
+const { variant = 'subtle', size = 'md', href, type = 'button', class: className, ...rest } = Astro.props;
 
 const VARIANTS: Record<Variant, string> = {
 	primary: 'bg-surface-blue-9 text-ink-base hover:bg-surface-blue-10 active:opacity-90',
@@ -48,7 +48,7 @@ const classes = [
 			<slot />
 		</a>
 	) : (
-		<button type="button" class:list={classes} {...rest}>
+		<button type={type} class:list={classes} {...rest}>
 			<slot />
 		</button>
 	)
