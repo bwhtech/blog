@@ -1,0 +1,698 @@
+---
+/**
+ * Variant 3, Theory of change: our work drawn in the format every NGO fills
+ * in for a funder. The cover is a results chain that draws itself; scrolling
+ * walks through each stage; the logframe matrix's "means of verification"
+ * column is where the proof lives; the footer is "Assumptions & risks".
+ */
+import { Image } from 'astro:assets';
+import planningPhoto from '../../assets/landing/cs17-planning.jpg';
+import studentsPhoto from '../../assets/landing/cs17-students.jpg';
+import Button from '../../components/landing/Button.astro';
+import FunderStrip from '../../components/landing/FunderStrip.astro';
+import Icon from '../../components/landing/Icon.astro';
+import IntakeCompact from '../../components/landing/IntakeCompact.astro';
+import Logo from '../../components/landing/Logo.astro';
+import Tbd from '../../components/landing/Tbd.astro';
+import {
+	CHECKED_ON,
+	CONTRIBUTIONS,
+	COURSES,
+	CS17,
+	CTA,
+	FAQ,
+	HEADLINE,
+	HOME_TOWN,
+	LEGAL_NAME,
+	OFFERS,
+	OPEN_SOURCE,
+	PARTNERS,
+	PROBLEMS,
+	PROCESS,
+	STACK,
+	YOUTUBE,
+	isTBD,
+} from '../../data/landing';
+import LabLayout from '../../layouts/LabLayout.astro';
+
+type Tone = 'amber' | 'gray' | 'blue' | 'cyan' | 'violet' | 'green';
+const STAGES: { id: string; label: string; line: string; tone: Tone }[] = [
+	{ id: 'problem', label: 'Problem', line: 'Data in many sheets, forms and chats. Reports take days. Nobody trusts the numbers.', tone: 'amber' },
+	{ id: 'inputs', label: 'Inputs', line: `A team in Jagdalpur and an open-source stack we help build: ${CONTRIBUTIONS.total.toLocaleString('en-IN')} pull requests merged.`, tone: 'gray' },
+	{ id: 'activities', label: 'Activities', line: 'Listen, map, build, train the trainer, hand over.', tone: 'blue' },
+	{ id: 'outputs', label: 'Outputs', line: 'One system: MIS, case management, dashboards, HR and accounts.', tone: 'cyan' },
+	{ id: 'outcomes', label: 'Outcomes', line: 'Your team runs it, changes it, and trusts the numbers.', tone: 'violet' },
+	{ id: 'impact', label: 'Impact', line: 'More time for the people you serve.', tone: 'green' },
+];
+
+const TONE: Record<Tone, { band: string; ink: string; soft: string; dot: string; line: string }> = {
+	amber: { band: 'bg-surface-amber-2', ink: 'text-ink-amber-8', soft: 'bg-surface-amber-1', dot: 'bg-surface-amber-7', line: 'var(--outline-amber-4)' },
+	gray: { band: 'bg-surface-gray-2', ink: 'text-ink-gray-8', soft: 'bg-surface-gray-1', dot: 'bg-surface-gray-7', line: 'var(--outline-gray-4)' },
+	blue: { band: 'bg-surface-blue-2', ink: 'text-ink-blue-8', soft: 'bg-surface-blue-1', dot: 'bg-surface-blue-7', line: 'var(--outline-blue-4)' },
+	cyan: { band: 'bg-surface-cyan-2', ink: 'text-ink-cyan-8', soft: 'bg-surface-cyan-1', dot: 'bg-surface-cyan-7', line: 'var(--outline-cyan-4)' },
+	violet: { band: 'bg-surface-violet-2', ink: 'text-ink-violet-8', soft: 'bg-surface-violet-1', dot: 'bg-surface-violet-7', line: 'var(--outline-violet-4)' },
+	green: { band: 'bg-surface-green-2', ink: 'text-ink-green-8', soft: 'bg-surface-green-1', dot: 'bg-surface-green-7', line: 'var(--outline-green-4)' },
+};
+
+const checked = new Date(CHECKED_ON).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+const COVER = [
+	{ term: 'Reference', value: 'BWH/TOC/2026-10' },
+	{ term: 'Prepared by', value: `${LEGAL_NAME}, ${HOME_TOWN}` },
+	{ term: 'Prepared for', value: 'Organisations solving society’s problems' },
+	{ term: 'Date', value: checked },
+];
+
+const MATRIX = [
+	{
+		level: 'Goal',
+		summary: 'Organisations solving society’s problems spend their time on the problem, not on spreadsheets.',
+		indicator: { text: 'Hours saved on reporting each month, per partner', tbd: true },
+		verification: [{ label: 'Partner testimonials', tbd: true }],
+		assumption: 'Leadership wants one source of truth.',
+	},
+	{
+		level: 'Purpose',
+		summary: 'Your team runs and changes its own system.',
+		indicator: { text: 'Staff trained as trainers, per partner', tbd: true },
+		verification: [
+			{ label: 'Training for teams', href: '/train-your-team' },
+			{ label: `${COURSES[0].learners.toLocaleString('en-IN')} learners in our largest Frappe School course`, href: 'https://school.frappe.io/lms/courses' },
+		],
+		assumption: 'A few people have time to learn.',
+	},
+	{
+		level: 'Outputs',
+		summary: 'A system on open source: MIS, case management, dashboards, HR and accounts.',
+		indicator: { text: `${PARTNERS.length} partner organisations; Frappe Changemakers in use in Bengaluru and Chennai` },
+		verification: [{ label: 'github.com/frappe/changemakers', href: 'https://github.com/frappe/changemakers' }],
+		assumption: 'The old data can be cleaned and imported.',
+	},
+	{
+		level: 'Activities',
+		summary: 'Listen, map, build, train the trainer, hand over.',
+		indicator: { text: `${CONTRIBUTIONS.total.toLocaleString('en-IN')} pull requests merged into the stack by our team` },
+		verification: [
+			{ label: 'GitHub, frappe/*', href: 'https://github.com/frappe' },
+			{ label: `YouTube, ${YOUTUBE.subscribers} subscribers`, href: YOUTUBE.href },
+		],
+		assumption: 'We get to sit with the people who fill the sheets.',
+	},
+];
+
+const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list', 'users', 'hand-coins'];
+---
+
+<LabLayout
+	title="Theory of change"
+	description="BWH's theory of change: from scattered sheets and forms to a system your team owns."
+	variant="theory-of-change"
+>
+	<div class="toc">
+		<!-- Sticky bar: the chain in miniature, lit at the stage you are reading. -->
+		<header class="sticky top-0 z-30 border-b border-outline-gray-1 bg-surface-base" data-print-hide>
+			<div class="mx-auto flex h-14 max-w-[1200px] items-center gap-4 px-4 sm:px-6">
+				<a href="/lab/theory-of-change" class="flex items-center gap-2 no-underline" aria-label="BWH">
+					<Logo size={26} />
+					<span class="text-base-semibold text-ink-gray-9 max-sm:hidden">BWH</span>
+				</a>
+				<nav aria-label="Stages" class="hidden flex-1 items-center justify-center md:flex">
+					<ol class="flex items-center">
+						{STAGES.map((stage, index) => (
+							<li class="flex items-center">
+								<a href={`#stage-${stage.id}`} data-mini={stage.id} class="group flex items-center gap-1.5 rounded-full px-2 py-1 text-sm text-ink-gray-5 no-underline transition-colors hover:text-ink-gray-9 aria-[current=true]:text-ink-gray-9">
+									<span class:list={['size-2 rounded-full opacity-40 transition-opacity group-aria-[current=true]:opacity-100', TONE[stage.tone].dot]} />
+									{stage.label}
+								</a>
+								{index < STAGES.length - 1 && <Icon name="chevron-right" size={12} class="text-ink-gray-3" />}
+							</li>
+						))}
+					</ol>
+				</nav>
+				<div class="ml-auto flex items-center gap-2 md:ml-0">
+					<Button href={CTA.meetHref} variant="ghost" class="max-sm:hidden">{CTA.secondary}</Button>
+					<Button href="#tell-us" variant="primary">{CTA.primary}</Button>
+				</div>
+			</div>
+		</header>
+
+		<main id="main-content">
+			<!-- Cover -->
+			<section class="mx-auto flex max-w-[1200px] flex-col gap-10 px-4 pb-16 pt-12 sm:px-6 sm:pt-16" aria-labelledby="toc-title">
+				<div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-end">
+					<div class="flex flex-col gap-5">
+						<h1 id="toc-title" class="max-w-[17ch] text-[40px] font-semibold leading-[1.03] tracking-[-0.035em] text-ink-gray-9 [text-wrap:balance] sm:text-[60px] lg:text-[68px]">
+							{HEADLINE.title}
+						</h1>
+						<p class="max-w-[60ch] text-p-lg text-ink-gray-6 sm:text-[18px] sm:leading-[1.6]">{HEADLINE.lede}</p>
+					</div>
+					<dl class="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-x-3 gap-y-2 border-l border-outline-gray-2 py-1 pl-4 text-sm">
+						{COVER.map((row) => (
+							<>
+								<dt class="text-ink-gray-5">{row.term}</dt>
+								<dd class="font-data text-[12.5px] text-ink-gray-8">{row.value}</dd>
+							</>
+						))}
+					</dl>
+				</div>
+
+				<!-- The results chain. -->
+				<ol class="chain" data-chain aria-label="Our theory of change">
+					{STAGES.map((stage, index) => (
+						<li class="chain-node" data-node style={`--line: ${TONE[stage.tone].line}`}>
+							<a href={`#stage-${stage.id}`} class="flex h-full flex-col overflow-hidden rounded-5 border border-outline-gray-1 bg-surface-base no-underline transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-outline-gray-3 hover:shadow-md">
+								<span class:list={['flex items-center justify-between px-3 py-2 text-sm font-semibold', TONE[stage.tone].band, TONE[stage.tone].ink]}>
+									{stage.label}
+									<span class="font-data text-[11px] font-normal opacity-70">{index + 1}/{STAGES.length}</span>
+								</span>
+								<span class="flex-1 px-3 py-3 text-p-sm text-ink-gray-7">{stage.line}</span>
+							</a>
+							{index < STAGES.length - 1 && (
+								<svg class="chain-link" viewBox="0 0 40 16" aria-hidden="true">
+									<path d="M1 8H33" pathLength="1" class="chain-line" />
+									<path d="M28 3L35 8L28 13" pathLength="1" class="chain-head" />
+									<circle r="2.5" cx="1" cy="8" class="chain-pulse" />
+								</svg>
+							)}
+						</li>
+					))}
+				</ol>
+			</section>
+
+			<!-- The walk through each stage: a horizontal track, pinned while you scroll. -->
+			<section data-walk class="walk relative" aria-label="Each stage in detail">
+				<div data-walk-stage class="walk-stage">
+					<div data-track class="walk-track">
+						<!-- Problem -->
+						<article id="stage-problem" data-panel data-stage-id="problem" data-tone="amber" class="panel">
+							<p class:list={['panel-label', TONE.amber.band, TONE.amber.ink]}>Problem</p>
+							<h2 class="panel-title">Your programme works. Your tools do not.</h2>
+							<p class="panel-body">What we hear from almost every organisation, before we build anything:</p>
+							<ul class="flex flex-wrap gap-2">
+								{PROBLEMS.map((problem) => (
+									<li class="rounded-full border border-outline-amber-2 bg-surface-amber-1 px-3 py-1.5 text-p-sm text-ink-gray-8">{problem.label}</li>
+								))}
+							</ul>
+						</article>
+
+						<!-- Inputs -->
+						<article id="stage-inputs" data-panel data-stage-id="inputs" data-tone="gray" class="panel">
+							<p class:list={['panel-label', TONE.gray.band, TONE.gray.ink]}>Inputs</p>
+							<h2 class="panel-title">What we bring</h2>
+							<dl class="grid gap-x-8 gap-y-5 sm:grid-cols-2">
+								<div class="flex flex-col gap-1">
+									<dt class="text-sm text-ink-gray-5">A team</dt>
+									<dd class="text-p-base text-ink-gray-8">Engineers in {HOME_TOWN}, in one office. Team size <Tbd /></dd>
+								</div>
+								<div class="flex flex-col gap-1">
+									<dt class="text-sm text-ink-gray-5">Contributions to the stack</dt>
+									<dd class="font-data text-[28px] leading-none text-ink-gray-9">{CONTRIBUTIONS.total.toLocaleString('en-IN')}</dd>
+									<dd class="text-xs text-ink-gray-5">pull requests merged into frappe/*, 2021 to today</dd>
+								</div>
+								<div class="flex flex-col gap-2 sm:col-span-2">
+									<dt class="text-sm text-ink-gray-5">An open-source stack</dt>
+									<dd class="flex flex-wrap gap-x-5 gap-y-2">
+										{STACK.map((item) => (
+											<span class="flex items-center gap-2 text-sm text-ink-gray-8"><img src={item.src} alt="" width="20" height="20" class="size-5" />{item.label}</span>
+										))}
+									</dd>
+								</div>
+								<div class="flex flex-col gap-1 sm:col-span-2">
+									<dt class="text-sm text-ink-gray-5">Teaching</dt>
+									<dd class="text-p-base text-ink-gray-8">
+										{COURSES[0].learners.toLocaleString('en-IN')} learners in our largest course on Frappe School, and {YOUTUBE.subscribers} subscribers on YouTube.
+									</dd>
+								</div>
+							</dl>
+						</article>
+
+						<!-- Activities -->
+						<article id="stage-activities" data-panel data-stage-id="activities" data-tone="blue" class="panel panel-split">
+							<div class="flex flex-col gap-4">
+								<p class:list={['panel-label', TONE.blue.band, TONE.blue.ink]}>Activities</p>
+								<h2 class="panel-title">How we work with you</h2>
+								<ol class="flex flex-col">
+									{PROCESS.map((step, index) => (
+										<li class="grid grid-cols-[1.75rem_minmax(0,1fr)] gap-3 border-t border-outline-gray-1 py-2.5 first:border-t-0">
+											<span class="font-data text-xs leading-6 text-ink-blue-7">{String(index + 1).padStart(2, '0')}</span>
+											<span class="flex flex-col">
+												<span class="text-base-medium text-ink-gray-9">{step.title}</span>
+												<span class="text-p-sm text-ink-gray-6">{step.body}</span>
+											</span>
+										</li>
+									))}
+								</ol>
+							</div>
+							<figure class="flex flex-col gap-2">
+								<Image src={planningPhoto} alt="A blackboard with a programme plan: operations, programme design, budgets, safety and mentoring" widths={[480, 720]} sizes="(min-width: 1024px) 420px, 100vw" class="aspect-[4/3] w-full rounded-5 object-cover" />
+								<figcaption class="text-xs text-ink-gray-5">Mapping a programme before building anything: the plan for CS17.</figcaption>
+							</figure>
+						</article>
+
+						<!-- Outputs -->
+						<article id="stage-outputs" data-panel data-stage-id="outputs" data-tone="cyan" class="panel">
+							<p class:list={['panel-label', TONE.cyan.band, TONE.cyan.ink]}>Outputs</p>
+							<h2 class="panel-title">{OFFERS[0].title}</h2>
+							<p class="panel-body">{OFFERS[0].summary}</p>
+							<ul class="grid gap-x-6 gap-y-3 sm:grid-cols-2">
+								{OFFERS[0].items.map((item, index) => (
+									<li class="flex items-center gap-2.5 text-p-base text-ink-gray-8">
+										<span class="flex size-7 shrink-0 items-center justify-center rounded-4 bg-surface-cyan-1 text-ink-cyan-7"><Icon name={OUTPUT_ICONS[index]} size={15} /></span>
+										{item}
+									</li>
+								))}
+							</ul>
+						</article>
+
+						<!-- Outcomes -->
+						<article id="stage-outcomes" data-panel data-stage-id="outcomes" data-tone="violet" class="panel">
+							<p class:list={['panel-label', TONE.violet.band, TONE.violet.ink]}>Outcomes</p>
+							<h2 class="panel-title">What changed for the people we worked with</h2>
+							<ul class="flex flex-col divide-y divide-outline-gray-1">
+								{PARTNERS.slice(0, 5).map((partner) => (
+									<li class="grid gap-1 py-2.5 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-4">
+										<span class="text-base-medium text-ink-gray-9">{isTBD(partner.name) ? <Tbd note="partner name" /> : partner.name}</span>
+										<span class="text-p-sm text-ink-gray-7">{isTBD(partner.outcome) ? <Tbd note="outcome" /> : partner.outcome}</span>
+									</li>
+								))}
+							</ul>
+							<figure class="flex flex-col gap-2 rounded-5 bg-surface-violet-1 p-4">
+								<blockquote class="text-p-base text-ink-gray-8"><Tbd note="testimonial from a partner" /></blockquote>
+								<figcaption class="text-xs text-ink-gray-5"><Tbd note="name, role, organisation" /></figcaption>
+							</figure>
+						</article>
+
+						<!-- Impact -->
+						<article id="stage-impact" data-panel data-stage-id="impact" data-tone="green" class="panel panel-split">
+							<div class="flex flex-col gap-4">
+								<p class:list={['panel-label', TONE.green.band, TONE.green.ink]}>Impact</p>
+								<h2 class="panel-title">More time for the people you serve.</h2>
+								<p class="panel-body">
+									We invest in the same idea at home. {CS17.name} is our own programme: young women in {HOME_TOWN} learn
+									to build software, for 18 months, fully funded.
+								</p>
+								<a href={CS17.href} class="flex items-center gap-1 text-base text-ink-gray-8 underline hover:text-ink-gray-9">cs17.org <Icon name="arrow-up-right" size={14} /></a>
+							</div>
+							<figure class="flex flex-col gap-2">
+								<Image src={studentsPhoto} alt="CS17 students working together on laptops" widths={[480, 720, 960]} sizes="(min-width: 1024px) 460px, 100vw" class="aspect-[4/3] w-full rounded-5 object-cover" />
+								<figcaption class="text-xs text-ink-gray-5">{CS17.partners}.</figcaption>
+							</figure>
+						</article>
+					</div>
+
+					<div class="walk-progress" aria-hidden="true" data-print-hide>
+						<span data-walk-bar class="walk-progress-bar"></span>
+					</div>
+				</div>
+			</section>
+
+			<div class="mx-auto flex max-w-[1200px] flex-col gap-20 px-4 pb-24 pt-16 sm:px-6">
+				<!-- The logframe. -->
+				<section aria-labelledby="matrix-title" class="flex flex-col gap-6">
+					<div class="flex flex-col gap-2">
+						<h2 id="matrix-title" class="text-[28px] font-semibold leading-[1.15] tracking-[-0.025em] text-ink-gray-9 sm:text-[34px]">The logframe</h2>
+						<p class="max-w-[62ch] text-p-lg text-ink-gray-6">
+							The same plan, in the matrix you fill in for every funder. The means of verification are the proof: follow
+							them.
+						</p>
+					</div>
+					<div class="overflow-x-auto rounded-5 border border-outline-gray-1">
+						<table class="w-full min-w-[860px] border-collapse text-left">
+							<thead>
+								<tr class="bg-surface-gray-1 text-sm text-ink-gray-5">
+									<th scope="col" class="w-28 px-4 py-2.5 font-normal"></th>
+									<th scope="col" class="px-4 py-2.5 font-normal">Narrative summary</th>
+									<th scope="col" class="px-4 py-2.5 font-normal">Indicators</th>
+									<th scope="col" class="px-4 py-2.5 font-normal">Means of verification</th>
+									<th scope="col" class="px-4 py-2.5 font-normal">Assumptions</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-outline-gray-1 align-top">
+								{MATRIX.map((row) => (
+									<tr>
+										<th scope="row" class="px-4 py-4 text-base-semibold text-ink-gray-9">{row.level}</th>
+										<td class="px-4 py-4 text-p-sm text-ink-gray-8">{row.summary}</td>
+										<td class="px-4 py-4 text-p-sm text-ink-gray-7">
+											{row.indicator.text}
+											{row.indicator.tbd && <div class="pt-1.5"><Tbd note="figure" /></div>}
+										</td>
+										<td class="px-4 py-4">
+											<ul class="flex flex-col gap-1.5">
+												{row.verification.map((item) => (
+													<li class="text-p-sm">
+														{'href' in item && item.href ? (
+															<a href={item.href} class="inline-flex items-start gap-1 text-ink-blue-7 underline hover:text-ink-blue-9">
+																{item.label}
+																<Icon name="arrow-up-right" size={12} class="mt-1" />
+															</a>
+														) : (
+															<span class="text-ink-gray-7">{item.label} <Tbd /></span>
+														)}
+													</li>
+												))}
+											</ul>
+										</td>
+										<td class="px-4 py-4 text-p-sm text-ink-gray-6">{row.assumption}</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+					<p class="text-xs text-ink-gray-5">Numbers checked {checked}. Sources: GitHub, Frappe School, YouTube, cs17.org, the BWH blog.</p>
+				</section>
+
+				<FunderStrip />
+
+				<div class="rounded-5 border border-outline-gray-1 p-5 sm:p-8">
+					<IntakeCompact />
+				</div>
+			</div>
+		</main>
+
+		<!-- Footer: assumptions and risks, as every proposal ends. -->
+		<footer class="border-t border-outline-gray-1 bg-surface-gray-1">
+			<div class="mx-auto flex max-w-[1200px] flex-col gap-8 px-4 py-14 sm:px-6">
+				<h2 class="text-2xl font-semibold tracking-[-0.01em] text-ink-gray-9">Assumptions and risks</h2>
+				<dl class="grid gap-x-10 gap-y-6 md:grid-cols-2">
+					{FAQ.map((item) => (
+						<div class="grid grid-cols-[4.5rem_minmax(0,1fr)] content-start gap-x-3 gap-y-1.5 border-t border-outline-gray-2 pt-4">
+							<dt class="contents">
+								<span class="pt-0.5 font-data text-[11px] text-ink-amber-7">Risk</span>
+								<span class="text-base-medium text-ink-gray-9">{item.q}</span>
+							</dt>
+							<dd class="contents">
+								<span class="pt-0.5 font-data text-[11px] text-ink-green-7">Mitigation</span>
+								<span class="text-p-sm text-ink-gray-7">{item.a}</span>
+							</dd>
+						</div>
+					))}
+				</dl>
+				<div class="flex flex-col gap-3 border-t border-outline-gray-2 pt-6 text-sm text-ink-gray-5 sm:flex-row sm:items-center sm:justify-between">
+					<p>{LEGAL_NAME}, {HOME_TOWN}.</p>
+					<nav aria-label="Elsewhere" class="flex flex-wrap gap-4">
+						<a href="/blog" class="underline hover:text-ink-gray-9">Blog</a>
+						<a href={YOUTUBE.href} class="underline hover:text-ink-gray-9">YouTube</a>
+						<a href={OPEN_SOURCE.href} class="underline hover:text-ink-gray-9">GitHub</a>
+						<a href={CTA.meetHref} class="underline hover:text-ink-gray-9">Book a call</a>
+					</nav>
+				</div>
+			</div>
+		</footer>
+	</div>
+</LabLayout>
+
+<style>
+	/* The results chain: six nodes and five links on one line, stacked on phones. */
+	.chain {
+		display: grid;
+		grid-template-columns: repeat(6, minmax(0, 1fr));
+		gap: 2.25rem;
+	}
+	.chain-node {
+		position: relative;
+		min-height: 9.5rem;
+	}
+	.chain-link {
+		position: absolute;
+		top: 50%;
+		right: -2.1rem;
+		width: 2rem;
+		height: 1rem;
+		transform: translateY(-50%);
+		overflow: visible;
+	}
+	.chain-line,
+	.chain-head {
+		fill: none;
+		stroke: var(--line);
+		stroke-width: 1.75;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		stroke-dasharray: 1;
+		stroke-dashoffset: 0;
+	}
+	.chain-pulse {
+		fill: var(--line);
+		opacity: 0;
+	}
+	@media (max-width: 1023px) {
+		.chain {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+		.chain-node:nth-child(3) .chain-link {
+			display: none;
+		}
+	}
+	@media (max-width: 639px) {
+		.chain {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 1.75rem;
+		}
+		.chain-node {
+			min-height: 0;
+		}
+		.chain-node .chain-link,
+		.chain-node:nth-child(3) .chain-link {
+			display: block;
+			top: auto;
+			bottom: -1.6rem;
+			right: auto;
+			left: 1.25rem;
+			transform: rotate(90deg);
+			transform-origin: left center;
+			width: 1.5rem;
+		}
+	}
+	html[data-motion='on'] .chain-node {
+		opacity: 0;
+	}
+	html[data-motion='on'] .chain-line,
+	html[data-motion='on'] .chain-head {
+		stroke-dashoffset: 1;
+	}
+
+	/* The walk: a horizontal track inside a tall section, pinned under the bar. */
+	.walk {
+		--panel: min(56rem, 82vw);
+		--gap: 2rem;
+		height: 560vh;
+	}
+	.walk-stage {
+		position: sticky;
+		top: 56px;
+		height: calc(100vh - 56px);
+		height: calc(100dvh - 56px);
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		background: var(--surface-gray-1);
+		border-block: 1px solid var(--outline-gray-1);
+		transition: background-color 500ms var(--lab-ease);
+	}
+	.walk-track {
+		display: flex;
+		gap: var(--gap);
+		padding-inline: calc((100vw - var(--panel)) / 2);
+		will-change: transform;
+	}
+	.panel {
+		flex: 0 0 var(--panel);
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		max-height: calc(100vh - 140px);
+		overflow: auto;
+		padding: 2rem;
+		border-radius: 12px;
+		border: 1px solid var(--outline-gray-1);
+		background: var(--surface-base);
+		box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px rgb(0 0 0 / 0.05);
+		transition: opacity 300ms var(--lab-ease);
+		scroll-margin-top: 80px;
+	}
+	.panel-split {
+		display: grid;
+		grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+		gap: 2rem;
+		align-items: start;
+	}
+	.panel-label {
+		align-self: flex-start;
+		border-radius: 999px;
+		padding: 2px 10px;
+		font-size: 12px;
+		font-weight: 600;
+	}
+	.panel-title {
+		font-size: clamp(24px, 3vw, 34px);
+		font-weight: 600;
+		line-height: 1.12;
+		letter-spacing: -0.025em;
+		color: var(--ink-gray-9);
+		text-wrap: balance;
+	}
+	.panel-body {
+		max-width: 60ch;
+		font-size: 15px;
+		line-height: 1.6;
+		color: var(--ink-gray-6);
+	}
+	.walk-progress {
+		position: absolute;
+		left: 50%;
+		bottom: 22px;
+		width: min(20rem, 60vw);
+		height: 3px;
+		border-radius: 999px;
+		background: var(--surface-gray-3);
+		transform: translateX(-50%);
+		overflow: hidden;
+	}
+	.walk-progress-bar {
+		display: block;
+		height: 100%;
+		width: 100%;
+		background: var(--surface-gray-10);
+		transform-origin: left;
+		transform: scaleX(0);
+	}
+
+	/* Without the pinned walk: panels stack. */
+	html:not([data-motion='on']) .walk,
+	.walk[data-stacked] {
+		height: auto;
+	}
+	html:not([data-motion='on']) .walk-stage,
+	.walk[data-stacked] .walk-stage {
+		position: relative;
+		top: 0;
+		height: auto;
+		padding-block: 3rem;
+	}
+	html:not([data-motion='on']) .walk-track,
+	.walk[data-stacked] .walk-track {
+		flex-direction: column;
+		padding-inline: 1rem;
+		align-items: center;
+		transform: none !important;
+	}
+	html:not([data-motion='on']) .panel,
+	.walk[data-stacked] .panel {
+		flex-basis: auto;
+		width: min(56rem, 100%);
+		max-height: none;
+		opacity: 1 !important;
+	}
+	html:not([data-motion='on']) .walk-progress,
+	.walk[data-stacked] .walk-progress {
+		display: none;
+	}
+	@media (max-width: 767px) {
+		.panel {
+			padding: 1.25rem;
+		}
+		.panel-split {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+
+	@media print {
+		.walk {
+			height: auto;
+		}
+		.walk-stage {
+			position: relative;
+			height: auto;
+		}
+		.walk-track {
+			flex-direction: column;
+			transform: none !important;
+		}
+	}
+</style>
+
+<script>
+	import { animate, stagger } from 'motion';
+	import { boot, EASE_OUT, motionAllowed } from '../../scripts/landing/motion';
+
+	boot();
+
+	// The focal moment: the chain draws itself left to right, then a pulse
+	// runs along it once, from the problem to the impact.
+	const chain = document.querySelector<HTMLElement>('[data-chain]');
+	if (chain && motionAllowed()) {
+		const nodes = chain.querySelectorAll<HTMLElement>('[data-node]');
+		const lines = chain.querySelectorAll<SVGPathElement>('.chain-line, .chain-head');
+		const pulses = [...chain.querySelectorAll<SVGCircleElement>('.chain-pulse')];
+		animate(nodes, { opacity: [0, 1], transform: ['translateY(10px)', 'translateY(0)'] }, { duration: 0.55, ease: EASE_OUT, delay: stagger(0.11, { startDelay: 0.15 }) });
+		animate(lines, { strokeDashoffset: [1, 0] }, { duration: 0.35, ease: EASE_OUT, delay: stagger(0.055, { startDelay: 0.4 }) });
+		pulses.forEach((pulse, index) => {
+			animate(pulse, { opacity: [0, 1, 1, 0], cx: [1, 34] }, { duration: 0.42, ease: 'easeInOut', delay: 1.35 + index * 0.36 });
+		});
+	}
+
+	// The walk: scrolling down moves the track sideways.
+	const walk = document.querySelector<HTMLElement>('[data-walk]')!;
+	const stage = walk.querySelector<HTMLElement>('[data-walk-stage]')!;
+	const track = walk.querySelector<HTMLElement>('[data-track]')!;
+	const panels = [...walk.querySelectorAll<HTMLElement>('[data-panel]')];
+	const bar = walk.querySelector<HTMLElement>('[data-walk-bar]')!;
+	const minis = document.querySelectorAll<HTMLAnchorElement>('[data-mini]');
+	const narrow = matchMedia('(max-width: 767px)');
+
+	const markStage = (id: string | undefined) =>
+		minis.forEach((mini) => mini.setAttribute('aria-current', String(mini.dataset.mini === id)));
+
+	let pinned = false;
+	function layout() {
+		pinned = motionAllowed() && !narrow.matches;
+		walk.toggleAttribute('data-stacked', !pinned);
+		if (!pinned) track.style.transform = '';
+		update();
+	}
+
+	function update() {
+		if (!pinned) return;
+		const travel = walk.offsetHeight - stage.offsetHeight;
+		const progress = Math.min(1, Math.max(0, -walk.getBoundingClientRect().top / travel));
+		const distance = track.scrollWidth - window.innerWidth;
+		track.style.transform = `translateX(${-progress * distance}px)`;
+		bar.style.transform = `scaleX(${progress})`;
+		const center = window.innerWidth / 2;
+		let active: HTMLElement | undefined;
+		panels.forEach((panel) => {
+			const box = panel.getBoundingClientRect();
+			const near = Math.abs(box.left + box.width / 2 - center) < box.width / 2 + 16;
+			panel.style.opacity = near ? '1' : '0.45';
+			if (near && !active) active = panel;
+		});
+		// The stage takes on the colour of the stage you are reading.
+		if (active) stage.style.backgroundColor = `var(--surface-${active.dataset.tone}-1)`;
+		if (walk.getBoundingClientRect().top <= 56 && walk.getBoundingClientRect().bottom > window.innerHeight / 2) {
+			markStage(active?.dataset.stageId);
+		} else {
+			markStage(undefined);
+		}
+	}
+
+	let frame = 0;
+	window.addEventListener('scroll', () => (frame ||= requestAnimationFrame(() => ((frame = 0), update()))), { passive: true });
+	window.addEventListener('resize', layout);
+	narrow.addEventListener('change', layout);
+	layout();
+
+	// Jumping to a stage from the chain or the bar lands on that panel.
+	document.querySelectorAll<HTMLAnchorElement>('a[href^="#stage-"]').forEach((link) =>
+		link.addEventListener('click', (event) => {
+			const panel = document.querySelector<HTMLElement>(link.getAttribute('href')!);
+			if (!panel || !pinned) return;
+			event.preventDefault();
+			const index = panels.indexOf(panel);
+			const travel = walk.offsetHeight - stage.offsetHeight;
+			const distance = track.scrollWidth - window.innerWidth;
+			const step = (panel.offsetWidth + parseFloat(getComputedStyle(track).gap)) / distance;
+			const target = walk.offsetTop + Math.min(1, index * step) * travel;
+			window.scrollTo({ top: target, behavior: motionAllowed() ? 'smooth' : 'auto' });
+		}),
+	);
+</script>
