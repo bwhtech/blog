@@ -99,7 +99,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 					<span class="size-1.5 rounded-full bg-current opacity-70"></span>
 					<span data-status-text>Draft</span>
 					</span>
-					<span data-ticket-head class="hidden font-data text-xs text-ink-gray-5 md:inline">New request</span>
+					<span data-ticket-head class="hidden font-data text-xs text-ink-gray-5 md:inline">BWH-···· · not sent</span>
 				<div class="ml-auto flex items-center gap-2">
 					<Button href={CTA.meetHref} variant="ghost" class="max-sm:hidden">{CTA.secondary}</Button>
 					<Button href="#tell-us" variant="primary">Send request</Button>
@@ -178,12 +178,13 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 
 								<div data-preview="overview" hidden class="flex flex-col gap-3">
 									<p class="text-base-semibold text-ink-gray-9">Your system so far</p>
-									<ul class="grid gap-2 sm:grid-cols-2">
+									<ul class="flex flex-col gap-1.5">
 										{PROBLEMS.map((problem) => (
 											<li data-tile={problem.id} hidden>
-												<button type="button" data-open={problem.id} class="flex w-full items-start gap-2.5 rounded-4 border border-outline-gray-1 bg-surface-base p-3 text-left transition-[border-color,box-shadow] duration-200 hover:border-outline-gray-3 data-[new]:border-outline-blue-3 data-[new]:shadow-[0_0_0_3px_var(--outline-blue-1)]">
+												<button type="button" data-open={problem.id} class="flex w-full items-center gap-2.5 rounded-4 border border-outline-gray-1 bg-surface-base px-3 py-2 text-left transition-[border-color,background-color] duration-200 hover:border-outline-gray-3 data-[new]:border-outline-blue-3 data-[new]:bg-surface-blue-1">
 													<span class="flex size-7 shrink-0 items-center justify-center rounded-4 bg-surface-blue-2 text-ink-blue-7"><Icon name={MODULE_ICON[problem.icon]} size={14} /></span>
-													<span class="flex min-w-0 flex-col"><span class="text-sm font-medium text-ink-gray-9">{problem.module}</span><span class="text-xs text-ink-gray-6">{TILE[problem.id]}</span></span>
+													<span class="min-w-0 flex-1 truncate text-sm font-medium text-ink-gray-9">{problem.module}</span>
+													<span class="shrink-0 text-xs text-ink-gray-6 max-sm:hidden">{TILE[problem.id]}</span>
 												</button>
 											</li>
 										))}
@@ -470,13 +471,13 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 					<span class="size-1.5 rounded-full bg-current opacity-70"></span>
 					<span data-status-footer-text>Draft</span>
 				</span>
-				<span data-ticket-foot class="font-data text-xs text-ink-gray-5">New request</span>
+				<span data-ticket-foot class="font-data text-xs text-ink-gray-5">BWH-···· · not sent</span>
 				<div class="flex items-center gap-2">
 					<Button href="#tell-us" variant="primary">Send request</Button>
 					<Button href={CTA.meetHref} variant="ghost">{CTA.secondary}</Button>
 				</div>
 				<p class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-gray-5 md:ml-auto">
-					<span>{LEGAL_NAME}, {HOME_TOWN}</span>
+					<span class="max-md:basis-full">{LEGAL_NAME}, {HOME_TOWN}</span>
 					<a href="/blog" class="underline hover:text-ink-gray-9">Blog</a>
 					<a href={YOUTUBE.href} class="underline hover:text-ink-gray-9">YouTube</a>
 					<a href={OPEN_SOURCE.href} class="underline hover:text-ink-gray-9">GitHub</a>
@@ -538,10 +539,9 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 	const EMPTY_SUMMARY = [...summary.childNodes].map((node) => node.cloneNode(true));
 
 	// The request has a number from the moment the page opens.
-	const ticket = `BWH-${String(Math.floor(1000 + Math.random() * 9000))}`;
-	document.querySelectorAll('[data-ticket-head], [data-ticket-foot]').forEach((el) => (el.textContent = `${ticket} · created just now`));
-	const ticketId = document.querySelector('[data-ticket-id]');
-	if (ticketId) ticketId.textContent = ticket;
+	// A request number exists only once something is sent.
+	const setTicket = (text: string) => document.querySelectorAll('[data-ticket-head], [data-ticket-foot]').forEach((el) => (el.textContent = text));
+	setTicket('BWH-···· · not sent');
 
 	let pickedCount = 0;
 	let fieldVisible = true;
@@ -679,5 +679,11 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 		);
 	}
 
-	form.addEventListener('intake:sent', () => setStatus('green', 'Sent'));
+	form.addEventListener('intake:sent', () => {
+		const ticket = `BWH-${String(Math.floor(1000 + Math.random() * 9000))}`;
+		const ticketId = document.querySelector('[data-ticket-id]');
+		if (ticketId) ticketId.textContent = ticket;
+		setTicket(`${ticket} · sent just now`);
+		setStatus('green', 'Sent');
+	});
 </script>

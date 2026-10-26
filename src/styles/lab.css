@@ -117,3 +117,21 @@ html[data-motion='on'] [data-reveal] {
 .photo-mono {
 	filter: grayscale(1) contrast(1.04);
 }
+
+/* On phones the lab switcher sits at the very end of the page instead of
+   floating over it. */
+@media (max-width: 639px) {
+	.lab-switcher {
+		position: relative;
+		right: auto;
+		bottom: auto !important;
+		display: flex;
+		justify-content: center;
+		padding: 1rem 0 calc(1rem + env(safe-area-inset-bottom));
+	}
+	.lab-switcher details > div {
+		left: 50%;
+		right: auto;
+		transform: translateX(-50%);
+	}
+}

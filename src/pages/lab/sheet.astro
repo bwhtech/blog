@@ -27,6 +27,7 @@ import {
 	LEGAL_NAME,
 	OFFERS,
 	OPEN_SOURCE,
+	NAMED_PARTNERS,
 	PARTNERS,
 	STACK,
 	YOUTUBE,
@@ -103,16 +104,16 @@ const CHANGES = [
 
 // Who uses each part, by offer. Same order as OFFERS[].items.
 const WHO: Record<string, string[]> = {
-	systems: ['Leadership', 'Programme team', 'Field team', 'MEL', 'HR', 'Finance'],
-	training: ['Developers', 'HR', 'Finance', 'Developers', 'Everyone'],
-	ai: ['CS17', 'CS17', 'Your team'],
+	systems: ['Leadership', 'Programme team', 'Field team', 'MEL team', 'HR team', 'Finance team'],
+	training: ['Developers', 'HR team', 'Finance team', 'Developers', 'Everyone'],
+	ai: ['Teachers', 'Students', 'Your team'],
 };
 
 // Sample grantees for the portfolio report.
 const PORTFOLIO = [
-	{ name: 'Grantee A', place: 'Bastar', people: 212, visits: 486 },
-	{ name: 'Grantee B', place: 'Kutch', people: 164, visits: 301 },
-	{ name: 'Grantee C', place: 'Ernakulam', people: 98, visits: 140 },
+	{ name: 'Sample grantee A', place: 'Raipur', people: 212, visits: 486 },
+	{ name: 'Sample grantee B', place: 'Pune', people: 164, visits: 301 },
+	{ name: 'Sample grantee C', place: 'Lucknow', people: 98, visits: 140 },
 ];
 
 const maxYear = Math.max(...CONTRIBUTIONS.byYear.map((row) => row.count));
@@ -376,7 +377,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 					</div>
 
 					<!-- Caption: where we are in the story. -->
-					<div class="pointer-events-none absolute inset-x-0 bottom-[60px] z-10 flex justify-center px-3 sm:bottom-4 lg:justify-start lg:pl-14" data-print-hide>
+					<div class="pointer-events-none absolute inset-x-0 bottom-3 z-10 flex justify-center px-3 sm:bottom-4 lg:justify-start lg:pl-14" data-print-hide>
 						<div class="pointer-events-auto flex max-w-[640px] items-center gap-3 rounded-full border border-outline-gray-2 bg-surface-elevation-2 py-2 pl-3 pr-4 shadow-lg">
 							<span class="flex shrink-0 gap-1" aria-hidden="true">
 								{[0, 1, 2, 3].map((step) => <span data-dot={step} class="size-1.5 rounded-full bg-surface-gray-4 transition-colors duration-200" />)}
@@ -423,6 +424,10 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 						<p class="max-w-[60ch] text-p-base text-ink-gray-6">Everything we build and teach, grouped the way your system would group it.</p>
 					</div>
 					<div class="overflow-hidden rounded-5 border border-outline-gray-1">
+						<div class="flex h-8 items-center justify-between border-b border-outline-gray-1 px-4 pl-[38px] text-xs text-ink-gray-5" aria-hidden="true">
+							<span>Part</span>
+							<span>For</span>
+						</div>
 						{OFFERS.map((offer) => (
 							<div class="border-b border-outline-gray-1 last:border-b-0">
 								<div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 bg-surface-gray-1 px-4 py-2 text-sm">
@@ -618,8 +623,12 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 				))}
 				<span class="flex shrink-0 items-center px-3 text-ink-gray-4" aria-hidden="true">Copy of FINAL (3)</span>
 			</div>
+			<p class="flex shrink-0 items-center gap-2 border-l border-outline-gray-2 px-2.5 font-data text-[11px] text-ink-gray-5 md:hidden">
+				<span>n {NAMED_PARTNERS.length}</span>
+				<span>Σ {CONTRIBUTIONS.total.toLocaleString('en-IN')}</span>
+			</p>
 			<p class="hidden shrink-0 items-center gap-4 border-l border-outline-gray-2 px-4 font-data text-xs text-ink-gray-5 md:flex">
-				<span>Count: {PARTNERS.length} partners</span>
+				<span>Count: {NAMED_PARTNERS.length} partners</span>
 				<span>Sum: {CONTRIBUTIONS.total.toLocaleString('en-IN')} PRs merged</span>
 			</p>
 		</nav>
@@ -794,7 +803,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 	@media (max-width: 639px) {
 		.comment {
 			left: auto;
-			right: 4px;
+			right: calc(100% - 6px);
 			top: calc(100% - 2px);
 		}
 	}
@@ -902,21 +911,25 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 		}
 	}
 	@media (max-width: 639px) {
+		/* Small enough to sit beside the evidence: the form and the chat in the
+		   empty cells beside the total, the script over the last villages. */
 		.artifact {
-			scale: 0.78;
+			scale: 0.62;
 			transform-origin: top right;
 		}
 		.form-card {
-			top: -78px;
+			top: -110px;
 			right: 2%;
 		}
 		.chat {
-			top: 18%;
+			top: -58px;
 			right: 2%;
 		}
 		.terminal {
-			top: 52%;
-			right: 2%;
+			top: calc(var(--row) * 7 + 4px);
+			right: auto;
+			left: 34%;
+			transform-origin: top left;
 		}
 	}
 
@@ -1071,7 +1084,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 			el.style.transform = `translate(${dx * t}px, ${dy * t}px) rotate(${rot}deg) scale(${1 - 0.7 * t})`;
 			el.style.opacity = String(1 - fade);
 			el.style.filter = fade > 0 ? `blur(${fade * 6}px)` : '';
-			if (travel >= 1) merged += 1;
+			if (fade >= 1) merged += 1;
 		});
 		sourcesText.textContent = `Sources: ${merged} merged`;
 

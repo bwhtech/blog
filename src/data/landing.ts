@@ -123,9 +123,9 @@ export const PARTNERS: Partner[] = [
 		sector: 'Homeless care',
 		place: 'Bengaluru and Chennai',
 		pins: ['bengaluru', 'chennai'],
-		work: 'Frappe Changemakers, which our founder built with Umair at Frappe in 2022, before BWH: beneficiary and case management for the homeless care programme. Field workers log rescues, cases, food distribution and shelter admissions. The Foundation also funds CS17.',
+		work: 'Frappe Changemakers, which our founder built at Frappe in 2022, before BWH: beneficiary and case management for the homeless care programme. Field workers log rescues, cases, food distribution and shelter admissions. The Foundation also funds CS17.',
 		problem: TBD,
-		outcome: 'Frappe Changemakers, built by our founder at Frappe before BWH, manages thousands of beneficiaries (BWH blog, July 2025).',
+		outcome: 'Manages thousands of beneficiaries (BWH blog, July 2025).',
 		quote: TBD,
 		kind: 'Build',
 		link: { label: 'github.com/frappe/changemakers · AGPL-3.0', href: 'https://github.com/frappe/changemakers' },
@@ -300,7 +300,7 @@ export type ProblemId = (typeof PROBLEMS)[number]['id'];
 
 export const FUNDERS = {
 	title: 'Funding a portfolio of grantees?',
-	body: 'Give every grantee the same system and see one view across all of them. Azim Premji Foundation funds CS17, and Frappe Changemakers manages thousands of beneficiaries in its homeless care programme.',
+	body: 'Give every grantee the same system and see one view across all of them. Azim Premji Foundation funds CS17, our own programme.',
 };
 
 export const FAQ = [
@@ -321,3 +321,6 @@ export const VARIANTS = [
 ] as const;
 
 export const isTBD = (value: string) => value === TBD;
+
+/** Partners we can name today; the rest are TBD rows. */
+export const NAMED_PARTNERS = PARTNERS.filter((partner) => !isTBD(partner.name));

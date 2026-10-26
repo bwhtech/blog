@@ -24,6 +24,7 @@ import {
 	LEGAL_NAME,
 	OFFERS,
 	OPEN_SOURCE,
+	NAMED_PARTNERS,
 	PARTNERS,
 	PROCESS,
 	STACK,
@@ -120,7 +121,7 @@ const CITY: Record<PinKey, string> = {
 const LABEL_SIDE: Partial<Record<PinKey, 'left' | 'right'>> = { bengaluru: 'left', ernakulam: 'left' };
 
 const kpis = [
-	{ label: 'Partner organisations', value: PARTNERS.length, display: String(PARTNERS.length), meta: 'named on this page' },
+	{ label: 'Partner organisations', value: NAMED_PARTNERS.length, display: String(NAMED_PARTNERS.length), meta: `named on this page, ${PARTNERS.length - NAMED_PARTNERS.length} more to come` },
 	{ label: 'Pull requests merged into Frappe', value: CONTRIBUTIONS.total, display: '1,043', meta: 'by our team, 2021 to today' },
 	{ label: 'Enrolments in our largest course', value: COURSES[0].learners, display: '18,608', meta: 'on Frappe School' },
 	{ label: 'YouTube subscribers', value: 10.9, display: YOUTUBE.subscribers, decimals: 1, suffix: 'K', meta: `${YOUTUBE.videos} videos, ${YOUTUBE.views} views` },
@@ -958,7 +959,7 @@ const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b bor
 		if (home) animate(home, { opacity: [0, 1], transform: ['scale(0.4)', 'scale(1)'] }, { duration: 0.5, ease: EASE_OUT, delay: 0.2 });
 		animate(arcs, { strokeDashoffset: [1, 0] }, { duration: 0.9, ease: EASE_OUT, delay: stagger(0.12, { startDelay: 0.45 }) });
 		animate(pins, { opacity: [0, 1] }, { duration: 0.35, delay: stagger(0.12, { startDelay: 1.05 }) });
-	}, 0.4);
+	}, 0.85);
 
 	document.querySelectorAll<HTMLElement>('[data-count]').forEach(countUp);
 
