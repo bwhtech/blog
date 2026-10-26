@@ -11,7 +11,6 @@ import { Image } from 'astro:assets';
 import aiPhoto from '../../assets/landing/cs17-ai-presentation.jpg';
 import teachingPhoto from '../../assets/landing/cs17-teaching.jpg';
 import Button from '../../components/landing/Button.astro';
-import FunderStrip from '../../components/landing/FunderStrip.astro';
 import Icon from '../../components/landing/Icon.astro';
 import IntakeCompact from '../../components/landing/IntakeCompact.astro';
 import Logo from '../../components/landing/Logo.astro';
@@ -22,6 +21,7 @@ import {
 	COURSES,
 	CS17,
 	CTA,
+	FUNDERS,
 	HEADLINE,
 	HOME_TOWN,
 	LEGAL_NAME,
@@ -101,6 +101,20 @@ const CHANGES = [
 	{ before: 'Grants in Tally and email', after: 'ERPNext accounts and grants' },
 ];
 
+// Who uses each part, by offer. Same order as OFFERS[].items.
+const WHO: Record<string, string[]> = {
+	systems: ['Leadership', 'Programme team', 'Field team', 'MEL', 'HR', 'Finance'],
+	training: ['Developers', 'HR', 'Finance', 'Developers', 'Everyone'],
+	ai: ['CS17', 'CS17', 'Your team'],
+};
+
+// Sample grantees for the portfolio report.
+const PORTFOLIO = [
+	{ name: 'Grantee A', place: 'Bastar', people: 212, visits: 486 },
+	{ name: 'Grantee B', place: 'Kutch', people: 164, visits: 301 },
+	{ name: 'Grantee C', place: 'Ernakulam', people: 98, visits: 140 },
+];
+
 const maxYear = Math.max(...CONTRIBUTIONS.byYear.map((row) => row.count));
 const checked = new Date(CHECKED_ON).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025em] text-ink-gray-9 sm:text-[34px] [text-wrap:balance]';
@@ -171,6 +185,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 								data-formula={`="${HEADLINE.title}"`}
 								class="merged relative flex flex-col gap-3 px-4 py-5 sm:px-6 sm:py-7"
 							>
+								<span class="merged-frame" data-a-chrome aria-hidden="true"></span>
 								<span class="selection" data-a-chrome aria-hidden="true"><span class="fill-handle"></span></span>
 								<h1
 									id="sheet-title"
@@ -200,7 +215,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 													class:list={['cell', HIDE_ON_MOBILE.has(col) && 'c-hide', label && 'font-medium text-ink-gray-8', value && 'relative font-data']}
 													data-cell={label || value ? '' : undefined}
 													data-ref={value ? 'B7' : label ? 'A7' : undefined}
-													data-formula={value ? '=COUNTIF(E10:E17,"yes")' : label ? 'Visited this month' : undefined}
+													data-formula={value ? '=COUNTIF(E11:E18,"yes")' : label ? 'Visited this month' : undefined}
 												>
 													{label && 'Visited this month'}
 													{value && (
@@ -329,6 +344,8 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 								))}
 							</div>
 
+							<span data-wipe class="wipe-line" aria-hidden="true"></span>
+
 							<!-- The other places the data lives. They fly into "Sources". -->
 							<div class="artifact form-card" data-fly data-i="0" data-rot="2.5" aria-hidden="true">
 								<span class="block h-1.5 rounded-t-[7px] bg-surface-violet-7"></span>
@@ -392,7 +409,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 					<ol class="flex flex-col" data-changes>
 						{CHANGES.map((change) => (
 							<li class="grid grid-cols-[minmax(0,1fr)_2rem_minmax(0,1fr)] items-center gap-2 border-b border-outline-gray-1 py-3.5 first:border-t">
-								<span class="font-data text-[13px] text-ink-gray-6 line-through decoration-outline-gray-4">{change.before}</span>
+								<span class="text-p-sm text-ink-gray-6 line-through decoration-outline-gray-4">{change.before}</span>
 								<Icon name="arrow-right" size={16} class="justify-self-center text-ink-blue-6" />
 								<span class="text-base-medium text-ink-gray-9">{change.after}</span>
 							</li>
@@ -400,19 +417,28 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 					</ol>
 				</section>
 
-				<section id="build" aria-labelledby="build-title" class="flex scroll-mt-24 flex-col gap-10">
-					<h2 id="build-title" class:list={[sectionTitle, 'max-w-[22ch]']}>Tell us the problem. We work out the system with you.</h2>
-					<div class="grid gap-10 md:grid-cols-3 md:gap-0 md:divide-x md:divide-outline-gray-1">
-						{OFFERS.map((offer, index) => (
-							<div class:list={['flex flex-col gap-3', index > 0 && 'md:pl-8', index < 2 && 'md:pr-8']}>
-								<span class:list={['flex size-9 items-center justify-center rounded-5', offer.id === 'systems' ? 'bg-surface-blue-2 text-ink-blue-7' : 'bg-surface-violet-2 text-ink-violet-7']}>
-									<Icon name={offer.id === 'systems' ? 'blocks' : offer.id === 'training' ? 'graduation-cap' : 'sparkles'} size={18} />
-								</span>
-								<h3 class="text-xl font-semibold text-ink-gray-9">{offer.title}</h3>
-								<p class="text-p-base text-ink-gray-6">{offer.summary}</p>
-								<ul class="flex flex-col gap-1.5 pt-1 text-p-sm text-ink-gray-7">
-									{offer.items.map((item) => (
-										<li class="flex gap-2"><Icon name="check" size={14} class="mt-[3px] text-ink-gray-5" />{item}</li>
+				<section id="build" aria-labelledby="build-title" class="flex scroll-mt-24 flex-col gap-6">
+					<div class="flex flex-col gap-2">
+						<h2 id="build-title" class:list={[sectionTitle, 'max-w-[22ch]']}>Tell us the problem. We work out the system with you.</h2>
+						<p class="max-w-[60ch] text-p-base text-ink-gray-6">Everything we build and teach, grouped the way your system would group it.</p>
+					</div>
+					<div class="overflow-hidden rounded-5 border border-outline-gray-1">
+						{OFFERS.map((offer) => (
+							<div class="border-b border-outline-gray-1 last:border-b-0">
+								<div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 bg-surface-gray-1 px-4 py-2 text-sm">
+									<Icon name="chevron-down" size={14} class="text-ink-gray-5" />
+									<h3 class="font-medium text-ink-gray-9">{offer.title}</h3>
+									<span class="font-data text-xs text-ink-gray-5">{offer.items.length}</span>
+									<p class="basis-full pl-[22px] text-p-xs text-ink-gray-6 md:ml-auto md:basis-auto md:pl-0">{offer.summary}</p>
+								</div>
+								<ul class="divide-y divide-outline-gray-1">
+									{offer.items.map((item, index) => (
+										<li class="flex items-center justify-between gap-4 px-4 py-2.5 pl-[38px]">
+											<span class="text-p-sm text-ink-gray-8">{item}</span>
+											<span class:list={['inline-flex h-6 shrink-0 items-center rounded-full px-2 text-xs', offer.id === 'systems' ? 'bg-surface-blue-2 text-ink-blue-8' : 'bg-surface-violet-2 text-ink-violet-8']}>
+												{WHO[offer.id][index]}
+											</span>
+										</li>
 									))}
 								</ul>
 							</div>
@@ -513,7 +539,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 						</ul>
 						<div class="flex flex-col gap-3">
 							<p class="text-p-base text-ink-gray-7">
-								Learners in Hussain's courses on Frappe School. We are an official Frappe School partner, and we run{' '}
+								Enrolments in Hussain's courses on Frappe School, October 2026. We are an official Frappe School partner, and we run{' '}
 								{CS17.name}, an 18-month programme for young women in {HOME_TOWN}.
 							</p>
 							<div class="flex flex-wrap gap-3">
@@ -524,19 +550,60 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 					</div>
 				</section>
 
-				<FunderStrip />
+				<section id="funders" aria-labelledby="funders-title" class="flex scroll-mt-24 flex-col gap-5">
+					<div class="flex flex-col gap-2">
+						<h2 id="funders-title" class={sectionTitle}>{FUNDERS.title}</h2>
+						<p class="max-w-[60ch] text-p-base text-ink-gray-6">{FUNDERS.body}</p>
+					</div>
+					<div class="overflow-hidden rounded-5 border border-outline-gray-1">
+						<div class="flex h-10 items-center gap-1.5 border-b border-outline-gray-1 px-4 text-sm">
+							<span class="text-ink-gray-5">Reports</span>
+							<Icon name="chevron-right" size={13} class="text-ink-gray-4" />
+							<span class="font-medium text-ink-gray-9">All grantees</span>
+							<span class="ml-auto rounded-full bg-surface-gray-2 px-1.5 py-0.5 text-[11px] text-ink-gray-6">Sample</span>
+						</div>
+						<table class="w-full text-left text-sm">
+							<thead>
+								<tr class="bg-surface-gray-1 text-xs text-ink-gray-5">
+									<th scope="col" class="px-4 py-2 font-normal">Grantee</th>
+									<th scope="col" class="px-4 py-2 text-right font-normal">Beneficiaries</th>
+									<th scope="col" class="px-4 py-2 text-right font-normal">Visits this month</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-outline-gray-1">
+								{PORTFOLIO.map((row) => (
+									<tr>
+										<td class="px-4 py-2.5 text-ink-gray-8">{row.name} <span class="text-ink-gray-5">· {row.place}</span></td>
+										<td class="px-4 py-2.5 text-right font-data text-ink-gray-8">{row.people}</td>
+										<td class="px-4 py-2.5 text-right font-data text-ink-gray-8">{row.visits}</td>
+									</tr>
+								))}
+								<tr class="bg-surface-gray-1">
+									<td class="px-4 py-2.5 font-medium text-ink-gray-9">All grantees</td>
+									<td class="px-4 py-2.5 text-right font-data font-medium text-ink-gray-9">{PORTFOLIO.reduce((sum, row) => sum + row.people, 0)}</td>
+									<td class="px-4 py-2.5 text-right font-data font-medium text-ink-gray-9">{PORTFOLIO.reduce((sum, row) => sum + row.visits, 0)}</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="flex flex-wrap items-center justify-between gap-3 border-t border-outline-gray-1 px-4 py-3">
+							<p class="text-p-xs text-ink-gray-6">Every grantee on the same system, so the totals add up.</p>
+							<Button href={CTA.meetHref} variant="outline">Talk about a portfolio <Icon name="arrow-up-right" size={14} /></Button>
+						</div>
+					</div>
+				</section>
 
 				<div class="rounded-5 border border-outline-gray-1 bg-surface-base p-5 sm:p-8">
 					<IntakeCompact />
 				</div>
 
-				<footer class="flex flex-col gap-3 border-t border-outline-gray-1 pt-6 text-sm text-ink-gray-5 sm:flex-row sm:justify-between">
-					<p>{LEGAL_NAME}, {HOME_TOWN}.</p>
-					<nav aria-label="Elsewhere" class="flex flex-wrap gap-4">
-						<a href="/blog" class="underline hover:text-ink-gray-9">Blog</a>
-						<a href={YOUTUBE.href} class="underline hover:text-ink-gray-9">YouTube</a>
-						<a href={OPEN_SOURCE.href} class="underline hover:text-ink-gray-9">GitHub</a>
-					</nav>
+				<footer class="sheet-footer" aria-label="About BWH">
+					<span class="footer-rownum" aria-hidden="true">{TABLE_FIRST_ROW + MESS.length + 1}</span>
+					<span class="footer-cell font-medium text-ink-gray-9">{LEGAL_NAME}</span>
+					<span class="footer-cell">{HOME_TOWN}</span>
+					<a href="/blog" class="footer-cell">Blog</a>
+					<a href={YOUTUBE.href} class="footer-cell">YouTube</a>
+					<a href={OPEN_SOURCE.href} class="footer-cell">GitHub</a>
+					<a href={CTA.meetHref} class="footer-cell">Book a call</a>
 				</footer>
 			</div>
 		</main>
@@ -551,7 +618,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 				))}
 				<span class="flex shrink-0 items-center px-3 text-ink-gray-4" aria-hidden="true">Copy of FINAL (3)</span>
 			</div>
-			<p class="hidden shrink-0 items-center gap-4 border-l border-outline-gray-2 px-4 font-data text-xs text-ink-gray-5 lg:flex">
+			<p class="hidden shrink-0 items-center gap-4 border-l border-outline-gray-2 px-4 font-data text-xs text-ink-gray-5 md:flex">
 				<span>Count: {PARTNERS.length} partners</span>
 				<span>Sum: {CONTRIBUTIONS.total.toLocaleString('en-IN')} PRs merged</span>
 			</p>
@@ -679,9 +746,14 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 		font-weight: 500;
 	}
 	.merged {
+		min-height: calc(5 * var(--row));
+	}
+	.merged-frame {
+		position: absolute;
+		inset: 0;
 		border-right: 1px solid var(--outline-gray-1);
 		border-bottom: 1px solid var(--outline-gray-1);
-		min-height: calc(5 * var(--row));
+		pointer-events: none;
 	}
 	.selection {
 		position: absolute;
@@ -706,6 +778,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 		border-left: 7px solid transparent;
 	}
 	.comment {
+		font-family: InterVar, Inter, ui-sans-serif, system-ui, sans-serif;
 		position: absolute;
 		left: calc(100% - 4px);
 		top: -6px;
@@ -746,6 +819,18 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 	}
 
 	[data-b-layer] {
+		pointer-events: none;
+	}
+	.wipe-line {
+		position: absolute;
+		top: 0;
+		width: 2px;
+		height: calc(var(--row) * 9);
+		margin-left: -1px;
+		background: var(--surface-blue-8);
+		box-shadow: 0 0 0 3px color-mix(in oklch, var(--surface-blue-8) 18%, transparent);
+		opacity: 0;
+		z-index: 4;
 		pointer-events: none;
 	}
 	[data-b-row],
@@ -826,14 +911,54 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 			right: 2%;
 		}
 		.chat {
-			top: 70%;
+			top: 18%;
 			right: 2%;
 		}
 		.terminal {
-			top: calc(100% + 8px);
+			top: 52%;
+			right: 2%;
 		}
 	}
 
+	.sheet-footer {
+		display: grid;
+		grid-template-columns: 2.5rem repeat(6, minmax(0, 1fr));
+		border-top: 1px solid var(--outline-gray-2);
+		border-left: 1px solid var(--outline-gray-2);
+		font-size: 13px;
+	}
+	.footer-rownum,
+	.footer-cell {
+		display: flex;
+		align-items: center;
+		min-height: 36px;
+		padding: 0 0.625rem;
+		border-right: 1px solid var(--outline-gray-2);
+		border-bottom: 1px solid var(--outline-gray-2);
+		color: var(--ink-gray-7);
+	}
+	.footer-rownum {
+		justify-content: center;
+		background: var(--surface-gray-1);
+		font-family: GeistMono, ui-monospace, monospace;
+		font-size: 11px;
+		color: var(--ink-gray-5);
+	}
+	a.footer-cell {
+		text-decoration: underline;
+	}
+	a.footer-cell:hover {
+		background: var(--surface-gray-1);
+		color: var(--ink-gray-9);
+	}
+	@media (max-width: 767px) {
+		.sheet-footer {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+		.footer-rownum {
+			display: none;
+		}
+	}
 	.partner-cols {
 		display: grid;
 		grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr) minmax(0, 0.9fr) minmax(0, 1.6fr);
@@ -897,6 +1022,8 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 	const hdrA = [...header.querySelectorAll<HTMLElement>('[data-hdr-a]')];
 	const hdrB = [...header.querySelectorAll<HTMLElement>('[data-hdr-b]')];
 	const dup = stage.querySelector<HTMLElement>('[data-dup]');
+	const wipe = stage.querySelector<HTMLElement>('[data-wipe]');
+	const chipIcon = sourcesChip.querySelector('svg') ?? sourcesChip;
 	const afterDup = [...stage.querySelectorAll<HTMLElement>('[data-after-dup]')];
 
 	const CAPTIONS = [
@@ -914,7 +1041,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 	let targets: { dx: number; dy: number }[] = [];
 	function measure() {
 		flyers.forEach((el) => (el.style.transform = ''));
-		const chip = sourcesChip.getBoundingClientRect();
+		const chip = chipIcon.getBoundingClientRect();
 		targets = flyers.map((el) => {
 			const box = el.getBoundingClientRect();
 			return {
@@ -932,15 +1059,20 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 		hdrB.forEach((el) => (el.style.opacity = String(ease(seg(p, 0.58, 0.74)))));
 		mess.forEach((el) => (el.style.opacity = String(1 - seg(p, 0.14, 0.24))));
 
+		// Each card travels to the chip's icon and is gone before it arrives, so
+		// the chip never sits under a shrunken card. The count rises as each lands.
+		let merged = 0;
 		flyers.forEach((el, i) => {
-			const t = ease(seg(p, 0.12 + i * 0.05, 0.34 + i * 0.05));
-			const fade = seg(p, 0.28 + i * 0.05, 0.36 + i * 0.05);
+			const travel = seg(p, 0.12 + i * 0.06, 0.32 + i * 0.06);
+			const t = ease(travel);
+			const fade = Math.min(1, Math.max(0, (t - 0.5) / 0.4));
 			const rot = Number(el.dataset.rot ?? 0) * (1 - t);
 			const { dx, dy } = targets[i] ?? { dx: 0, dy: 0 };
-			el.style.transform = `translate(${dx * t}px, ${dy * t}px) rotate(${rot}deg) scale(${1 - 0.8 * t})`;
+			el.style.transform = `translate(${dx * t}px, ${dy * t}px) rotate(${rot}deg) scale(${1 - 0.7 * t})`;
 			el.style.opacity = String(1 - fade);
+			el.style.filter = fade > 0 ? `blur(${fade * 6}px)` : '';
+			if (travel >= 1) merged += 1;
 		});
-		const merged = flyers.filter((_, i) => p >= 0.36 + i * 0.05).length;
 		sourcesText.textContent = `Sources: ${merged} merged`;
 
 		const rowHeight = aRows[0]?.offsetHeight ?? 30;
@@ -951,16 +1083,24 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 			dup.style.transformOrigin = 'top';
 			afterDup.forEach((el) => (el.style.translate = `0 ${-rowHeight * d}px`));
 		}
+		// Sheet rows and list rows share one straight wipe, with the edge line as
+		// its front: left of the line is the system, right of it the sheet.
+		const rowT = (_i: number) => ease(seg(p, 0.42, 0.62));
 		aRows.forEach((el, i) => {
-			const t = ease(seg(p, 0.42 + i * 0.03, 0.54 + i * 0.03));
+			const t = rowT(i);
 			// No clip at rest: it would also clip the comments that hang off a row.
 			el.style.clipPath = t > 0 ? `inset(0 0 0 ${t * 100}%)` : '';
 		});
 		bRows.forEach((el, i) => {
-			const t = ease(seg(p, 0.43 + i * 0.03, 0.55 + i * 0.03));
+			const t = rowT(i);
 			el.style.opacity = t > 0 ? '1' : '0';
 			el.style.clipPath = `inset(0 ${(1 - t) * 100}% 0 0)`;
 		});
+		if (wipe) {
+			const t = rowT(4);
+			wipe.style.left = `${t * 100}%`;
+			wipe.style.opacity = t > 0 && t < 1 ? '1' : '0';
+		}
 		aFades.forEach((el) => {
 			const [from, to] = (el.dataset.aFade ?? '0 1').split(' ').map(Number);
 			el.style.opacity = String(1 - ease(seg(p, from, to)));

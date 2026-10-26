@@ -111,3 +111,9 @@ html[data-motion='on'] [data-reveal] {
 		display: none !important;
 	}
 }
+
+/* One grade for the CS17 photos, so a colour shot never sits beside a
+   black-and-white one. */
+.photo-mono {
+	filter: grayscale(1) contrast(1.04);
+}

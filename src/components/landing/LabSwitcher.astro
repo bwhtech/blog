@@ -1,5 +1,6 @@
 ---
 import { VARIANTS } from '../../data/landing';
+import Icon from './Icon.astro';
 
 interface Props {
 	current: string;
@@ -7,39 +8,44 @@ interface Props {
 }
 
 const { current, offset = 0 } = Astro.props;
-const SHORT: Record<string, string> = {
-	mis: 'MIS',
-	sheet: 'Sheet',
-	'theory-of-change': 'ToC',
-	intake: 'Intake',
-};
+const currentLabel = VARIANTS.find((variant) => variant.slug === current)?.label ?? 'Lab';
+const link =
+	'flex h-7 items-center rounded-full px-2.5 text-sm text-ink-gray-7 no-underline transition-colors hover:bg-surface-gray-2 hover:text-ink-gray-9 aria-[current=page]:bg-surface-gray-10 aria-[current=page]:text-ink-base';
 ---
 
+<!-- Lab chrome only: switches between the landing variants. On phones it
+     folds into one button so it covers as little of the page as it can. -->
 <nav
 	aria-label="Landing page variants"
 	data-print-hide
 	class="lab-chrome fixed right-3 z-40"
 	style={`bottom: ${12 + offset}px`}
 >
-	<div
-		class="flex items-center gap-0.5 rounded-full border border-outline-gray-2 bg-surface-elevation-2 p-1 shadow-lg"
-	>
-		<a
-			href="/lab"
-			class="flex h-7 items-center px-2 text-xs text-ink-gray-5 no-underline transition-colors hover:text-ink-gray-9"
-			>Lab</a
-		>
+	<div class="hidden items-center gap-0.5 rounded-full border border-outline-gray-2 bg-surface-elevation-2 p-1 shadow-lg sm:flex">
+		<a href="/lab" class="flex h-7 items-center px-2 text-xs text-ink-gray-5 no-underline transition-colors hover:text-ink-gray-9">Lab</a>
 		{
 			VARIANTS.map((variant) => (
-				<a
-					href={`/lab/${variant.slug}`}
-					aria-current={variant.slug === current ? 'page' : undefined}
-					class="flex h-7 items-center rounded-full px-2.5 text-sm text-ink-gray-7 no-underline transition-colors hover:bg-surface-gray-2 hover:text-ink-gray-9 aria-[current=page]:bg-surface-gray-10 aria-[current=page]:text-ink-base"
-				>
-					<span class="hidden sm:inline">{variant.label}</span>
-					<span class="sm:hidden">{SHORT[variant.slug]}</span>
+				<a href={`/lab/${variant.slug}`} aria-current={variant.slug === current ? 'page' : undefined} class={link}>
+					{variant.label}
 				</a>
 			))
 		}
 	</div>
+	<details class="group sm:hidden">
+		<summary class="flex h-8 cursor-pointer list-none items-center gap-1.5 rounded-full border border-outline-gray-2 bg-surface-elevation-2 px-3 text-sm text-ink-gray-8 shadow-lg [&::-webkit-details-marker]:hidden">
+			<Icon name="layers" size={14} class="text-ink-gray-5" />
+			{currentLabel}
+			<Icon name="chevron-up" size={14} class="text-ink-gray-5 transition-transform group-open:rotate-180" />
+		</summary>
+		<div class="absolute bottom-10 right-0 flex w-48 flex-col gap-0.5 rounded-5 border border-outline-gray-2 bg-surface-elevation-2 p-1 shadow-xl">
+			<a href="/lab" class="flex h-8 items-center rounded-4 px-2.5 text-sm text-ink-gray-6 no-underline hover:bg-surface-gray-2">All variants</a>
+			{
+				VARIANTS.map((variant) => (
+					<a href={`/lab/${variant.slug}`} aria-current={variant.slug === current ? 'page' : undefined} class="flex h-8 items-center rounded-4 px-2.5 text-sm text-ink-gray-8 no-underline hover:bg-surface-gray-2 aria-[current=page]:bg-surface-gray-2 aria-[current=page]:font-medium">
+						{variant.label}
+					</a>
+				))
+			}
+		</div>
+	</details>
 </nav>

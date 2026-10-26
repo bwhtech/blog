@@ -3,9 +3,17 @@
  *
  * Every number here was checked on 2026-10-26 and carries its source. Copy
  * that only the client can give us (what we built for most partners,
- * outcomes, testimonials, photos) is `TBD`, which the pages render as a
- * visible placeholder rather than filling the gap with invented blurb, the
+ * outcomes, testimonials, partner photos) is `TBD`, which the pages render as
+ * a visible placeholder rather than filling the gap with invented blurb, the
  * same convention as src/data/training.ts.
+ *
+ * Photos in src/assets/landing/ are CS17's own, already published on
+ * cs17.org (source repo NagariaHussain/foss_academy): cs17-students.jpg is
+ * src/assets/landing/hero.png, cs17-ai-presentation.jpg is
+ * posts/_assets/week-13/team-presentation-1.jpg, cs17-teaching.jpg is
+ * posts/_assets/week-1/internet-lecture.png and cs17-planning.jpg is
+ * posts/_assets/05/blackboard.jpg. Resized only. Confirm consent before the
+ * page goes public.
  */
 export { TBD } from './training';
 import { TBD } from './training';
@@ -63,7 +71,11 @@ export const OPEN_SOURCE = {
 	highlights: ['Buzz', 'Nano Press', 'Commera', 'Forms Pro', 'Batwara'],
 };
 
-/** Frappe School courses taught by Hussain. Never add these up: one learner can take several. */
+/**
+ * Frappe School courses taught by Hussain. `learners` is the enrolment count
+ * the school shows: call it enrolments on the page, and never add them up,
+ * since one person can take several courses.
+ */
 export const COURSES = [
 	{ title: 'Full-stack App Development with Frappe Framework', learners: 18608 },
 	{ title: 'VueJS, TailwindCSS & FrappeUI', learners: 1996 },
@@ -111,9 +123,9 @@ export const PARTNERS: Partner[] = [
 		sector: 'Homeless care',
 		place: 'Bengaluru and Chennai',
 		pins: ['bengaluru', 'chennai'],
-		work: 'Frappe Changemakers: beneficiary and case management for the homeless care programme. Field workers log rescues, cases, food distribution and shelter admissions.',
+		work: 'Frappe Changemakers, which our founder built with Umair at Frappe in 2022, before BWH: beneficiary and case management for the homeless care programme. Field workers log rescues, cases, food distribution and shelter admissions. The Foundation also funds CS17.',
 		problem: TBD,
-		outcome: 'Used to manage thousands of beneficiaries (BWH blog, July 2025).',
+		outcome: 'Frappe Changemakers, built by our founder at Frappe before BWH, manages thousands of beneficiaries (BWH blog, July 2025).',
 		quote: TBD,
 		kind: 'Build',
 		link: { label: 'github.com/frappe/changemakers · AGPL-3.0', href: 'https://github.com/frappe/changemakers' },
@@ -188,7 +200,7 @@ export const PARTNERS: Partner[] = [
 		id: 'oasis',
 		name: 'OASIS Network',
 		fullName: 'Open-source Alliance for Social Innovation & Sustainability',
-		sector: 'Open source for social good',
+		sector: 'Open source',
 		place: 'National network',
 		pins: [],
 		work: 'Partner in the network of organisations putting open-source software to work for social development.',
@@ -288,7 +300,7 @@ export type ProblemId = (typeof PROBLEMS)[number]['id'];
 
 export const FUNDERS = {
 	title: 'Funding a portfolio of grantees?',
-	body: 'Give every grantee the same system and see one view across all of them. Azim Premji Foundation funds both Frappe Changemakers and CS17.',
+	body: 'Give every grantee the same system and see one view across all of them. Azim Premji Foundation funds CS17, and Frappe Changemakers manages thousands of beneficiaries in its homeless care programme.',
 };
 
 export const FAQ = [

@@ -48,11 +48,24 @@ const MODULE_ICON: Record<string, string> = {
 
 // What we have done that is closest to each problem. Only Changemakers and
 // CS17 are public; the rest wait for partners to confirm.
+const CHANGEMAKERS = 'Frappe Changemakers, which our founder built at Frappe before BWH for Azim Premji Foundation';
 const CLOSEST: Record<string, string> = {
-	sheets: 'Frappe Changemakers: one record per beneficiary, for Azim Premji Foundation',
-	forms: 'Frappe Changemakers: field workers log rescues and visits on their phones',
-	trust: 'Frappe Changemakers: cases and services in one place, for Azim Premji Foundation',
-	team: 'CS17: we train people to build and run software, in Jagdalpur',
+	sheets: `Closest work: ${CHANGEMAKERS}. One record per beneficiary.`,
+	forms: `Closest work: ${CHANGEMAKERS}. Field workers log rescues and visits on their phones.`,
+	trust: `Closest work: ${CHANGEMAKERS}. Cases and services in one place.`,
+	team: 'Closest work: CS17, where we train people in Jagdalpur to build and run software.',
+};
+
+// One line per part, for the overview once several are picked.
+const TILE: Record<string, string> = {
+	sheets: 'One record per person',
+	forms: 'Filled in on the phone',
+	reports: 'In the funder’s format',
+	trust: 'The same figures for everyone',
+	script: 'Rules you can read',
+	hr: 'Leave, attendance, salary',
+	accounts: 'A budget per grant',
+	team: 'Your people teach your people',
 };
 
 const SAMPLE_PEOPLE = [
@@ -85,7 +98,8 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 				<span data-status class="inline-flex h-6 items-center gap-1.5 rounded-full bg-surface-gray-2 px-2 text-xs font-medium text-ink-gray-7" aria-live="polite">
 					<span class="size-1.5 rounded-full bg-current opacity-70"></span>
 					<span data-status-text>Draft</span>
-				</span>
+					</span>
+					<span data-ticket-head class="hidden font-data text-xs text-ink-gray-5 md:inline">New request</span>
 				<div class="ml-auto flex items-center gap-2">
 					<Button href={CTA.meetHref} variant="ghost" class="max-sm:hidden">{CTA.secondary}</Button>
 					<Button href="#tell-us" variant="primary">Send request</Button>
@@ -93,7 +107,18 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 			</div>
 		</header>
 
-		<main id="main-content">
+		<a
+				href="#system"
+				data-tray
+				hidden
+				class="fixed inset-x-0 top-14 z-20 flex items-center gap-2 border-b border-outline-blue-2 bg-surface-blue-1 px-4 py-2 text-sm text-ink-blue-8 no-underline shadow-sm lg:!hidden"
+			>
+				<Icon name="blocks" size={15} />
+				<span data-tray-text class="min-w-0 flex-1 truncate">Your system</span>
+				<span class="shrink-0 font-medium underline">View</span>
+			</a>
+
+			<main id="main-content">
 			<!-- First viewport: the question, and the system it builds. -->
 			<section aria-labelledby="intake-title" class="mx-auto grid max-w-[1280px] gap-10 px-4 pb-16 pt-10 sm:px-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-12 lg:pt-14">
 				<div class="flex flex-col gap-7">
@@ -105,7 +130,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 					</div>
 					<fieldset class="flex flex-col gap-3">
 						<legend class="mb-3 text-xl font-semibold text-ink-gray-9">What's breaking?</legend>
-						<p class="-mt-1 text-p-sm text-ink-gray-5">Pick everything that sounds familiar. Your system builds itself on the right.</p>
+						<p class="-mt-1 text-p-sm text-ink-gray-5">Pick everything that sounds familiar. Your system builds itself as you pick.</p>
 						<div class="flex flex-wrap gap-2 pt-1">
 							{PROBLEMS.map((problem) => <ProblemChip id={problem.id} label={problem.label} form={FORM} size="lg" />)}
 						</div>
@@ -116,7 +141,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 				</div>
 
 				<!-- The system, assembling. -->
-				<div class="field relative flex flex-col gap-4 rounded-6 p-3 sm:p-5 lg:sticky lg:top-20 lg:self-start" data-field>
+				<div id="system" class="field relative flex scroll-mt-28 flex-col gap-4 rounded-6 p-3 sm:p-5 lg:sticky lg:top-20 lg:self-start" data-field>
 					<div class="window overflow-hidden rounded-5 bg-surface-base shadow-xl">
 						<div class="flex h-10 items-center gap-2 border-b border-outline-gray-1 px-3">
 							<span class="text-sm font-medium text-ink-gray-9">Your system</span>
@@ -125,20 +150,45 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 						</div>
 						<div class="grid min-h-[360px] grid-cols-[12rem_minmax(0,1fr)] max-sm:grid-cols-1">
 							<nav aria-label="Parts of your system" class="flex flex-col gap-0.5 border-r border-outline-gray-1 bg-surface-gray-1 p-2 max-sm:flex-row max-sm:flex-wrap max-sm:border-b max-sm:border-r-0">
+								<button type="button" data-overview hidden class="module-item flex h-8 items-center gap-2 rounded-4 px-2 text-left text-sm text-ink-gray-7 transition-colors hover:bg-surface-gray-2 aria-[current=true]:bg-surface-base aria-[current=true]:text-ink-gray-9 aria-[current=true]:shadow-sm">
+									<Icon name="layout-grid" size={14} class="text-ink-gray-5" />
+									<span class="truncate">Overview</span>
+								</button>
 								{PROBLEMS.map((problem) => (
-									<button type="button" data-module={problem.id} hidden class="module-item flex h-8 items-center gap-2 rounded-4 px-2 text-left text-sm text-ink-gray-7 transition-colors hover:bg-surface-gray-2 aria-[current=true]:bg-surface-base aria-[current=true]:text-ink-gray-9 aria-[current=true]:shadow-sm">
+									<button type="button" data-module={problem.id} disabled class="module-item flex h-8 items-center gap-2 rounded-4 px-2 text-left text-sm text-ink-gray-7 transition-[background-color,color,opacity] duration-200 hover:bg-surface-gray-2 disabled:cursor-default disabled:opacity-35 disabled:hover:bg-transparent aria-[current=true]:bg-surface-base aria-[current=true]:text-ink-gray-9 aria-[current=true]:shadow-sm">
 										<Icon name={MODULE_ICON[problem.icon]} size={14} class="text-ink-gray-5" />
 										<span class="truncate">{problem.module}</span>
 									</button>
 								))}
-								<p data-module-empty class="px-2 py-1.5 text-xs text-ink-gray-5">Nothing yet</p>
 							</nav>
 
 							<div class="relative min-w-0 p-4">
-								<div data-preview="empty" class="flex h-full min-h-[320px] flex-col items-center justify-center gap-3 rounded-5 border border-dashed border-outline-gray-3 text-center">
-									<span class="flex size-10 items-center justify-center rounded-full bg-surface-gray-2 text-ink-gray-5"><Icon name="mouse-pointer-click" size={18} /></span>
-									<p class="text-base text-ink-gray-7">Pick what is breaking.</p>
-									<p class="max-w-[30ch] text-p-sm text-ink-gray-5">Each problem adds the part of the system that fixes it.</p>
+								<div data-preview="empty" class="flex h-full min-h-[320px] flex-col gap-3" aria-label="Your system, empty">
+									<span class="h-4 w-36 rounded-4 bg-surface-gray-2"></span>
+									<span class="grid grid-cols-3 gap-2">
+										{[0, 1, 2].map(() => <span class="h-12 rounded-4 bg-surface-gray-1" />)}
+									</span>
+									<span class="flex flex-col gap-2 rounded-4 border border-outline-gray-1 p-3">
+										{[72, 58, 64, 46].map((width) => (
+											<span class="flex items-center gap-2"><span class="size-5 rounded-full bg-surface-gray-2" /><span class="h-2.5 rounded-full bg-surface-gray-2" style={`width: ${width}%`} /></span>
+										))}
+									</span>
+									<p class="mt-auto text-center text-p-sm text-ink-gray-6">Pick what is breaking. Each problem lights up the part that fixes it.</p>
+								</div>
+
+								<div data-preview="overview" hidden class="flex flex-col gap-3">
+									<p class="text-base-semibold text-ink-gray-9">Your system so far</p>
+									<ul class="grid gap-2 sm:grid-cols-2">
+										{PROBLEMS.map((problem) => (
+											<li data-tile={problem.id} hidden>
+												<button type="button" data-open={problem.id} class="flex w-full items-start gap-2.5 rounded-4 border border-outline-gray-1 bg-surface-base p-3 text-left transition-[border-color,box-shadow] duration-200 hover:border-outline-gray-3 data-[new]:border-outline-blue-3 data-[new]:shadow-[0_0_0_3px_var(--outline-blue-1)]">
+													<span class="flex size-7 shrink-0 items-center justify-center rounded-4 bg-surface-blue-2 text-ink-blue-7"><Icon name={MODULE_ICON[problem.icon]} size={14} /></span>
+													<span class="flex min-w-0 flex-col"><span class="text-sm font-medium text-ink-gray-9">{problem.module}</span><span class="text-xs text-ink-gray-6">{TILE[problem.id]}</span></span>
+												</button>
+											</li>
+										))}
+									</ul>
+									<p class="text-xs text-ink-gray-5">One system: a beneficiary, a visit and a payment are the same record in every part.</p>
 								</div>
 
 								<!-- One preview per part. Sample content, labelled so. -->
@@ -318,11 +368,11 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 						<h2 id="who-title" class={sectionTitle}>Who you would be working with</h2>
 						<p class="max-w-[54ch] text-p-lg text-ink-gray-6">
 							A team of problem solvers in {HOME_TOWN}. We build on an open-source stack and help build it: our team has{' '}
-							<span class="font-data text-ink-gray-9">{CONTRIBUTIONS.total.toLocaleString('en-IN')}</span> pull requests merged
-							into Frappe's repositories.
+							<span class="tabular-nums text-ink-gray-9">{CONTRIBUTIONS.total.toLocaleString('en-IN')}</span> pull requests merged
+								into Frappe's repositories (<a href="https://github.com/frappe" class="underline hover:text-ink-gray-9">GitHub</a>, October 2026).
 						</p>
-						<ul class="flex flex-wrap gap-x-5 gap-y-2">
-							{STACK.map((item) => (
+						<ul class="flex flex-wrap gap-x-4 gap-y-2">
+								{STACK.map((item) => (
 								<li class="flex items-center gap-2 text-sm text-ink-gray-8"><img src={item.src} alt="" width="20" height="20" class="size-5" />{item.label}</li>
 							))}
 						</ul>
@@ -345,7 +395,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 							<div class="flex flex-col gap-1.5">
 								<h3 class="text-base-semibold text-ink-gray-9">{OFFERS[2].title}</h3>
 								<p class="text-p-sm text-ink-gray-6">{OFFERS[2].summary}</p>
-								<p class="text-xs text-ink-gray-5">{COURSES[0].learners.toLocaleString('en-IN')} learners in our largest course · {YOUTUBE.subscribers} on YouTube</p>
+								<p class="text-xs text-ink-gray-5">{COURSES[0].learners.toLocaleString('en-IN')} enrolments in our largest Frappe School course · {YOUTUBE.subscribers} YouTube subscribers · October 2026</p>
 							</div>
 						</div>
 					</div>
@@ -354,13 +404,13 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 							<Image src={studentsPhoto} alt="CS17 students working together on laptops" widths={[640, 960, 1280]} sizes="(min-width: 1024px) 600px, 100vw" class="aspect-[16/9] w-full rounded-5 object-cover" />
 						</figure>
 						<figure class="flex flex-col gap-2">
-							<Image src={aiPhoto} alt="Two CS17 students present a game, with a slide that says they used AI tools to make its graphics" widths={[360, 540]} sizes="(min-width: 1024px) 300px, 50vw" class="aspect-[4/3] w-full rounded-5 object-cover" />
+							<Image src={aiPhoto} alt="Two CS17 students present a game, with a slide that says they used AI tools to make its graphics" widths={[360, 540]} sizes="(min-width: 1024px) 300px, 50vw" class="photo-mono aspect-[4/3] w-full rounded-5 object-cover" />
 						</figure>
-						<figcaption class="flex flex-col justify-end gap-1 pb-1 text-p-sm text-ink-gray-6">
+						<div class="flex flex-col justify-start gap-1 text-p-sm text-ink-gray-6">
 							<span class="text-base-medium text-ink-gray-9">{CS17.name}, our own programme</span>
 							Young women in {HOME_TOWN} learn to build software for 18 months, fully funded. Here, students present a game they made with AI tools.{' '}
 							<a href={CS17.href} class="text-sm text-ink-gray-8 underline hover:text-ink-gray-9">cs17.org</a>
-						</figcaption>
+						</div>
 					</div>
 				</section>
 
@@ -414,14 +464,23 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 			</div>
 		</main>
 
-		<footer class="border-t border-outline-gray-1">
-			<div class="mx-auto flex max-w-[1280px] flex-col gap-3 px-4 py-6 text-sm text-ink-gray-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-				<p>{LEGAL_NAME}, {HOME_TOWN}.</p>
-				<nav aria-label="Elsewhere" class="flex flex-wrap gap-4">
+		<footer class="border-t border-outline-gray-1 bg-surface-gray-1">
+			<div class="mx-auto flex max-w-[1280px] flex-wrap items-center gap-x-5 gap-y-3 px-4 py-5 sm:px-6">
+				<span data-status-footer class="inline-flex h-6 items-center gap-1.5 rounded-full bg-surface-gray-2 px-2 text-xs font-medium text-ink-gray-7">
+					<span class="size-1.5 rounded-full bg-current opacity-70"></span>
+					<span data-status-footer-text>Draft</span>
+				</span>
+				<span data-ticket-foot class="font-data text-xs text-ink-gray-5">New request</span>
+				<div class="flex items-center gap-2">
+					<Button href="#tell-us" variant="primary">Send request</Button>
+					<Button href={CTA.meetHref} variant="ghost">{CTA.secondary}</Button>
+				</div>
+				<p class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-gray-5 md:ml-auto">
+					<span>{LEGAL_NAME}, {HOME_TOWN}</span>
 					<a href="/blog" class="underline hover:text-ink-gray-9">Blog</a>
 					<a href={YOUTUBE.href} class="underline hover:text-ink-gray-9">YouTube</a>
 					<a href={OPEN_SOURCE.href} class="underline hover:text-ink-gray-9">GitHub</a>
-				</nav>
+				</p>
 			</div>
 		</footer>
 	</div>
@@ -452,7 +511,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 </style>
 
 <script>
-	import { animate } from 'motion';
+	import { animate, stagger } from 'motion';
 	import { initIntake, pickedProblems } from '../../scripts/landing/intake';
 	import { boot, EASE_OUT, motionAllowed } from '../../scripts/landing/motion';
 
@@ -461,20 +520,32 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 	const form = document.querySelector<HTMLFormElement>('#intake-form')!;
 	const closest = JSON.parse(document.querySelector('#intake-closest')?.textContent ?? '{}') as Record<string, string>;
 	const modules = [...document.querySelectorAll<HTMLButtonElement>('[data-module]')];
+	const overviewButton = document.querySelector<HTMLButtonElement>('[data-overview]')!;
 	const previews = [...document.querySelectorAll<HTMLElement>('[data-preview]')];
+	const tiles = [...document.querySelectorAll<HTMLElement>('[data-tile]')];
 	const count = document.querySelector('[data-module-count]')!;
-	const empty = document.querySelector<HTMLElement>('[data-module-empty]')!;
 	const closestText = document.querySelector('[data-closest-text]')!;
-	const status = document.querySelector<HTMLElement>('[data-status]')!;
-	const statusText = document.querySelector('[data-status-text]')!;
-	const ticketStatus = document.querySelector<HTMLElement>('[data-ticket-status]')!;
+	const field = document.querySelector<HTMLElement>('[data-field]')!;
+	const tray = document.querySelector<HTMLAnchorElement>('[data-tray]')!;
+	const trayText = document.querySelector('[data-tray-text]')!;
 	const ticketList = document.querySelector('[data-ticket-list]')!;
 	const summary = document.querySelector('[data-summary]')!;
 	const contact = form.elements.namedItem('contact') as HTMLInputElement;
 
+	const moduleName = (id: string) => modules.find((m) => m.dataset.module === id)?.textContent?.trim() ?? id;
 	const label = (id: string) => document.querySelector(`[data-problem-label="${id}"]`)?.textContent?.trim() ?? id;
 	const DEFAULT_CLOSEST = closestText.textContent ?? '';
 	const EMPTY_SUMMARY = [...summary.childNodes].map((node) => node.cloneNode(true));
+
+	// The request has a number from the moment the page opens.
+	const ticket = `BWH-${String(Math.floor(1000 + Math.random() * 9000))}`;
+	document.querySelectorAll('[data-ticket-head], [data-ticket-foot]').forEach((el) => (el.textContent = `${ticket} · created just now`));
+	const ticketId = document.querySelector('[data-ticket-id]');
+	if (ticketId) ticketId.textContent = ticket;
+
+	let pickedCount = 0;
+	let fieldVisible = true;
+	const syncTray = () => (tray.hidden = pickedCount === 0 || fieldVisible);
 
 	let shown = 'empty';
 	function show(id: string) {
@@ -483,57 +554,75 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 		if (!next) return;
 		previews.forEach((preview) => (preview.hidden = preview !== next));
 		modules.forEach((module) => module.setAttribute('aria-current', String(module.dataset.module === id)));
+		overviewButton.setAttribute('aria-current', String(id === 'overview'));
 		if (motionAllowed()) {
-			animate(next, { opacity: [0, 1], transform: ['translateY(8px) scale(0.99)', 'translateY(0) scale(1)'] }, { duration: 0.35, ease: EASE_OUT });
+			animate(next, { opacity: [0, 1], transform: ['translateY(6px)', 'translateY(0)'] }, { duration: 0.3, ease: EASE_OUT });
 		}
 		shown = id;
-		closestText.textContent = closest[id] ?? DEFAULT_CLOSEST;
 	}
 
-	function setStatus(tone: 'gray' | 'blue' | 'green', text: string) {
-		const tones = {
-			gray: ['bg-surface-gray-2', 'text-ink-gray-7'],
-			blue: ['bg-surface-blue-2', 'text-ink-blue-8'],
-			green: ['bg-surface-green-2', 'text-ink-green-8'],
-		};
-		for (const element of [status, ticketStatus]) {
-			Object.values(tones).flat().forEach((name) => element.classList.remove(name));
-			element.classList.add(...tones[tone]);
-		}
-		statusText.textContent = text;
-		ticketStatus.textContent = text;
+	// The signature: a picked chip's label flies to its slot in the system.
+	function fly(id: string) {
+		const chip = document.querySelector<HTMLElement>(`[data-problem-label="${id}"]`)?.parentElement;
+		const slot = modules.find((module) => module.dataset.module === id);
+		if (!chip || !slot || !motionAllowed() || matchMedia('(max-width: 1023px)').matches) return;
+		const from = chip.getBoundingClientRect();
+		const to = slot.getBoundingClientRect();
+		const ghost = document.createElement('span');
+		ghost.textContent = moduleName(id);
+		ghost.className = 'fixed z-50 rounded-full bg-surface-blue-9 px-3 py-1 text-sm font-medium text-ink-base shadow-lg pointer-events-none';
+		ghost.style.left = `${from.left}px`;
+		ghost.style.top = `${from.top}px`;
+		document.body.append(ghost);
+		const dx = to.left - from.left;
+		const dy = to.top - from.top;
+		animate(
+			ghost,
+			{ transform: ['translate(0, 0) scale(1)', `translate(${dx}px, ${dy}px) scale(0.85)`], opacity: [1, 1, 0] },
+			{ duration: 0.55, ease: EASE_OUT },
+		).then(() => {
+			ghost.remove();
+			animate(slot, { backgroundColor: ['var(--surface-blue-2)', 'rgba(0,0,0,0)'] }, { duration: 0.6 });
+		});
 	}
 
 	function refresh(picked: string[], added?: string) {
-		modules.forEach((module) => {
-			const on = picked.includes(module.dataset.module!);
-			const wasHidden = module.hidden;
-			module.hidden = !on;
-			if (on && wasHidden && motionAllowed()) {
-				animate(module, { opacity: [0, 1], transform: ['translateX(-6px)', 'translateX(0)'] }, { duration: 0.3, ease: EASE_OUT });
-			}
+		modules.forEach((module) => (module.disabled = !picked.includes(module.dataset.module!)));
+		overviewButton.hidden = picked.length < 2;
+		tiles.forEach((tile) => {
+			tile.hidden = !picked.includes(tile.dataset.tile!);
+			tile.querySelector('button')?.toggleAttribute('data-new', tile.dataset.tile === added);
 		});
-		empty.hidden = picked.length > 0;
 		count.textContent = `${picked.length} ${picked.length === 1 ? 'part' : 'parts'}`;
 
+		// One part: show it. Several: show the system as a whole, newest marked.
 		if (!picked.length) show('empty');
-		else if (added && picked.includes(added)) show(added);
-		else if (!picked.includes(shown)) show(picked[picked.length - 1]);
+		else if (picked.length === 1) show(picked[0]);
+		else show('overview');
+		if (added) fly(added);
 
-		const items = picked.map(label);
+		const newest = added ?? picked[picked.length - 1];
+		closestText.textContent = (newest && closest[newest]) ?? DEFAULT_CLOSEST;
+
+		pickedCount = picked.length;
+		syncTray();
+		trayText.textContent = picked.length
+			? `Your system · ${picked.length} ${picked.length === 1 ? 'part' : 'parts'} · newest: ${moduleName(newest)}`
+			: 'Your system';
+
 		ticketList.replaceChildren(
-			...(items.length ? items : ['Nothing picked yet']).map((text) => {
+			...(picked.length ? picked.map((id) => `Added ${moduleName(id)}`) : ['Nothing picked yet']).map((text) => {
 				const li = document.createElement('li');
-				li.textContent = items.length ? `· ${text}` : text;
+				li.textContent = text;
 				return li;
 			}),
 		);
-		if (items.length) {
+		if (picked.length) {
 			summary.classList.add('list-disc', 'pl-5');
 			summary.replaceChildren(
-				...items.map((text) => {
+				...picked.map((id) => {
 					const li = document.createElement('li');
-					li.textContent = text;
+					li.textContent = label(id);
 					return li;
 				}),
 			);
@@ -544,6 +633,18 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 		updateStatus(picked);
 	}
 
+	const TONES = {
+		gray: ['bg-surface-gray-2', 'text-ink-gray-7'],
+		blue: ['bg-surface-blue-2', 'text-ink-blue-8'],
+		green: ['bg-surface-green-2', 'text-ink-green-8'],
+	};
+	function setStatus(tone: keyof typeof TONES, text: string) {
+		document.querySelectorAll<HTMLElement>('[data-status], [data-status-footer], [data-ticket-status]').forEach((element) => {
+			Object.values(TONES).flat().forEach((name) => element.classList.remove(name));
+			element.classList.add(...TONES[tone]);
+		});
+		document.querySelectorAll('[data-status-text], [data-status-footer-text], [data-ticket-status]').forEach((el) => (el.textContent = text));
+	}
 	function updateStatus(picked = pickedProblems(form)) {
 		if (contact.value.trim() && picked.length) setStatus('green', 'Ready to send');
 		else if (picked.length) setStatus('blue', `${picked.length} ${picked.length === 1 ? 'problem' : 'problems'}`);
@@ -558,10 +659,25 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 	});
 	contact.addEventListener('input', () => updateStatus());
 	modules.forEach((module) => module.addEventListener('click', () => show(module.dataset.module!)));
+	overviewButton.addEventListener('click', () => show('overview'));
+	document.querySelectorAll<HTMLButtonElement>('[data-open]').forEach((button) => button.addEventListener('click', () => show(button.dataset.open!)));
 
-	form.addEventListener('intake:sent', () => {
-		const id = document.querySelector('[data-ticket-id]');
-		if (id) id.textContent = `BWH-${String(Math.floor(1000 + Math.random() * 9000))}`;
-		setStatus('green', 'Sent');
-	});
+	// The tray only shows while the system itself is off screen.
+	new IntersectionObserver(
+		([entry]) => {
+			fieldVisible = entry.isIntersecting;
+			syncTray();
+		},
+		{ threshold: 0.25 },
+	).observe(field);
+
+	// Once, on arrival: the faint parts light up in turn, showing what the
+	// window will become.
+	if (motionAllowed()) {
+		animate(modules, { opacity: [0.35, 1, 0.35] }, { duration: 0.9, delay: stagger(0.08, { startDelay: 0.5 }), ease: 'easeInOut' }).then(() =>
+			modules.forEach((module) => (module.style.opacity = '')),
+		);
+	}
+
+	form.addEventListener('intake:sent', () => setStatus('green', 'Sent'));
 </script>

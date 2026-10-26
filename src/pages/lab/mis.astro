@@ -120,9 +120,9 @@ const CITY: Record<PinKey, string> = {
 const LABEL_SIDE: Partial<Record<PinKey, 'left' | 'right'>> = { bengaluru: 'left', ernakulam: 'left' };
 
 const kpis = [
-	{ label: 'Partner organisations', value: PARTNERS.length, display: String(PARTNERS.length), meta: 'named here, plus smaller teams' },
+	{ label: 'Partner organisations', value: PARTNERS.length, display: String(PARTNERS.length), meta: 'named on this page' },
 	{ label: 'Pull requests merged into Frappe', value: CONTRIBUTIONS.total, display: '1,043', meta: 'by our team, 2021 to today' },
-	{ label: 'Learners in our largest course', value: COURSES[0].learners, display: '18,608', meta: 'on Frappe School' },
+	{ label: 'Enrolments in our largest course', value: COURSES[0].learners, display: '18,608', meta: 'on Frappe School' },
 	{ label: 'YouTube subscribers', value: 10.9, display: YOUTUBE.subscribers, decimals: 1, suffix: 'K', meta: `${YOUTUBE.videos} videos, ${YOUTUBE.views} views` },
 ];
 
@@ -135,7 +135,7 @@ const activity = [
 
 const SOURCES = [
 	{ name: 'GitHub, frappe/* repositories', backs: 'Pull requests', href: 'https://github.com/frappe' },
-	{ name: 'Frappe School', backs: 'Learners', href: 'https://school.frappe.io/lms/courses' },
+	{ name: 'Frappe School', backs: 'Enrolments', href: 'https://school.frappe.io/lms/courses' },
 	{ name: 'YouTube, @BuildWithHussain', backs: 'Subscribers', href: YOUTUBE.href },
 	{ name: 'cs17.org', backs: 'CS17', href: CS17.href },
 	{ name: 'BWH blog', backs: 'Changemakers, BWH Studios', href: '/blog/announcements/introducing-bwh-studios/' },
@@ -172,7 +172,7 @@ const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b bor
 	description="BWH builds systems for nonprofits: MIS, dashboards, case management, and training for your team."
 	variant="mis"
 >
-	<div class="mis lg:grid lg:grid-cols-[15rem_minmax(0,1fr)]">
+	<div class="mis lg:grid lg:grid-cols-[14rem_minmax(0,1fr)]">
 		<!-- Sidebar: the page's navigation, drawn as the MIS workspace. -->
 		<aside
 			data-print-hide
@@ -227,11 +227,8 @@ const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b bor
 						<Icon name="chevron-right" size={14} class="text-ink-gray-4 max-lg:hidden" />
 						<span class="text-ink-gray-9">Impact report</span>
 					</nav>
-					<span
-						class="hidden h-7 items-center gap-1.5 rounded-4 border border-outline-gray-2 px-2 text-sm text-ink-gray-7 md:inline-flex"
-					>
-						<Icon name="calendar" size={14} class="text-ink-gray-5" />
-						<span class="font-data">2021 – {new Date(CHECKED_ON).getFullYear()}</span>
+					<span class="hidden text-sm text-ink-gray-5 md:inline">
+						Reporting period <span class="font-data text-ink-gray-7">2021 – {new Date(CHECKED_ON).getFullYear()}</span>
 					</span>
 					<div class="ml-auto flex items-center gap-2" data-print-hide>
 						<Button data-print variant="ghost" class="max-sm:hidden">
@@ -379,7 +376,7 @@ const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b bor
 						<div class:list={[panel, 'flex flex-col']}>
 							<div class={panelHead}>
 								<h2 class="text-base-semibold text-ink-gray-9">Activity</h2>
-								<span class="flex items-center gap-1.5 text-xs text-ink-gray-5"><span class="live-dot" aria-hidden="true"></span>Live</span>
+								<span class="font-data text-xs text-ink-gray-5">checked {checked}</span>
 							</div>
 							<ol class="flex flex-col px-4 py-2">
 								{
@@ -425,7 +422,7 @@ const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b bor
 					<div class="flex flex-col gap-1">
 						<h2 id="field-title" class="text-2xl font-semibold tracking-[-0.01em] text-ink-gray-9">Systems in the field</h2>
 						<p class="max-w-[62ch] text-p-base text-ink-gray-6">
-							Organisations we have worked with over the past year and a half. Pick a row for the details.
+							Organisations we have worked with, and the programme we run ourselves. Pick a row for the details.
 						</p>
 					</div>
 
@@ -458,22 +455,22 @@ const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b bor
 											data-row={row.id}
 											data-sector={row.sector}
 											aria-haspopup="dialog"
-											class="mis-cols group w-full items-center px-3 py-2.5 text-left transition-colors hover:bg-surface-gray-1 focus-visible:bg-surface-gray-1 md:h-14 md:py-0"
+											class="mis-cols group w-full items-center px-3 py-2.5 text-left transition-colors hover:bg-surface-gray-1 focus-visible:bg-surface-gray-1 md:min-h-14 md:py-2.5"
 										>
 											<span class="flex min-w-0 flex-col">
-												<span class="truncate text-base-medium text-ink-gray-9">
+												<span class="text-base-medium text-ink-gray-9">
 													{isTBD(row.name) ? <Tbd note="partner name" /> : row.name}
 												</span>
 												{row.fullName && (
-													<span class="truncate text-xs text-ink-gray-5">
+													<span class="text-xs text-ink-gray-5">
 														{isTBD(row.fullName) ? <Tbd note="full name" /> : row.fullName}
 													</span>
 												)}
 											</span>
 											<span class="max-md:hidden">
-												{isTBD(row.sector) ? <Tbd /> : <span class="inline-flex h-6 items-center rounded-4 bg-surface-gray-2 px-1.5 text-sm text-ink-gray-7">{row.sector}</span>}
+												{isTBD(row.sector) ? <Tbd /> : <span class="inline-flex h-6 items-center whitespace-nowrap rounded-4 bg-surface-gray-2 px-1.5 text-sm text-ink-gray-7">{row.sector}</span>}
 											</span>
-											<span class="truncate text-sm text-ink-gray-6 max-md:hidden">{isTBD(row.place) ? <Tbd /> : row.place}</span>
+											<span class="text-sm text-ink-gray-6 max-md:hidden">{isTBD(row.place) ? <Tbd /> : row.place}</span>
 											<span class="min-w-0 text-sm text-ink-gray-7 max-md:col-span-2 max-md:mt-1">
 												{isTBD(row.work) ? <Tbd note="what we built" /> : <span class="line-clamp-2 md:line-clamp-1">{row.work}</span>}
 											</span>
@@ -551,7 +548,7 @@ const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b bor
 														data-gantt-bar
 														class:list={[
 															'absolute inset-y-0 origin-left rounded-4',
-															step.id === 'train' ? 'bg-surface-violet-3' : step.id === 'handover' ? 'bg-surface-green-3' : 'bg-surface-blue-3',
+															step.id === 'train' ? 'bg-surface-violet-3' : step.id === 'handover' ? 'bg-surface-blue-5' : 'bg-surface-blue-3',
 														]}
 														style={`left: ${start * 100}%; width: ${(end - start) * 100}%`}
 													/>
@@ -647,7 +644,7 @@ const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b bor
 					<figure class:list={[panel, 'flex flex-col']}>
 						<figcaption class={panelHead}>
 							<span class="text-base-semibold text-ink-gray-9">Our courses on Frappe School</span>
-							<span class="text-xs text-ink-gray-5">Learners</span>
+							<span class="text-xs text-ink-gray-5">Enrolments</span>
 						</figcaption>
 						<ul class="divide-y divide-outline-gray-1" data-bars>
 							{COURSES.map((course) => (
@@ -678,14 +675,14 @@ const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b bor
 							<figcaption class="flex flex-col gap-2 p-4">
 								<ul class="grid gap-x-6 gap-y-1.5 text-p-sm text-ink-gray-7 sm:grid-cols-2">
 									{CS17.facts.map((fact) => (
-										<li class="flex gap-2"><Icon name="check" size={14} class="mt-[3px] text-ink-green-6" />{fact}</li>
+										<li class="flex gap-2"><Icon name="check" size={14} class="mt-[3px] text-ink-gray-5" />{fact}</li>
 									))}
 								</ul>
 								<p class="text-xs text-ink-gray-5">{CS17.partners}. <a href={CS17.href} class="underline hover:text-ink-gray-8">cs17.org</a></p>
 							</figcaption>
 						</figure>
 						<figure class:list={[panel, 'flex flex-col overflow-hidden']}>
-							<Image src={aiPhoto} alt="Two CS17 students present a game, with a slide that says they used AI tools to make its graphics" widths={[480, 720, 960]} sizes="(min-width: 1024px) 480px, 100vw" class="aspect-[4/3] w-full object-cover" />
+							<Image src={aiPhoto} alt="Two CS17 students present a game, with a slide that says they used AI tools to make its graphics" widths={[480, 720, 960]} sizes="(min-width: 1024px) 480px, 100vw" class="photo-mono aspect-[4/3] w-full object-cover" />
 							<figcaption class="flex flex-1 flex-col gap-2 p-4">
 								<p class="text-base-semibold text-ink-gray-9">{OFFERS[2].title}</p>
 								<p class="text-p-sm text-ink-gray-6">{OFFERS[2].summary}</p>
@@ -739,7 +736,7 @@ const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b bor
 						<dt class="text-ink-gray-5">Sector</dt>
 						<dd class="text-ink-gray-8">{isTBD(row.sector) ? <Tbd /> : row.sector}</dd>
 						<dt class="text-ink-gray-5">Where</dt>
-						<dd class="text-ink-gray-8">{isTBD(row.place) ? <Tbd /> : row.place}</dd>
+						<dd class="text-ink-gray-8" data-place>{isTBD(row.place) ? <Tbd /> : row.place}</dd>
 						<dt class="text-ink-gray-5">Status</dt>
 						<dd class="text-ink-gray-8">{isTBD(row.status) ? <Tbd /> : row.status}</dd>
 					</dl>
@@ -791,6 +788,16 @@ const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b bor
 			<Button data-drawer-close variant="ghost" size="sm" aria-label="Close">
 				<Icon name="x" size={16} />
 			</Button>
+		</div>
+		<div class="border-b border-outline-gray-1 bg-surface-gray-1 px-5 py-4">
+			<svg data-drawer-map viewBox={indiaMap.viewBox} class="mx-auto h-44 w-auto" role="img" aria-labelledby="drawer-place">
+				<path d={indiaMap.d} fill="url(#mis-dots)"></path>
+				<path d={indiaMap.d} fill="none" style="stroke: var(--outline-gray-3)" stroke-width="1" vector-effect="non-scaling-stroke"></path>
+				{arcs.map((arc) => <path data-drawer-arc={arc.key} d={arc.d} pathLength="1" fill="none" stroke-width="2.5" stroke-linecap="round" class="drawer-arc" />)}
+				{pins.map((pin) => <circle data-drawer-pin={pin.key} cx={pin.x} cy={pin.y} r="9" class="drawer-pin" />)}
+				<circle cx={home[0]} cy={home[1]} r="10" class="mis-home-dot" data-drawer-pin="jagdalpur" />
+			</svg>
+			<p id="drawer-place" data-drawer-place class="pt-2 text-center text-xs text-ink-gray-5"></p>
 		</div>
 		<div data-drawer-body class="overflow-y-auto p-5"></div>
 	</dialog>
@@ -894,6 +901,23 @@ const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b bor
 		opacity: 0;
 	}
 
+	.drawer-pin {
+		fill: var(--outline-gray-4);
+		stroke: var(--surface-gray-1);
+		stroke-width: 3;
+	}
+	.drawer-pin[data-active] {
+		fill: var(--surface-blue-8);
+	}
+	.drawer-arc {
+		stroke: var(--outline-blue-5);
+		stroke-dasharray: 1;
+		stroke-dashoffset: 1;
+		opacity: 0;
+	}
+	.drawer-arc[data-active] {
+		opacity: 1;
+	}
 	.mis-drawer::backdrop {
 		background: color-mix(in oklch, var(--surface-gray-10) 18%, transparent);
 	}
@@ -927,29 +951,25 @@ const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b bor
 
 	// The focal moment: the map draws itself out from Jagdalpur to the field.
 	const map = document.querySelector<SVGSVGElement>('[data-map]');
-	if (map && motionAllowed()) {
+	if (map && motionAllowed()) once(map, () => {
 		const home = map.querySelector('.mis-home');
 		const arcs = map.querySelectorAll('.mis-arc');
 		const pins = map.querySelectorAll('.mis-pin');
 		if (home) animate(home, { opacity: [0, 1], transform: ['scale(0.4)', 'scale(1)'] }, { duration: 0.5, ease: EASE_OUT, delay: 0.2 });
 		animate(arcs, { strokeDashoffset: [1, 0] }, { duration: 0.9, ease: EASE_OUT, delay: stagger(0.12, { startDelay: 0.45 }) });
 		animate(pins, { opacity: [0, 1] }, { duration: 0.35, delay: stagger(0.12, { startDelay: 1.05 }) });
-	}
+	}, 0.4);
 
 	document.querySelectorAll<HTMLElement>('[data-count]').forEach(countUp);
 
 	// Bars grow from their baseline the first time each chart is in view.
 	document.querySelectorAll<HTMLElement>('[data-bars]').forEach((chart) => {
 		if (!motionAllowed()) return;
+		// Motion throws on an empty selection, so charts without columns skip.
 		const vertical = chart.querySelectorAll('[data-bar]');
-		const horizontal = chart.querySelectorAll('[data-bar-x]');
+		if (!vertical.length) return;
 		vertical.forEach((bar) => ((bar as HTMLElement).style.transform = 'scaleY(0)'));
-		horizontal.forEach((bar) => ((bar as HTMLElement).style.transform = 'scaleX(0)'));
-		// Motion throws on an empty selection, so only animate what this chart has.
-		once(chart, () => {
-			if (vertical.length) animate(vertical, { transform: ['scaleY(0)', 'scaleY(1)'] }, { duration: 0.7, ease: EASE_OUT, delay: stagger(0.06) });
-			if (horizontal.length) animate(horizontal, { transform: ['scaleX(0)', 'scaleX(1)'] }, { duration: 0.7, ease: EASE_OUT, delay: stagger(0.05) });
-		});
+		once(chart, () => animate(vertical, { transform: ['scaleY(0)', 'scaleY(1)'] }, { duration: 0.7, ease: EASE_OUT, delay: stagger(0.06) }));
 	});
 
 	const gantt = document.querySelector('[data-gantt]');
@@ -1011,6 +1031,25 @@ const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b bor
 		row.addEventListener('blur', off);
 	});
 
+	// The drawer's map: this partner's pins, and the arcs out from Jagdalpur.
+	const drawerMap = document.querySelector<SVGSVGElement>('[data-drawer-map]');
+	const drawerPlace = document.querySelector('[data-drawer-place]');
+	function showPlace(id: string) {
+		if (!drawerMap) return;
+		const keys = [...document.querySelectorAll<SVGGElement>(`[data-map] [data-pin][data-rows~="${id}"]`)].map((pin) => pin.dataset.pin!);
+		drawerMap.querySelectorAll<SVGElement>('[data-drawer-pin]').forEach((pin) => pin.toggleAttribute('data-active', keys.includes(pin.dataset.drawerPin!)));
+		const arcs = [...drawerMap.querySelectorAll<SVGPathElement>('[data-drawer-arc]')];
+		arcs.forEach((arc) => {
+			const on = keys.includes(arc.dataset.drawerArc!);
+			arc.toggleAttribute('data-active', on);
+			arc.style.strokeDashoffset = on && !motionAllowed() ? '0' : '1';
+		});
+		const lit = arcs.filter((arc) => arc.hasAttribute('data-active'));
+		if (lit.length && motionAllowed()) animate(lit, { strokeDashoffset: [1, 0] }, { duration: 0.7, ease: EASE_OUT, delay: 0.15 });
+		const place = document.querySelector(`template[data-case="${id}"]`)?.content.querySelector('[data-place]')?.textContent?.trim();
+		if (drawerPlace) drawerPlace.textContent = keys.length ? (place ?? '') : 'No single location on the map';
+	}
+
 	// Case-study drawer.
 	const drawer = document.querySelector<HTMLDialogElement>('[data-drawer]');
 	const drawerBody = drawer?.querySelector('[data-drawer-body]');
@@ -1021,6 +1060,7 @@ const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b bor
 			if (!drawer || !drawerBody || !template) return;
 			opener = row;
 			drawerBody.replaceChildren(template.content.cloneNode(true));
+			showPlace(row.dataset.row!);
 			drawer.showModal();
 			if (motionAllowed()) animate(drawer, { transform: ['translateX(24px)', 'translateX(0)'], opacity: [0, 1] }, { duration: 0.32, ease: EASE_OUT });
 		}),

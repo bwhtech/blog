@@ -35,14 +35,14 @@ import {
 } from '../../data/landing';
 import LabLayout from '../../layouts/LabLayout.astro';
 
-type Tone = 'amber' | 'gray' | 'blue' | 'cyan' | 'violet' | 'green';
+type Tone = 'amber' | 'gray' | 'blue' | 'cyan' | 'violet' | 'purple';
 const STAGES: { id: string; label: string; line: string; tone: Tone }[] = [
 	{ id: 'problem', label: 'Problem', line: 'Data in many sheets, forms and chats. Reports take days. Nobody trusts the numbers.', tone: 'amber' },
 	{ id: 'inputs', label: 'Inputs', line: `A team in Jagdalpur and an open-source stack we help build: ${CONTRIBUTIONS.total.toLocaleString('en-IN')} pull requests merged.`, tone: 'gray' },
 	{ id: 'activities', label: 'Activities', line: 'Listen, map, build, train the trainer, hand over.', tone: 'blue' },
 	{ id: 'outputs', label: 'Outputs', line: 'One system: MIS, case management, dashboards, HR and accounts.', tone: 'cyan' },
 	{ id: 'outcomes', label: 'Outcomes', line: 'Your team runs it, changes it, and trusts the numbers.', tone: 'violet' },
-	{ id: 'impact', label: 'Impact', line: 'More time for the people you serve.', tone: 'green' },
+	{ id: 'impact', label: 'Impact', line: 'More time for the people you serve.', tone: 'purple' },
 ];
 
 const TONE: Record<Tone, { band: string; ink: string; soft: string; dot: string; line: string }> = {
@@ -51,7 +51,7 @@ const TONE: Record<Tone, { band: string; ink: string; soft: string; dot: string;
 	blue: { band: 'bg-surface-blue-2', ink: 'text-ink-blue-8', soft: 'bg-surface-blue-1', dot: 'bg-surface-blue-7', line: 'var(--outline-blue-4)' },
 	cyan: { band: 'bg-surface-cyan-2', ink: 'text-ink-cyan-8', soft: 'bg-surface-cyan-1', dot: 'bg-surface-cyan-7', line: 'var(--outline-cyan-4)' },
 	violet: { band: 'bg-surface-violet-2', ink: 'text-ink-violet-8', soft: 'bg-surface-violet-1', dot: 'bg-surface-violet-7', line: 'var(--outline-violet-4)' },
-	green: { band: 'bg-surface-green-2', ink: 'text-ink-green-8', soft: 'bg-surface-green-1', dot: 'bg-surface-green-7', line: 'var(--outline-green-4)' },
+	purple: { band: 'bg-surface-purple-2', ink: 'text-ink-purple-8', soft: 'bg-surface-purple-1', dot: 'bg-surface-purple-7', line: 'var(--outline-purple-4)' },
 };
 
 const checked = new Date(CHECKED_ON).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -65,6 +65,7 @@ const COVER = [
 const MATRIX = [
 	{
 		level: 'Goal',
+		tone: 'purple' as Tone,
 		summary: 'Organisations solving society’s problems spend their time on the problem, not on spreadsheets.',
 		indicator: { text: 'Hours saved on reporting each month, per partner', tbd: true },
 		verification: [{ label: 'Partner testimonials', tbd: true }],
@@ -72,23 +73,26 @@ const MATRIX = [
 	},
 	{
 		level: 'Purpose',
+		tone: 'violet' as Tone,
 		summary: 'Your team runs and changes its own system.',
 		indicator: { text: 'Staff trained as trainers, per partner', tbd: true },
 		verification: [
 			{ label: 'Training for teams', href: '/train-your-team' },
-			{ label: `${COURSES[0].learners.toLocaleString('en-IN')} learners in our largest Frappe School course`, href: 'https://school.frappe.io/lms/courses' },
+			{ label: `${COURSES[0].learners.toLocaleString('en-IN')} enrolments in our largest Frappe School course`, href: 'https://school.frappe.io/lms/courses' },
 		],
 		assumption: 'A few people have time to learn.',
 	},
 	{
 		level: 'Outputs',
+		tone: 'cyan' as Tone,
 		summary: 'A system on open source: MIS, case management, dashboards, HR and accounts.',
-		indicator: { text: `${PARTNERS.length} partner organisations; Frappe Changemakers in use in Bengaluru and Chennai` },
+		indicator: { text: `${PARTNERS.length} partner organisations; Frappe Changemakers, which our founder built at Frappe before BWH, in use in Bengaluru and Chennai` },
 		verification: [{ label: 'github.com/frappe/changemakers', href: 'https://github.com/frappe/changemakers' }],
 		assumption: 'The old data can be cleaned and imported.',
 	},
 	{
 		level: 'Activities',
+		tone: 'blue' as Tone,
 		summary: 'Listen, map, build, train the trainer, hand over.',
 		indicator: { text: `${CONTRIBUTIONS.total.toLocaleString('en-IN')} pull requests merged into the stack by our team` },
 		verification: [
@@ -184,8 +188,10 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 					<div data-track class="walk-track">
 						<!-- Problem -->
 						<article id="stage-problem" data-panel data-stage-id="problem" data-tone="amber" class="panel">
-							<p class:list={['panel-label', TONE.amber.band, TONE.amber.ink]}>Problem</p>
-							<h2 class="panel-title">Your programme works. Your tools do not.</h2>
+							<div class="panel-head">
+								<span class:list={['panel-stage', TONE.amber.ink]}><span class:list={['size-2 shrink-0 rounded-full', TONE.amber.dot]} />Problem</span>
+								<h2 class="panel-title">Your programme works. Your tools do not.</h2>
+							</div>
 							<p class="panel-body">What we hear from almost every organisation, before we build anything:</p>
 							<ul class="flex flex-wrap gap-2">
 								{PROBLEMS.map((problem) => (
@@ -196,8 +202,10 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 
 						<!-- Inputs -->
 						<article id="stage-inputs" data-panel data-stage-id="inputs" data-tone="gray" class="panel">
-							<p class:list={['panel-label', TONE.gray.band, TONE.gray.ink]}>Inputs</p>
-							<h2 class="panel-title">What we bring</h2>
+							<div class="panel-head">
+								<span class:list={['panel-stage', TONE.gray.ink]}><span class:list={['size-2 shrink-0 rounded-full', TONE.gray.dot]} />Inputs</span>
+								<h2 class="panel-title">What we bring</h2>
+							</div>
 							<dl class="grid gap-x-8 gap-y-5 sm:grid-cols-2">
 								<div class="flex flex-col gap-1">
 									<dt class="text-sm text-ink-gray-5">A team</dt>
@@ -219,7 +227,7 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 								<div class="flex flex-col gap-1 sm:col-span-2">
 									<dt class="text-sm text-ink-gray-5">Teaching</dt>
 									<dd class="text-p-base text-ink-gray-8">
-										{COURSES[0].learners.toLocaleString('en-IN')} learners in our largest course on Frappe School, and {YOUTUBE.subscribers} subscribers on YouTube.
+										{COURSES[0].learners.toLocaleString('en-IN')} enrolments in our largest course on Frappe School, and {YOUTUBE.subscribers} subscribers on YouTube (October 2026).
 									</dd>
 								</div>
 							</dl>
@@ -228,8 +236,10 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 						<!-- Activities -->
 						<article id="stage-activities" data-panel data-stage-id="activities" data-tone="blue" class="panel panel-split">
 							<div class="flex flex-col gap-4">
-								<p class:list={['panel-label', TONE.blue.band, TONE.blue.ink]}>Activities</p>
-								<h2 class="panel-title">How we work with you</h2>
+								<div class="panel-head">
+									<span class:list={['panel-stage', TONE.blue.ink]}><span class:list={['size-2 shrink-0 rounded-full', TONE.blue.dot]} />Activities</span>
+									<h2 class="panel-title">How we work with you</h2>
+								</div>
 								<ol class="flex flex-col">
 									{PROCESS.map((step, index) => (
 										<li class="grid grid-cols-[1.75rem_minmax(0,1fr)] gap-3 border-t border-outline-gray-1 py-2.5 first:border-t-0">
@@ -250,8 +260,10 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 
 						<!-- Outputs -->
 						<article id="stage-outputs" data-panel data-stage-id="outputs" data-tone="cyan" class="panel">
-							<p class:list={['panel-label', TONE.cyan.band, TONE.cyan.ink]}>Outputs</p>
-							<h2 class="panel-title">{OFFERS[0].title}</h2>
+							<div class="panel-head">
+								<span class:list={['panel-stage', TONE.cyan.ink]}><span class:list={['size-2 shrink-0 rounded-full', TONE.cyan.dot]} />Outputs</span>
+								<h2 class="panel-title">{OFFERS[0].title}</h2>
+							</div>
 							<p class="panel-body">{OFFERS[0].summary}</p>
 							<ul class="grid gap-x-6 gap-y-3 sm:grid-cols-2">
 								{OFFERS[0].items.map((item, index) => (
@@ -265,8 +277,10 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 
 						<!-- Outcomes -->
 						<article id="stage-outcomes" data-panel data-stage-id="outcomes" data-tone="violet" class="panel">
-							<p class:list={['panel-label', TONE.violet.band, TONE.violet.ink]}>Outcomes</p>
-							<h2 class="panel-title">What changed for the people we worked with</h2>
+							<div class="panel-head">
+								<span class:list={['panel-stage', TONE.violet.ink]}><span class:list={['size-2 shrink-0 rounded-full', TONE.violet.dot]} />Outcomes</span>
+								<h2 class="panel-title">What changed for the people we worked with</h2>
+							</div>
 							<ul class="flex flex-col divide-y divide-outline-gray-1">
 								{PARTNERS.slice(0, 5).map((partner) => (
 									<li class="grid gap-1 py-2.5 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-4">
@@ -282,10 +296,12 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 						</article>
 
 						<!-- Impact -->
-						<article id="stage-impact" data-panel data-stage-id="impact" data-tone="green" class="panel panel-split">
+						<article id="stage-impact" data-panel data-stage-id="impact" data-tone="purple" class="panel panel-split">
 							<div class="flex flex-col gap-4">
-								<p class:list={['panel-label', TONE.green.band, TONE.green.ink]}>Impact</p>
-								<h2 class="panel-title">More time for the people you serve.</h2>
+								<div class="panel-head">
+									<span class:list={['panel-stage', TONE.purple.ink]}><span class:list={['size-2 shrink-0 rounded-full', TONE.purple.dot]} />Impact</span>
+									<h2 class="panel-title">More time for the people you serve.</h2>
+								</div>
 								<p class="panel-body">
 									We invest in the same idea at home. {CS17.name} is our own programme: young women in {HOME_TOWN} learn
 									to build software, for 18 months, fully funded.
@@ -309,13 +325,46 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 				<!-- The logframe. -->
 				<section aria-labelledby="matrix-title" class="flex flex-col gap-6">
 					<div class="flex flex-col gap-2">
-						<h2 id="matrix-title" class="text-[28px] font-semibold leading-[1.15] tracking-[-0.025em] text-ink-gray-9 sm:text-[34px]">The logframe</h2>
+						<div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+								<h2 id="matrix-title" class="text-[28px] font-semibold leading-[1.15] tracking-[-0.025em] text-ink-gray-9 sm:text-[34px]">The logframe</h2>
+								<span class="font-data text-xs text-ink-gray-5">{COVER[0].value} · Annex A</span>
+							</div>
 						<p class="max-w-[62ch] text-p-lg text-ink-gray-6">
 							The same plan, in the matrix you fill in for every funder. The means of verification are the proof: follow
 							them.
 						</p>
 					</div>
-					<div class="overflow-x-auto rounded-5 border border-outline-gray-1">
+					<ol class="flex flex-col divide-y divide-outline-gray-1 rounded-5 border border-outline-gray-1 sm:hidden">
+						{MATRIX.map((row) => (
+							<li class="flex flex-col gap-3 p-4">
+								<p class="flex items-center gap-2 text-base-semibold text-ink-gray-9"><span class:list={['size-2 shrink-0 rounded-full', TONE[row.tone].dot]} />{row.level}</p>
+								<p class="text-p-sm text-ink-gray-8">{row.summary}</p>
+								<div class="flex flex-col gap-1">
+									<p class="text-xs text-ink-gray-5">Means of verification</p>
+									<ul class="flex flex-col gap-1">
+										{row.verification.map((item) => (
+											<li class="text-p-sm">
+												{'href' in item && item.href ? (
+													<a href={item.href} class="text-ink-blue-7 underline">{item.label}</a>
+												) : (
+													<span class="text-ink-gray-7">{item.label} <Tbd /></span>
+												)}
+											</li>
+										))}
+									</ul>
+								</div>
+								<div class="flex flex-col gap-1">
+									<p class="text-xs text-ink-gray-5">Indicators</p>
+									<p class="text-p-sm text-ink-gray-7">{row.indicator.text} {row.indicator.tbd && <Tbd note="figure" />}</p>
+								</div>
+								<div class="flex flex-col gap-1">
+									<p class="text-xs text-ink-gray-5">Assumptions</p>
+									<p class="text-p-sm text-ink-gray-6">{row.assumption}</p>
+								</div>
+							</li>
+						))}
+					</ol>
+					<div class="overflow-x-auto rounded-5 border border-outline-gray-1 max-sm:hidden">
 						<table class="w-full min-w-[860px] border-collapse text-left">
 							<thead>
 								<tr class="bg-surface-gray-1 text-sm text-ink-gray-5">
@@ -329,7 +378,7 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 							<tbody class="divide-y divide-outline-gray-1 align-top">
 								{MATRIX.map((row) => (
 									<tr>
-										<th scope="row" class="px-4 py-4 text-base-semibold text-ink-gray-9">{row.level}</th>
+										<th scope="row" class="px-4 py-4 text-base-semibold text-ink-gray-9"><span class="flex items-center gap-2"><span class:list={['size-2 shrink-0 rounded-full', TONE[row.tone].dot]} />{row.level}</span></th>
 										<td class="px-4 py-4 text-p-sm text-ink-gray-8">{row.summary}</td>
 										<td class="px-4 py-4 text-p-sm text-ink-gray-7">
 											{row.indicator.text}
@@ -371,16 +420,19 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 		<!-- Footer: assumptions and risks, as every proposal ends. -->
 		<footer class="border-t border-outline-gray-1 bg-surface-gray-1">
 			<div class="mx-auto flex max-w-[1200px] flex-col gap-8 px-4 py-14 sm:px-6">
-				<h2 class="text-2xl font-semibold tracking-[-0.01em] text-ink-gray-9">Assumptions and risks</h2>
+				<div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+						<h2 class="text-2xl font-semibold tracking-[-0.01em] text-ink-gray-9">Assumptions and risks</h2>
+						<span class="font-data text-xs text-ink-gray-5">{COVER[0].value} · Annex B</span>
+					</div>
 				<dl class="grid gap-x-10 gap-y-6 md:grid-cols-2">
 					{FAQ.map((item) => (
 						<div class="grid grid-cols-[4.5rem_minmax(0,1fr)] content-start gap-x-3 gap-y-1.5 border-t border-outline-gray-2 pt-4">
 							<dt class="contents">
-								<span class="pt-0.5 font-data text-[11px] text-ink-amber-7">Risk</span>
+								<span class="pt-0.5 text-xs font-medium text-ink-amber-7">Risk</span>
 								<span class="text-base-medium text-ink-gray-9">{item.q}</span>
 							</dt>
 							<dd class="contents">
-								<span class="pt-0.5 font-data text-[11px] text-ink-green-7">Mitigation</span>
+								<span class="pt-0.5 text-xs font-medium text-ink-blue-7">Mitigation</span>
 								<span class="text-p-sm text-ink-gray-7">{item.a}</span>
 							</dd>
 						</div>
@@ -462,8 +514,14 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 			width: 1.5rem;
 		}
 	}
-	html[data-motion='on'] .chain-node {
-		opacity: 0;
+	.chain-node > a {
+		transition:
+			border-color 200ms,
+			box-shadow 300ms var(--lab-ease),
+			transform 200ms;
+	}
+	.chain-node[data-lit] > a {
+		box-shadow: 0 0 0 3px var(--line);
 	}
 	html[data-motion='on'] .chain-line,
 	html[data-motion='on'] .chain-head {
@@ -510,18 +568,40 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 		transition: opacity 300ms var(--lab-ease);
 		scroll-margin-top: 80px;
 	}
+	.panel[data-tone='amber'] { --panel-tint: var(--surface-amber-1); }
+	.panel[data-tone='gray'] { --panel-tint: var(--surface-gray-1); }
+	.panel[data-tone='blue'] { --panel-tint: var(--surface-blue-1); }
+	.panel[data-tone='cyan'] { --panel-tint: var(--surface-cyan-1); }
+	.panel[data-tone='violet'] { --panel-tint: var(--surface-violet-1); }
+	.panel[data-tone='purple'] { --panel-tint: var(--surface-purple-1); }
 	.panel-split {
 		display: grid;
 		grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
 		gap: 2rem;
 		align-items: start;
 	}
-	.panel-label {
-		align-self: flex-start;
-		border-radius: 999px;
-		padding: 2px 10px;
-		font-size: 12px;
+	.panel-head {
+		display: flex;
+		align-items: baseline;
+		gap: 1rem;
+	}
+	.panel-stage {
+		display: inline-flex;
+		flex-shrink: 0;
+		align-items: center;
+		gap: 0.5rem;
+		width: 7.5rem;
+		font-size: 14px;
 		font-weight: 600;
+	}
+	@media (max-width: 767px) {
+		.panel-head {
+			flex-direction: column;
+			gap: 0.375rem;
+		}
+		.panel-stage {
+			width: auto;
+		}
 	}
 	.panel-title {
 		font-size: clamp(24px, 3vw, 34px);
@@ -583,6 +663,10 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 		max-height: none;
 		opacity: 1 !important;
 	}
+	html:not([data-motion='on']) .panel[data-tone],
+	.walk[data-stacked] .panel[data-tone] {
+		background: var(--panel-tint);
+	}
 	html:not([data-motion='on']) .walk-progress,
 	.walk[data-stacked] .walk-progress {
 		display: none;
@@ -624,10 +708,17 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 		const nodes = chain.querySelectorAll<HTMLElement>('[data-node]');
 		const lines = chain.querySelectorAll<SVGPathElement>('.chain-line, .chain-head');
 		const pulses = [...chain.querySelectorAll<SVGCircleElement>('.chain-pulse')];
-		animate(nodes, { opacity: [0, 1], transform: ['translateY(10px)', 'translateY(0)'] }, { duration: 0.55, ease: EASE_OUT, delay: stagger(0.11, { startDelay: 0.15 }) });
-		animate(lines, { strokeDashoffset: [1, 0] }, { duration: 0.35, ease: EASE_OUT, delay: stagger(0.055, { startDelay: 0.4 }) });
+		const light = (index: number, at: number) =>
+			setTimeout(() => {
+				nodes[index]?.setAttribute('data-lit', '');
+				setTimeout(() => nodes[index]?.removeAttribute('data-lit'), 520);
+			}, at * 1000);
+		animate(lines, { strokeDashoffset: [1, 0] }, { duration: 0.35, ease: EASE_OUT, delay: stagger(0.055, { startDelay: 0.3 }) });
+		light(0, 1.0);
 		pulses.forEach((pulse, index) => {
-			animate(pulse, { opacity: [0, 1, 1, 0], cx: [1, 34] }, { duration: 0.42, ease: 'easeInOut', delay: 1.35 + index * 0.36 });
+			const start = 1.2 + index * 0.42;
+			animate(pulse, { opacity: [0, 1, 1, 0], cx: [1, 34] }, { duration: 0.42, ease: 'easeInOut', delay: start });
+			light(index + 1, start + 0.38);
 		});
 	}
 
@@ -681,18 +772,28 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 	narrow.addEventListener('change', layout);
 	layout();
 
+	const scrollToPanel = (panel: HTMLElement, smooth: boolean) => {
+		const index = panels.indexOf(panel);
+		const travel = walk.offsetHeight - stage.offsetHeight;
+		const distance = track.scrollWidth - window.innerWidth;
+		const step = (panel.offsetWidth + parseFloat(getComputedStyle(track).gap)) / distance;
+		window.scrollTo({ top: walk.offsetTop + Math.min(1, index * step) * travel, behavior: smooth ? 'smooth' : 'auto' });
+	};
+	panels.forEach((panel) =>
+		panel.addEventListener('focusin', () => {
+			if (!pinned) return;
+			stage.scrollLeft = 0;
+			scrollToPanel(panel, false);
+		}),
+	);
+
 	// Jumping to a stage from the chain or the bar lands on that panel.
 	document.querySelectorAll<HTMLAnchorElement>('a[href^="#stage-"]').forEach((link) =>
 		link.addEventListener('click', (event) => {
 			const panel = document.querySelector<HTMLElement>(link.getAttribute('href')!);
 			if (!panel || !pinned) return;
 			event.preventDefault();
-			const index = panels.indexOf(panel);
-			const travel = walk.offsetHeight - stage.offsetHeight;
-			const distance = track.scrollWidth - window.innerWidth;
-			const step = (panel.offsetWidth + parseFloat(getComputedStyle(track).gap)) / distance;
-			const target = walk.offsetTop + Math.min(1, index * step) * travel;
-			window.scrollTo({ top: target, behavior: motionAllowed() ? 'smooth' : 'auto' });
+			scrollToPanel(panel, motionAllowed());
 		}),
 	);
 </script>
