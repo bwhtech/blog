@@ -55,11 +55,12 @@ const TONE: Record<Tone, { band: string; ink: string; soft: string; dot: string;
 };
 
 const checked = new Date(CHECKED_ON).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+// Reference and date are data, so they take the mono face; the rest is prose.
 const COVER = [
-	{ term: 'Reference', value: 'BWH/TOC/2026-10' },
-	{ term: 'Prepared by', value: `${LEGAL_NAME}, ${HOME_TOWN}` },
-	{ term: 'Prepared for', value: 'Organisations solving society’s problems' },
-	{ term: 'Date', value: checked },
+	{ term: 'Reference', value: 'BWH/TOC/2026-10', data: true },
+	{ term: 'Prepared by', value: `${LEGAL_NAME}, ${HOME_TOWN}`, data: false },
+	{ term: 'Prepared for', value: 'Organisations solving society’s problems', data: false },
+	{ term: 'Date', value: checked, data: true },
 ];
 
 const MATRIX = [
@@ -153,7 +154,7 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 						{COVER.map((row) => (
 							<>
 								<dt class="text-ink-gray-5">{row.term}</dt>
-								<dd class="font-data text-[12.5px] text-ink-gray-8">{row.value}</dd>
+								<dd class:list={['text-ink-gray-8', row.data ? 'font-data text-[12.5px]' : 'text-sm']}>{row.value}</dd>
 							</>
 						))}
 					</dl>
@@ -243,7 +244,7 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 								<ol class="flex flex-col">
 									{PROCESS.map((step, index) => (
 										<li class="grid grid-cols-[1.75rem_minmax(0,1fr)] gap-3 border-t border-outline-gray-1 py-2.5 first:border-t-0">
-											<span class="font-data text-xs leading-6 text-ink-blue-7">{String(index + 1).padStart(2, '0')}</span>
+											<span class="font-data text-xs leading-6 text-ink-blue-8">{String(index + 1).padStart(2, '0')}</span>
 											<span class="flex flex-col">
 												<span class="text-base-medium text-ink-gray-9">{step.title}</span>
 												<span class="text-p-sm text-ink-gray-6">{step.body}</span>
@@ -428,7 +429,7 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 					{FAQ.map((item) => (
 						<div class="grid grid-cols-[4.5rem_minmax(0,1fr)] content-start gap-x-3 gap-y-1.5 border-t border-outline-gray-2 pt-4">
 							<dt class="contents">
-								<span class="pt-0.5 text-xs font-medium text-ink-amber-7">Risk</span>
+								<span class="pt-0.5 text-xs font-medium text-ink-amber-8">Risk</span>
 								<span class="text-base-medium text-ink-gray-9">{item.q}</span>
 							</dt>
 							<dd class="contents">
