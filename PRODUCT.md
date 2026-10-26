@@ -58,9 +58,10 @@ Verified on 2026-10-26:
 - 48 public, non-fork repositories under `github.com/bwhtech` (Buzz, Nano Press, Commera, Forms Pro, Batwara).
 - Frappe Changemakers (`github.com/frappe/changemakers`, AGPL-3.0, repository created 2022-10-12): beneficiary management for Azim Premji Foundation's homeless care programme in Bengaluru and Chennai, "used to manage thousands of beneficiaries" (BWH blog, July 2025). Built by the founder with Umair while at Frappe, before BWH. Do not name Umair on the page without consent.
 - CS17: 18-month residential programme for young women in Jagdalpur, 100% scholarship, CS50-based curriculum, Frappe Framework, IGNOU BCA, 6-month internship. Campus by Bastar Sevak Mandal, funded by Azim Premji Foundation.
+- Photos: four CS17 photos already published on cs17.org (BWH's own programme), copied to `src/assets/landing/` with their origin recorded in `src/data/landing.ts` and inside each file. Consent for showing identifiable students on bwh.tech is not yet confirmed; confirm it before the page goes public.
 - Partners named by the user: Azim Premji Foundation; CMID (Centre for Migration and Inclusive Development, Ernakulam); ILF (full name unknown); Dhwani RIS (Gurugram); KMVS (Kutch Mahila Vikas Sangathan, Bhuj); ASHA, the Alliance for Sustainable & Holistic Agriculture (Kisan Swaraj Sammelan); OASIS Network; one more organisation the user has not named yet.
 
-Absent, and not to be invented: what BWH built for each partner other than Azim Premji Foundation, outcomes, testimonials, photographs, client logos, team size today, prices and timelines. Show these as visible `TBD` placeholders.
+Absent, and not to be invented: what BWH built for each partner other than Azim Premji Foundation, outcomes, testimonials, partner photographs, client logos, team size today, prices and timelines. Show these as visible `TBD` placeholders.
 
 ## Product Principles
 

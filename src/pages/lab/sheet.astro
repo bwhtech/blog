@@ -624,8 +624,8 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 				<span class="flex shrink-0 items-center px-3 text-ink-gray-4" aria-hidden="true">Copy of FINAL (3)</span>
 			</div>
 			<p class="flex shrink-0 items-center gap-2 border-l border-outline-gray-2 px-2.5 font-data text-[11px] text-ink-gray-5 md:hidden">
-				<span>n {NAMED_PARTNERS.length}</span>
-				<span>Σ {CONTRIBUTIONS.total.toLocaleString('en-IN')}</span>
+				<span>Count {NAMED_PARTNERS.length} partners</span>
+				<span>Sum {CONTRIBUTIONS.total.toLocaleString('en-IN')} PRs</span>
 			</p>
 			<p class="hidden shrink-0 items-center gap-4 border-l border-outline-gray-2 px-4 font-data text-xs text-ink-gray-5 md:flex">
 				<span>Count: {NAMED_PARTNERS.length} partners</span>
@@ -926,7 +926,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 			right: 2%;
 		}
 		.terminal {
-			top: calc(var(--row) * 7 + 4px);
+			top: calc(var(--row) * 6 + 4px);
 			right: auto;
 			left: 34%;
 			transform-origin: top left;

@@ -599,6 +599,13 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 			width: auto;
 			font-size: 13px;
 		}
+		/* Beside the stage name the heading has a narrow row; balance would
+		   narrow it further into three short lines. */
+		.panel-head .panel-title {
+			flex: 1;
+			min-width: 0;
+			text-wrap: pretty;
+		}
 	}
 	.panel-title {
 		font-size: clamp(24px, 3vw, 34px);
