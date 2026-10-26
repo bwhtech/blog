@@ -1,0 +1,45 @@
+---
+import { VARIANTS } from '../../data/landing';
+
+interface Props {
+	current: string;
+	offset?: number;
+}
+
+const { current, offset = 0 } = Astro.props;
+const SHORT: Record<string, string> = {
+	mis: 'MIS',
+	sheet: 'Sheet',
+	'theory-of-change': 'ToC',
+	intake: 'Intake',
+};
+---
+
+<nav
+	aria-label="Landing page variants"
+	data-print-hide
+	class="fixed right-3 z-40"
+	style={`bottom: ${12 + offset}px`}
+>
+	<div
+		class="flex items-center gap-0.5 rounded-full border border-outline-gray-2 bg-surface-elevation-2 p-1 shadow-lg"
+	>
+		<a
+			href="/lab"
+			class="flex h-7 items-center px-2 text-xs text-ink-gray-5 no-underline transition-colors hover:text-ink-gray-9"
+			>Lab</a
+		>
+		{
+			VARIANTS.map((variant) => (
+				<a
+					href={`/lab/${variant.slug}`}
+					aria-current={variant.slug === current ? 'page' : undefined}
+					class="flex h-7 items-center rounded-full px-2.5 text-sm text-ink-gray-7 no-underline transition-colors hover:bg-surface-gray-2 hover:text-ink-gray-9 aria-[current=page]:bg-surface-gray-10 aria-[current=page]:text-ink-base"
+				>
+					<span class="hidden sm:inline">{variant.label}</span>
+					<span class="sm:hidden">{SHORT[variant.slug]}</span>
+				</a>
+			))
+		}
+	</div>
+</nav>

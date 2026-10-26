@@ -1,0 +1,104 @@
+---
+/**
+ * The closing "Tell us the problem" section. Front end only: see
+ * src/scripts/landing/intake.ts.
+ */
+import { CTA, PROBLEMS } from '../../data/landing';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+import ProblemChip from './ProblemChip.astro';
+import TextField from './TextField.astro';
+
+interface Props {
+	id?: string;
+	class?: string;
+	title?: string;
+}
+
+const { id = 'tell-us', class: className, title = 'Tell us the problem.' } = Astro.props;
+const formId = `${id}-form`;
+---
+
+<section id={id} aria-labelledby={`${id}-title`} class:list={['scroll-mt-20', className]}>
+	<form id={formId} data-intake class="outline-none" novalidate={false}>
+		<div data-intake-body class="flex flex-col gap-6">
+			<div class="flex flex-col gap-2">
+				<h2
+					id={`${id}-title`}
+					class="text-[28px] font-semibold leading-[1.15] tracking-[-0.02em] text-ink-gray-9 sm:text-[34px]"
+				>
+					{title}
+				</h2>
+				<p class="max-w-[58ch] text-p-lg text-ink-gray-6">
+					Pick what sounds familiar and add a line in your own words. We listen first, then we work
+					it out with you.
+				</p>
+			</div>
+
+			<fieldset class="flex flex-col gap-3">
+				<legend class="mb-3 text-sm text-ink-gray-5">What's breaking?</legend>
+				<div class="flex flex-wrap gap-2">
+					{PROBLEMS.map((problem) => <ProblemChip id={problem.id} label={problem.label} />)}
+				</div>
+			</fieldset>
+
+			<TextField
+				form={formId}
+				type="textarea"
+				name="story"
+				label="In your words"
+				placeholder="Our field team sends updates on WhatsApp and someone copies them into Excel every Friday."
+			/>
+
+			<div class="grid gap-4 sm:grid-cols-3">
+				<TextField form={formId} name="name" label="Your name" autocomplete="name" />
+				<TextField form={formId} name="org" label="Organisation" autocomplete="organization" />
+				<TextField
+					form={formId}
+					name="contact"
+					label="Email or phone"
+					autocomplete="email"
+					required
+				/>
+			</div>
+
+			<div class="flex flex-wrap items-center gap-x-4 gap-y-3">
+				<Button type="submit" variant="primary" size="lg">
+					Send
+					<Icon name="arrow-right" size={16} />
+				</Button>
+				<a href={CTA.meetHref} class="text-base text-ink-gray-6 underline hover:text-ink-gray-9"
+					>or book a call</a
+				>
+				<p class="text-p-xs text-ink-gray-5 sm:ml-auto">Prototype: nothing is sent yet.</p>
+			</div>
+		</div>
+
+		<div data-intake-done hidden tabindex="-1" class="flex flex-col gap-4 outline-none">
+			<div class="flex size-10 items-center justify-center rounded-full bg-surface-green-2 text-ink-green-7">
+				<Icon name="check" size={20} strokeWidth={2.25} />
+			</div>
+			<h2 data-intake-greeting class="text-[28px] font-semibold tracking-[-0.02em] text-ink-gray-9">
+				Thanks.
+			</h2>
+			<div class="flex flex-col gap-2 text-p-base text-ink-gray-7">
+				<p>We have your note about:</p>
+				<ul data-intake-list class="list-disc pl-5 text-ink-gray-8"></ul>
+				<p>We'll reply at <span data-intake-contact class="font-medium text-ink-gray-9"></span>.</p>
+			</div>
+			<div class="flex flex-wrap items-center gap-3">
+				<Button href={CTA.meetHref} variant="primary">Book a call now</Button>
+				<Button data-intake-reset variant="ghost">Start over</Button>
+			</div>
+			<p class="text-p-xs text-ink-gray-5">Prototype: this note did not leave your browser.</p>
+		</div>
+	</form>
+</section>
+
+<script>
+	import { initIntake } from '../../scripts/landing/intake';
+
+	document.querySelectorAll<HTMLFormElement>('form[data-intake]:not([data-intake-custom])').forEach((form) =>
+		initIntake(form),
+	);
+</script>

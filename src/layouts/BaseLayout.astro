@@ -16,12 +16,14 @@ interface Props {
 	publishedTime?: Date;
 	tags?: string[];
 	type?: 'article' | 'website';
+	noindex?: boolean;
 }
 
 const {
 	author,
 	description,
 	image,
+	noindex,
 	ogImage,
 	publishedTime,
 	tags,
@@ -43,6 +45,7 @@ const documentTitle = title === SITE_TITLE ? title : `${title} · ${SITE_TITLE}`
 			publishedTime={publishedTime}
 			tags={tags}
 			type={type}
+			noindex={noindex}
 		/>
 	</head>
 	<body class="min-h-screen bg-surface-base text-ink-gray-9 antialiased">

@@ -1,0 +1,42 @@
+---
+/**
+ * Layout for the landing page experiments under /lab. They stay out of search
+ * results and analytics, and each one carries the variant switcher.
+ */
+import LabSwitcher from '../components/landing/LabSwitcher.astro';
+import BaseLayout from './BaseLayout.astro';
+import '../styles/lab.css';
+
+interface Props {
+	title: string;
+	description: string;
+	/** Slug of the variant, for the switcher. Omit on the /lab index. */
+	variant?: string;
+	/** Lifts the switcher above a fixed bottom bar, in px. */
+	switcherOffset?: number;
+}
+
+const { title, description, variant, switcherOffset = 0 } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} noindex>
+	<!--
+	  Entrance motion starts from a hidden state, so the flag is stamped before
+	  the body paints. If the page script never boots, the timeout takes the flag
+	  away again and the page shows as it is rather than staying blank.
+	-->
+	<script is:inline>
+		(() => {
+			const root = document.documentElement;
+			if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+			root.dataset.motion = 'on';
+			setTimeout(() => {
+				if (!root.dataset.motionBooted) delete root.dataset.motion;
+			}, 2500);
+		})();
+	</script>
+	<div class="lab">
+		<slot />
+	</div>
+	{variant && <LabSwitcher current={variant} offset={switcherOffset} />}
+</BaseLayout>
