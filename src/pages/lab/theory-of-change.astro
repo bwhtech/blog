@@ -162,7 +162,7 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 							<a href={`#stage-${stage.id}`} class="flex h-full flex-col overflow-hidden rounded-5 border border-outline-gray-1 bg-surface-base no-underline transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-outline-gray-3 hover:shadow-md">
 								<span class:list={['flex items-center justify-between px-3 py-2 text-sm font-semibold', TONE[stage.tone].band, TONE[stage.tone].ink]}>
 									{stage.label}
-									<span class="font-data text-[11px] font-normal opacity-70">{index + 1}/{STAGES.length}</span>
+									<span class="font-data text-[11px] font-normal">{index + 1}/{STAGES.length}</span>
 								</span>
 								<span class="flex-1 px-3 py-3 text-p-sm text-ink-gray-7">{stage.line}</span>
 							</a>

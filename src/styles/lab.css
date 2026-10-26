@@ -2,6 +2,18 @@
    this file only themes what the browser draws by default, the placeholder
    chip, and the hidden starting state of entrance motion. */
 
+/* frappe-ui's ink-gray-5 is a quiet meta tone, about 3.6:1 on white and
+   4.2:1 on the dark base. The captions and labels that use it on a public
+   page need WCAG AA, so the lab pages lift it just past 4.5:1 in both themes. */
+.lab,
+.lab-chrome {
+	--ink-gray-5: oklch(0.52 0 0);
+}
+[data-theme='dark'] .lab,
+[data-theme='dark'] .lab-chrome {
+	--ink-gray-5: oklch(0.63 0 0);
+}
+
 .lab {
 	--lab-ease: cubic-bezier(0.16, 1, 0.3, 1);
 	scrollbar-color: var(--outline-gray-3) transparent;
@@ -40,11 +52,11 @@
 	gap: 0.25rem;
 	border: 1px dashed var(--outline-gray-3);
 	border-radius: 4px;
-	padding: 0 0.375rem;
+	padding: 1px 0.375rem;
 	font-family: GeistMono, ui-monospace, monospace;
 	font-size: 11px;
-	line-height: 18px;
-	color: var(--ink-gray-5);
+	line-height: 16px;
+	color: var(--ink-gray-6);
 	background: var(--surface-gray-1);
 	white-space: nowrap;
 	vertical-align: middle;
@@ -55,10 +67,8 @@
 	display: grid;
 	place-items: center;
 	border: 1px dashed var(--outline-gray-3);
-	background:
-		repeating-linear-gradient(135deg, transparent 0 10px, var(--surface-gray-1) 10px 11px),
-		var(--surface-base);
-	color: var(--ink-gray-5);
+	background: var(--surface-gray-1);
+	color: var(--ink-gray-6);
 	font-family: GeistMono, ui-monospace, monospace;
 	font-size: 11px;
 }
@@ -86,7 +96,8 @@ html[data-motion='on'] [data-reveal] {
 	height: 8px;
 	border-radius: 999px;
 	background: var(--surface-green-7);
-	animation: lab-live 2.4s var(--lab-ease) infinite;
+	/* Three breaths on arrival, then still: a loop that never ends is noise. */
+	animation: lab-live 2.4s var(--lab-ease) 3;
 }
 
 @media (prefers-reduced-motion: reduce) {

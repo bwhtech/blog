@@ -147,7 +147,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 									<ul class="divide-y divide-outline-gray-1 rounded-4 border border-outline-gray-1">
 										{SAMPLE_PEOPLE.map((person) => (
 											<li class="flex items-center gap-2 px-3 py-2">
-												<span class="flex size-6 items-center justify-center rounded-full bg-surface-gray-2 text-[10px] font-medium text-ink-gray-7">{person.name.split(' ').map((part) => part[0]).join('')}</span>
+												<span class="flex size-6 items-center justify-center rounded-full bg-surface-gray-2 text-[11px] font-medium text-ink-gray-7">{person.name.split(' ').map((part) => part[0]).join('')}</span>
 												<span class="flex min-w-0 flex-1 flex-col"><span class="truncate text-sm text-ink-gray-9">{person.name}</span><span class="text-xs text-ink-gray-5">{person.place}</span></span>
 												<span class:list={['rounded-full px-2 py-0.5 text-xs font-medium', statusTone(person.status)]}>{person.status}</span>
 											</li>
@@ -272,7 +272,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 					</div>
 					<p data-closest class="flex min-h-5 items-start gap-2 px-1 text-p-sm field-ink" aria-live="polite">
 						<Icon name="sparkles" size={15} class="mt-0.5 shrink-0 opacity-70" />
-						<span data-closest-text>Each part of this system is something we have built before.</span>
+						<span data-closest-text>Every part runs on the same open-source stack, so they work as one system.</span>
 					</p>
 				</div>
 			</section>

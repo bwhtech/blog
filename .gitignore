@@ -31,3 +31,8 @@ pnpm-debug.log*
 
 # obsidian vault settings
 .obsidian/
+
+# impeccable design skill: review captures and local state
+.impeccable/review/
+.impeccable/build/
+.impeccable/config.local.json
