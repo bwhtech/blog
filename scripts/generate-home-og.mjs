@@ -10,9 +10,9 @@ import path from 'node:path';
 
 import { buildDocument, escapeHtml, renderCards, root } from './og-card.mjs';
 
-/** Keep in sync with the headline and tagline in src/pages/index.astro. */
-const HEADLINE = 'Bunch of Problem Solvers.';
-const TAGLINE = 'We solve it, with Frappe.';
+/** Keep in sync with HEADLINE in src/data/landing.ts and the page title in src/pages/index.astro. */
+const HEADLINE = 'Problem Solving, for Problem Solvers.';
+const TAGLINE = 'Technology for nonprofits, built on open source.';
 
 const outFile = path.join(root, 'public/og/home.jpg');
 
@@ -35,10 +35,11 @@ const css = `
 		z-index: 1;
 	}
 
-	/* 84px is the largest size that keeps the headline on one line. */
+	/* Two balanced lines at 80px. */
 	h1 {
-		max-width: 1020px;
-		font-size: 84px;
+		max-width: 900px;
+		font-size: 80px;
+		text-wrap: balance;
 		font-weight: 600;
 		letter-spacing: -0.03em;
 		line-height: 1.05;

@@ -6,7 +6,8 @@
  * `data-at` value the stylesheet draws, so nothing depends on a script to show.
  */
 import Icon from './Icon.astro';
-import Tbd from './Tbd.astro';
+import { Image } from 'astro:assets';
+import teaching from '../../assets/landing/hussain-teaching.jpg';
 
 const PALETTE = [
 	{ icon: 'type', label: 'Text' },
@@ -14,15 +15,32 @@ const PALETTE = [
 	{ icon: 'list', label: 'Choice' },
 	{ icon: 'camera', label: 'Photo' },
 ];
-const AGENT_STEPS = ['Pulled 248 records for March', 'Built the monthly report', 'Emailed it to 3 funders'];
+// The agent's answer: visits by village this quarter, top three and the rest.
+const VISITS = [
+	{ name: 'Kondagaon', count: 216, tone: 'a' },
+	{ name: 'Bastar', count: 144, tone: 'b' },
+	{ name: 'Jagdalpur', count: 125, tone: 'c' },
+	{ name: 'Others', count: 177, tone: 'd' },
+];
+const TOTAL = VISITS.reduce((sum, v) => sum + v.count, 0);
+// Each slice as a share of 100, with where it starts, for a pathLength=100 ring.
+const SLICES = VISITS.reduce<{ name: string; count: number; tone: string; pct: number; start: number }[]>((list, v) => {
+	const start = list.length ? list[list.length - 1].start + list[list.length - 1].pct : 0;
+	return [...list, { ...v, pct: Math.round((v.count / TOTAL) * 100), start }];
+}, []);
 ---
 
 <div class="train">
 	<!-- 1: teaching -->
 	<article class="panel teach">
 		<div class="photo-slot">
-			<Icon name="image" size={22} />
-			<Tbd note="photo of Hussain teaching" />
+			<Image
+				src={teaching}
+				alt="Hussain at a lectern with a laptop, teaching a session"
+				widths={[480, 720, 1040]}
+				sizes="(min-width: 1024px) 420px, (min-width: 640px) 100vw, 100vw"
+				class="photo"
+			/>
 		</div>
 		<div class="caption">
 			<span class="num">1</span>
@@ -72,22 +90,33 @@ const AGENT_STEPS = ['Pulled 248 records for March', 'Built the monthly report',
 			<div class="win">
 				<div class="win-bar">
 					<span class="win-title"><Icon name="sparkles" size={13} />Agent</span>
-					<span class="status"><i></i>Working</span>
+					<span class="status"><i></i><span class="s-work">Working</span><span class="s-done">Answered</span></span>
 				</div>
-				<div class="ask">Send March's report to our funders</div>
-				<ol class="steps">
-					{AGENT_STEPS.map((step, i) => (
-						<li data-n={i + 1}><span class="tick"><Icon name="check" size={11} strokeWidth={3} /></span>{step}</li>
-					))}
-				</ol>
-				<div class="done"><Icon name="circle-check" size={14} />Done. Report sent to 3 funders.</div>
+				<div class="ask">Which villages had the most visits this quarter?</div>
+				<div class="thinking"><span></span><span></span><span></span>Reading {TOTAL} visits</div>
+				<div class="answer">
+					<span class="pie-wrap">
+					<svg class="pie" viewBox="0 0 100 100">
+						{SLICES.map((slice) => (
+							<circle cx="50" cy="50" r="38" pathLength="100" class:list={['slice', slice.tone]} style={`--pct:${slice.pct - 1};--start:${-slice.start}`} />
+						))}
+					</svg>
+					<span class="pie-label"><b>{SLICES[0].pct}%</b><small>{SLICES[0].name}</small></span>
+					</span>
+					<ul class="legend-pie">
+						{SLICES.map((slice) => (
+							<li><i class={slice.tone}></i><span>{slice.name}</span><b>{slice.count}</b></li>
+						))}
+					</ul>
+				</div>
+				<p class="reply">Kondagaon leads with {SLICES[0].count} visits, a third of the total.</p>
 			</div>
 		</div>
 		<div class="caption">
 			<span class="num">3</span>
 			<div>
 				<h3>AI agents that do the work</h3>
-				<p>Ask in plain words. The agent gathers the data, does the task and tells you when it is done.</p>
+				<p>Ask a question in plain words.</p>
 			</div>
 		</div>
 	</article>
@@ -112,9 +141,12 @@ const AGENT_STEPS = ['Pulled 248 records for March', 'Built the monthly report',
 			grid-template-columns: minmax(0, 1fr);
 		}
 	}
+	/* Picture and caption rows line up across the panels, whatever the caption length. */
 	.panel {
-		display: flex;
-		flex-direction: column;
+		display: grid;
+		grid-row: span 2;
+		grid-template-rows: subgrid;
+		row-gap: 0;
 		overflow: hidden;
 		border: 1px solid var(--outline-gray-2);
 		border-radius: 14px;
@@ -125,7 +157,8 @@ const AGENT_STEPS = ['Pulled 248 records for March', 'Built the monthly report',
 		position: relative;
 		display: flex;
 		flex: 1;
-		min-height: 260px;
+		min-height: 330px;
+		padding: 20px 0;
 		align-items: center;
 		justify-content: center;
 		border-bottom: 1px solid var(--outline-gray-1);
@@ -134,9 +167,22 @@ const AGENT_STEPS = ['Pulled 248 records for March', 'Built the monthly report',
 			var(--surface-gray-1);
 	}
 	.photo-slot {
-		flex-direction: column;
-		gap: 10px;
-		color: var(--ink-gray-4);
+		overflow: hidden;
+		background: var(--surface-gray-2);
+	}
+	.photo-slot :global(.photo) {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: 40% 60%;
+		/* Black and white, like the team photos, so it sits with the illustrations. */
+		filter: grayscale(1) contrast(1.12) brightness(1.04);
+	}
+	/* The white wall glares on a dark page; take it down a little. */
+	:global([data-theme='dark']) .photo-slot :global(.photo) {
+		filter: grayscale(1) contrast(1.08) brightness(0.86);
 	}
 	.caption {
 		display: flex;
@@ -359,7 +405,7 @@ const AGENT_STEPS = ['Pulled 248 records for March', 'Built the monthly report',
 		transform: none;
 	}
 
-	/* 3: the agent. 0 the ask, 1 to 3 each step ticks, 4 done. */
+	/* 3: the agent. 0 the question, 1 it reads the data, 2 the chart draws, 3 the answer holds. */
 	.status {
 		display: flex;
 		align-items: center;
@@ -372,79 +418,162 @@ const AGENT_STEPS = ['Pulled 248 records for March', 'Built the monthly report',
 		height: 7px;
 		border-radius: 999px;
 		background: var(--viz-due);
+		transition: background-color 300ms;
 	}
-	html[data-motion='on'] [data-agent]:not([data-at='4']) .status i {
-		animation: pulse 1.2s ease-in-out infinite;
+	.s-done,
+	[data-at='3'] .s-work {
+		display: none;
 	}
-	[data-at='4'] .status i {
+	[data-at='3'] .s-done {
+		display: inline;
+	}
+	[data-at='3'] .status i {
 		background: var(--viz-visited);
-	}
-	@keyframes pulse {
-		50% {
-			opacity: 0.3;
-		}
 	}
 	.ask {
 		align-self: flex-end;
-		max-width: 85%;
+		max-width: 88%;
 		padding: 7px 10px;
 		border-radius: 10px 10px 2px 10px;
 		background: var(--ink-gray-9);
+		line-height: 1.4;
 		color: var(--surface-base);
 	}
-	.steps {
-		display: flex;
-		flex-direction: column;
-		gap: 7px;
-	}
-	.steps li {
+	.thinking {
 		display: flex;
 		align-items: center;
-		gap: 8px;
-		color: var(--ink-gray-4);
-		transition: color 300ms var(--lab-ease);
-	}
-	.tick {
-		display: flex;
-		width: 16px;
-		height: 16px;
-		flex-shrink: 0;
-		align-items: center;
-		justify-content: center;
-		border: 1.5px solid var(--outline-gray-3);
-		border-radius: 999px;
-		color: transparent;
-		transition:
-			background-color 300ms var(--lab-ease),
-			border-color 300ms var(--lab-ease),
-			color 300ms var(--lab-ease);
-	}
-	[data-at='1'] [data-n='1'],
-	[data-at='2'] :is([data-n='1'], [data-n='2']),
-	:is([data-at='3'], [data-at='4']) [data-n] {
-		color: var(--ink-gray-8);
-	}
-	[data-at='1'] [data-n='1'] .tick,
-	[data-at='2'] :is([data-n='1'], [data-n='2']) .tick,
-	:is([data-at='3'], [data-at='4']) [data-n] .tick {
-		border-color: var(--viz-visited);
-		background: var(--viz-visited);
-		color: #fff;
-	}
-	.done {
-		padding: 7px 10px;
-		border-radius: 8px;
-		background: var(--surface-green-2);
-		color: var(--ink-green-7);
+		gap: 3px;
+		height: 0;
+		overflow: hidden;
+		font-size: 11px;
+		color: var(--ink-gray-5);
 		opacity: 0;
-		transform: translateY(4px);
+		transition:
+			opacity 250ms,
+			height 300ms var(--lab-ease);
+	}
+	.thinking span {
+		width: 4px;
+		height: 4px;
+		border-radius: 999px;
+		background: var(--ink-gray-5);
+	}
+	.thinking span:last-of-type {
+		margin-right: 5px;
+	}
+	html[data-motion='on'] .thinking span {
+		animation: pulse 1s ease-in-out infinite;
+	}
+	.thinking span:nth-child(2) { animation-delay: 150ms; }
+	.thinking span:nth-child(3) { animation-delay: 300ms; }
+	@keyframes pulse {
+		50% {
+			opacity: 0.25;
+		}
+	}
+	[data-at='1'] .thinking {
+		height: 16px;
+		opacity: 1;
+	}
+	.answer {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		padding: 10px;
+		border: 1px solid var(--outline-gray-1);
+		border-radius: 10px;
+		background: var(--surface-gray-1);
+		opacity: 0;
+		transform: translateY(6px);
 		transition:
 			opacity 300ms var(--lab-ease),
-			transform 400ms var(--lab-ease);
+			transform 450ms var(--lab-ease);
 	}
-	[data-at='4'] .done {
+	:is([data-at='2'], [data-at='3']) .answer {
 		opacity: 1;
 		transform: none;
+	}
+	.pie {
+		width: 86px;
+		height: 86px;
+		flex-shrink: 0;
+		transform: rotate(-90deg);
+	}
+	.slice {
+		fill: none;
+		stroke-width: 16;
+		stroke-dasharray: 0 100;
+		stroke-dashoffset: var(--start);
+		transition: stroke-dasharray 900ms var(--lab-ease);
+	}
+	:is([data-at='2'], [data-at='3']) .slice {
+		stroke-dasharray: var(--pct) calc(100 - var(--pct));
+	}
+	.slice.b { transition-delay: 120ms; }
+	.slice.c { transition-delay: 240ms; }
+	.slice.d { transition-delay: 360ms; }
+	.a { stroke: var(--viz-blue); background: var(--viz-blue); }
+	.b { stroke: var(--viz-visited); background: var(--viz-visited); }
+	.c { stroke: var(--viz-due); background: var(--viz-due); }
+	.d { stroke: var(--surface-gray-4); background: var(--surface-gray-4); }
+	.pie-wrap {
+		position: relative;
+		display: flex;
+		flex-shrink: 0;
+	}
+	.pie-label {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		line-height: 1.1;
+	}
+	.pie-label b {
+		font-size: 15px;
+		font-weight: 600;
+		color: var(--ink-gray-9);
+	}
+	.pie-label small {
+		font-size: 8px;
+		color: var(--ink-gray-5);
+	}
+	.legend-pie {
+		display: flex;
+		min-width: 0;
+		flex: 1;
+		flex-direction: column;
+		gap: 5px;
+		font-size: 11px;
+	}
+	.legend-pie li {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		color: var(--ink-gray-7);
+	}
+	.legend-pie i {
+		width: 7px;
+		height: 7px;
+		flex-shrink: 0;
+		border-radius: 2px;
+	}
+	.legend-pie b {
+		margin-left: auto;
+		font-weight: 500;
+		color: var(--ink-gray-9);
+		font-variant-numeric: tabular-nums;
+	}
+	.reply {
+		font-size: 11.5px;
+		line-height: 1.45;
+		color: var(--ink-gray-7);
+		opacity: 0;
+		transition: opacity 400ms var(--lab-ease) 500ms;
+	}
+	:is([data-at='2'], [data-at='3']) .reply {
+		opacity: 1;
 	}
 </style>
 
@@ -474,7 +603,7 @@ const AGENT_STEPS = ['Pulled 248 records for March', 'Built the monthly report',
 	if (!motionAllowed()) {
 		// Still pictures: the finished state of each.
 		if (builder) builder.dataset.at = '3';
-		if (agent) agent.dataset.at = '4';
+		if (agent) agent.dataset.at = '3';
 	} else {
 		if (builder) {
 			const win = builder.querySelector<HTMLElement>('.win')!;
@@ -497,6 +626,6 @@ const AGENT_STEPS = ['Pulled 248 records for March', 'Built the monthly report',
 			window.addEventListener('resize', place);
 			loop(builder, [1400, 1200, 1100, 2200], (at) => at === 0 && requestAnimationFrame(place));
 		}
-		if (agent) loop(agent, [1300, 900, 900, 900, 2600]);
+		if (agent) loop(agent, [1300, 1300, 900, 3200]);
 	}
 </script>

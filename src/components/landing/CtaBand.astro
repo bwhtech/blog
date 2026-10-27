@@ -1,0 +1,291 @@
+---
+/**
+ * The closing ask. A dark band in both themes: the ask and one button on the
+ * left, and on the right the problems teams bring us, which tick over to
+ * solved one by one while the band is on screen. The faces are the team.
+ */
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+
+import { CTA, PROBLEMS } from '../../data/landing';
+import Icon from './Icon.astro';
+
+const FIRST = 'hussain-nagaria';
+const team = (await getCollection('authors')).sort((a, b) => Number(b.id === FIRST) - Number(a.id === FIRST));
+const asks = PROBLEMS.filter((problem) => ['sheets', 'forms', 'reports', 'trust', 'script'].includes(problem.id));
+---
+
+<section id="tell-us" aria-labelledby="tell-us-title" class="band scroll-mt-24" data-band>
+	<div class="ask">
+		<h2 id="tell-us-title">Tell us the problem.</h2>
+		<p>We listen first, then work it out with you.</p>
+		<div class="actions">
+			<a href={CTA.meetHref} class="go">
+				{CTA.secondary}
+				<Icon name="arrow-right" size={16} />
+			</a>
+			<span class="faces">
+				<span class="stack" aria-hidden="true">
+					{team.slice(0, 5).map((person) => (
+						<Image src={person.data.avatar} alt="" width={64} height={64} class="face" />
+					))}
+				</span>
+				You talk to the team that builds it.
+			</span>
+		</div>
+	</div>
+	<ul class="problems" data-problems aria-label="Problems teams bring us">
+		{asks.map((problem) => (
+			<li class="problem" data-problem>
+				<span class="mark" aria-hidden="true">
+					<Icon name="x" size={12} strokeWidth={2.5} class="open" />
+					<Icon name="check" size={12} strokeWidth={3} class="done" />
+				</span>
+				<span class="label"><span class="txt">{problem.label}</span></span>
+				<span class="tag" aria-hidden="true">Solved</span>
+			</li>
+		))}
+	</ul>
+</section>
+
+<style>
+	/* The same dark band on a light or a dark page. */
+	.band {
+		--band-ink: #fafafa;
+		--band-muted: rgb(255 255 255 / 0.62);
+		--band-line: rgb(255 255 255 / 0.1);
+		--band-green: #3ecf8e;
+		position: relative;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		align-items: center;
+		gap: 40px;
+		overflow: hidden;
+		padding: 56px;
+		border: 1px solid rgb(255 255 255 / 0.08);
+		border-radius: 20px;
+		background:
+			radial-gradient(70% 90% at 100% 0%, rgb(62 207 142 / 0.12), transparent 60%),
+			radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.07) 1px, transparent 0) 0 0 / 20px 20px,
+			#141414;
+		color: var(--band-ink);
+	}
+	@media (max-width: 1023px) {
+		.band {
+			grid-template-columns: minmax(0, 1fr);
+			padding: 40px 28px;
+		}
+	}
+	.ask h2 {
+		font-size: 40px;
+		font-weight: 600;
+		line-height: 1.08;
+		letter-spacing: -0.03em;
+		text-wrap: balance;
+	}
+	@media (max-width: 639px) {
+		.ask h2 {
+			font-size: 30px;
+		}
+	}
+	.ask > p {
+		margin-top: 12px;
+		font-size: 18px;
+		line-height: 1.5;
+		color: var(--band-muted);
+	}
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 16px 20px;
+		margin-top: 28px;
+	}
+	.go {
+		display: inline-flex;
+		height: 44px;
+		align-items: center;
+		gap: 8px;
+		padding: 0 18px;
+		border-radius: 10px;
+		background: #fff;
+		font-size: 16px;
+		font-weight: 500;
+		color: #111;
+		text-decoration: none;
+		transition:
+			transform 200ms var(--lab-ease),
+			box-shadow 300ms var(--lab-ease);
+	}
+	.go :global(svg) {
+		transition: transform 300ms var(--lab-ease);
+	}
+	.go:hover {
+		box-shadow: 0 10px 28px -10px rgb(255 255 255 / 0.45);
+	}
+	.go:hover :global(svg) {
+		transform: translateX(3px);
+	}
+	.go:active {
+		transform: scale(0.97);
+	}
+	.go:focus-visible {
+		outline: 2px solid #fff;
+		outline-offset: 3px;
+	}
+	.faces {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		font-size: 13px;
+		color: var(--band-muted);
+	}
+	.stack {
+		display: flex;
+	}
+	.stack :global(.face) {
+		width: 28px;
+		height: 28px;
+		border: 2px solid #141414;
+		border-radius: 999px;
+		object-fit: cover;
+		filter: grayscale(1);
+	}
+	.stack :global(.face + .face) {
+		margin-left: -9px;
+	}
+
+	/* The problems: open with a cross, then struck through and ticked. */
+	.problems {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	.problem {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 12px 14px;
+		border: 1px solid var(--band-line);
+		border-radius: 12px;
+		background: rgb(255 255 255 / 0.04);
+		font-size: 14px;
+		transition:
+			background-color 400ms var(--lab-ease),
+			border-color 400ms var(--lab-ease);
+	}
+	.mark {
+		position: relative;
+		display: flex;
+		width: 22px;
+		height: 22px;
+		flex-shrink: 0;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+		background: rgb(255 255 255 / 0.08);
+		color: var(--band-muted);
+		transition:
+			background-color 400ms var(--lab-ease),
+			color 400ms var(--lab-ease);
+	}
+	.mark :global(svg) {
+		position: absolute;
+		transition:
+			opacity 250ms var(--lab-ease),
+			transform 450ms cubic-bezier(0.34, 1.5, 0.64, 1);
+	}
+	.mark :global(.done) {
+		opacity: 0;
+		transform: scale(0.4);
+	}
+	.label {
+		position: relative;
+		flex: 1;
+		color: var(--band-ink);
+		transition: color 400ms var(--lab-ease);
+	}
+	/* The strike draws across the words, line by line if they wrap. */
+	.txt {
+		background: linear-gradient(currentColor, currentColor) 0 58% / 0% 1.5px no-repeat;
+		-webkit-box-decoration-break: clone;
+		box-decoration-break: clone;
+		transition: background-size 600ms var(--lab-ease);
+	}
+	.tag {
+		font-size: 11px;
+		font-weight: 600;
+		letter-spacing: 0.02em;
+		color: var(--band-green);
+		opacity: 0;
+		transform: translateX(-4px);
+		transition:
+			opacity 300ms var(--lab-ease) 150ms,
+			transform 400ms var(--lab-ease) 150ms;
+	}
+	.problem.solved {
+		border-color: rgb(62 207 142 / 0.25);
+		background: rgb(62 207 142 / 0.06);
+	}
+	.problem.solved .mark {
+		background: var(--band-green);
+		color: #0b2a1c;
+	}
+	.problem.solved .mark :global(.open) {
+		opacity: 0;
+		transform: scale(0.4) rotate(-45deg);
+	}
+	.problem.solved .mark :global(.done) {
+		opacity: 1;
+		transform: none;
+	}
+	.problem.solved .label {
+		color: var(--band-muted);
+	}
+	.problem.solved .txt {
+		background-size: 100% 1.5px;
+	}
+	.problem.solved .tag {
+		opacity: 1;
+		transform: none;
+	}
+	@media (max-width: 639px) {
+		.problem {
+			font-size: 13px;
+		}
+		.tag {
+			display: none;
+		}
+	}
+</style>
+
+<script>
+	import { inView } from 'motion';
+	import { motionAllowed } from '../../scripts/landing/motion';
+
+	// One problem ticks over every beat; once all are solved they hold, then reset.
+	document.querySelectorAll<HTMLElement>('[data-band]').forEach((band) => {
+		const items = [...band.querySelectorAll<HTMLElement>('[data-problem]')];
+		if (!motionAllowed()) {
+			items.forEach((item) => item.classList.add('solved'));
+			return;
+		}
+		let next = 0;
+		let timer = 0;
+		const tick = () => {
+			if (next < items.length) {
+				items[next].classList.add('solved');
+				next += 1;
+				timer = window.setTimeout(tick, next === items.length ? 2600 : 900);
+			} else {
+				items.forEach((item) => item.classList.remove('solved'));
+				next = 0;
+				timer = window.setTimeout(tick, 1100);
+			}
+		};
+		inView(band, () => {
+			timer = window.setTimeout(tick, 600);
+			return () => window.clearTimeout(timer);
+		}, { amount: 0.4 });
+	});
+</script>

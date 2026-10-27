@@ -4,7 +4,7 @@
  * fewer elements, almost no text.
  */
 import Icon from '../../../components/landing/Icon.astro';
-import LabLayout from '../../../layouts/LabLayout.astro';
+import LandingLayout from '../../../layouts/LandingLayout.astro';
 
 const TITLE = 'We engineer processes that make your life easier.';
 const LEDE = 'From forms, sheets, chats and scripts to one process.';
@@ -33,7 +33,7 @@ const KNOT_ICONS = [
 ];
 ---
 
-<LabLayout title="Flow concepts, round 2" description="Cleaner concepts for the fragmented-tools section.">
+<LandingLayout title="Flow concepts, round 2" description="Cleaner concepts for the fragmented-tools section.">
 	<main class="mx-auto flex max-w-[1280px] flex-col gap-16 px-10 py-12">
 		<section class="concept" data-concept="d">
 			<p class="concept-name">D · Converge</p>
@@ -96,7 +96,7 @@ const KNOT_ICONS = [
 			</div>
 		</section>
 	</main>
-</LabLayout>
+</LandingLayout>
 
 <style>
 	.concept {

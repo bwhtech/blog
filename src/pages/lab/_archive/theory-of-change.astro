@@ -33,7 +33,7 @@ import {
 	YOUTUBE,
 	isTBD,
 } from '../../../data/landing';
-import LabLayout from '../../../layouts/LabLayout.astro';
+import LandingLayout from '../../../layouts/LandingLayout.astro';
 
 type Tone = 'amber' | 'gray' | 'blue' | 'cyan' | 'violet' | 'pink';
 const STAGES: { id: string; label: string; line: string; tone: Tone }[] = [
@@ -107,7 +107,7 @@ const MATRIX = [
 const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list', 'users', 'hand-coins'];
 ---
 
-<LabLayout
+<LandingLayout
 	title="Theory of change"
 	description="BWH's theory of change: from scattered sheets and forms to a system your team owns."
 	variant="theory-of-change"
@@ -451,7 +451,7 @@ const OUTPUT_ICONS = ['chart-column', 'id-card', 'smartphone', 'clipboard-list',
 			</div>
 		</footer>
 	</div>
-</LabLayout>
+</LandingLayout>
 
 <style>
 	/* The results chain: six nodes and five links on one line, stacked on phones. */

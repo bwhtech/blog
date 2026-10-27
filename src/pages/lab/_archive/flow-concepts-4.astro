@@ -4,7 +4,7 @@
  * place and becomes the source everything else reads from.
  */
 import Icon from '../../../components/landing/Icon.astro';
-import LabLayout from '../../../layouts/LabLayout.astro';
+import LandingLayout from '../../../layouts/LandingLayout.astro';
 
 const TITLE = 'We engineer processes that make your life easier.';
 const LEDE =
@@ -33,7 +33,7 @@ const Y = [70, 135, 200, 265, 330];
 const PY = [80, 160, 240, 320];
 ---
 
-<LabLayout title="Flow concepts, round 4" description="Replace, then serve: one system as the single source of truth.">
+<LandingLayout title="Flow concepts, round 4" description="Replace, then serve: one system as the single source of truth.">
 	<main class="mx-auto flex max-w-[1280px] flex-col gap-16 px-10 py-12">
 		<!-- J -->
 		<section class="concept" data-concept="j">
@@ -107,7 +107,7 @@ const PY = [80, 160, 240, 320];
 			</div>
 		</section>
 	</main>
-</LabLayout>
+</LandingLayout>
 
 <style>
 	.concept {

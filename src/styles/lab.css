@@ -74,7 +74,7 @@
 }
 
 /* Starting state for entrance motion. Only applies once the inline script in
-   LabLayout has confirmed motion is allowed. */
+   LandingLayout has confirmed motion is allowed. */
 html[data-motion='on'] [data-reveal] {
 	opacity: 0;
 }

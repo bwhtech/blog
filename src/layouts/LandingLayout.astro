@@ -1,7 +1,8 @@
 ---
 /**
- * Layout for the landing page experiments under /lab. They stay out of search
- * results and analytics, and each one carries the variant switcher.
+ * Layout for the landing page at / and the archived variants. Pages stay out
+ * of search results and analytics unless they pass `noindex={false}`; an
+ * archived variant can still show the variant switcher.
  */
 import LabSwitcher from '../components/landing/LabSwitcher.astro';
 import BaseLayout from './BaseLayout.astro';
@@ -14,12 +15,17 @@ interface Props {
 	variant?: string;
 	/** Lifts the switcher above a fixed bottom bar, in px. */
 	switcherOffset?: number;
+	/** On by default; the published landing page turns it off. */
+	noindex?: boolean;
+	/** A path under public/ for the social card. */
+	ogImage?: string;
 }
 
-const { title, description, variant, switcherOffset = 0 } = Astro.props;
+const { title, description, variant, switcherOffset = 0, noindex = true, ogImage } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} noindex>
+<BaseLayout title={title} description={description} noindex={noindex} ogImage={ogImage}>
+	<slot name="head" slot="head" />
 	<!--
 	  Entrance motion starts from a hidden state, so the flag is stamped before
 	  the body paints. If the page script never boots, the timeout takes the flag

@@ -1,6 +1,6 @@
 /**
  * Shared motion helpers for the /lab pages, on top of Motion
- * (https://motion.dev). LabLayout stamps `data-motion="on"` before paint when
+ * (https://motion.dev). LandingLayout stamps `data-motion="on"` before paint when
  * motion is allowed; `boot()` tells it the page script is alive.
  */
 import { animate, inView } from 'motion';

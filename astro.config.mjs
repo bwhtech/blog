@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import mdx from '@astrojs/mdx';
+import sitemap from '@astrojs/sitemap';
 import vue from '@astrojs/vue';
 import { defineConfig } from 'astro/config';
 import { barrelImports, lucideIcons } from 'frappe-ui/vite';
@@ -95,6 +96,15 @@ export default defineConfig({
 		// A post that has to mount a component in the middle of its body is written
 		// as index.mdx; every other post stays plain Markdown.
 		mdx(),
+		// Every public page, for search engines. Left out: the lab, the playground,
+		// and /blog/<slug>/, which only redirects an old post URL to
+		// /blog/<category>/<slug>/.
+		sitemap({
+			filter: (page) => {
+				const { pathname } = new URL(page);
+				return !/^\/(lab|playground)(\/|$)/.test(pathname) && !/^\/blog\/[^/]+\/$/.test(pathname);
+			},
+		}),
 	],
 	markdown: {
 		syntaxHighlight: {

@@ -5,7 +5,7 @@
  * one becomes the animated diagram on the page.
  */
 import Icon from '../../../components/landing/Icon.astro';
-import LabLayout from '../../../layouts/LabLayout.astro';
+import LandingLayout from '../../../layouts/LandingLayout.astro';
 
 const TITLE = 'We engineer processes that make your life easier.';
 const LEDE =
@@ -108,7 +108,7 @@ const DRIPS = [
 const STEP_X = [740, 870, 1000, 1124];
 ---
 
-<LabLayout title="Flow concepts" description="Three static concepts for the fragmented-tools section.">
+<LandingLayout title="Flow concepts" description="Three static concepts for the fragmented-tools section.">
 	<main class="mx-auto flex max-w-[1280px] flex-col gap-16 px-10 py-12">
 		<header class="flex flex-col gap-2">
 			<h1 class="text-[28px] font-semibold tracking-[-0.02em] text-ink-gray-9">Three concepts for the section after the dashboard</h1>
@@ -263,7 +263,7 @@ const STEP_X = [740, 870, 1000, 1124];
 			</p>
 		</section>
 	</main>
-</LabLayout>
+</LandingLayout>
 
 <style>
 	.concept {

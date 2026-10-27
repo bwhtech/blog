@@ -31,7 +31,7 @@ import {
 	YOUTUBE,
 	isTBD,
 } from '../../../data/landing';
-import LabLayout from '../../../layouts/LabLayout.astro';
+import LandingLayout from '../../../layouts/LandingLayout.astro';
 
 const FORM = 'intake-form';
 
@@ -80,7 +80,7 @@ const statusTone = (status: string) =>
 const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025em] text-ink-gray-9 sm:text-[34px] [text-wrap:balance]';
 ---
 
-<LabLayout
+<LandingLayout
 	title="Intake desk"
 	description="Tell BWH what is breaking in your programme and see the system that would fix it."
 	variant="intake"
@@ -487,7 +487,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 	</div>
 
 	<script type="application/json" id="intake-closest" set:html={JSON.stringify(CLOSEST)} is:inline></script>
-</LabLayout>
+</LandingLayout>
 
 <style>
 	/* The deep blue field the system sits on. In dark mode it is a deep blue

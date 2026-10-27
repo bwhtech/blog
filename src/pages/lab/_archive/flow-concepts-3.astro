@@ -4,7 +4,7 @@
  * shapes, with round 1's meaning back (tool names, breaks, step notes).
  */
 import Icon from '../../../components/landing/Icon.astro';
-import LabLayout from '../../../layouts/LabLayout.astro';
+import LandingLayout from '../../../layouts/LandingLayout.astro';
 
 const TITLE = 'We engineer processes that make your life easier.';
 const LEDE = 'Most teams juggle Google Forms, sheets, WhatsApp groups and a script someone vibe-coded once. We turn them into one process.';
@@ -31,7 +31,7 @@ const STEP_X = [740, 860, 980, 1100];
 const thread = (y: number) => `M220,${y} C420,${y} 420,200 560,200`;
 ---
 
-<LabLayout title="Flow concepts, round 3" description="In-between concepts for the fragmented-tools section.">
+<LandingLayout title="Flow concepts, round 3" description="In-between concepts for the fragmented-tools section.">
 	<main class="mx-auto flex max-w-[1280px] flex-col gap-16 px-10 py-12">
 		{['g', 'h'].map((variant) => (
 			<section class="concept" data-concept={variant}>
@@ -79,7 +79,7 @@ const thread = (y: number) => `M220,${y} C420,${y} 420,200 560,200`;
 			</section>
 		))}
 	</main>
-</LabLayout>
+</LandingLayout>
 
 <style>
 	.concept {

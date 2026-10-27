@@ -47,6 +47,7 @@ const documentTitle = title === SITE_TITLE ? title : `${title} · ${SITE_TITLE}`
 			type={type}
 			noindex={noindex}
 		/>
+		<slot name="head" />
 	</head>
 	<body class="min-h-screen bg-surface-base text-ink-gray-9 antialiased">
 		<a

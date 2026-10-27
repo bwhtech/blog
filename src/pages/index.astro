@@ -1,74 +1,1954 @@
 ---
-import NewsletterForm from '../components/islands/NewsletterForm.vue';
-import { SITE_TITLE } from '../consts';
-import AppLayout from '../layouts/AppLayout.astro';
+/**
+ * Variant 2, Sheet → System: the page opens as the spreadsheet most
+ * programmes run on. Scrolling pins it and turns it into one clean system:
+ * the forms and chats fly into one place, the duplicate merges, and the
+ * total that was wrong becomes right. The rest of the page lives in the app.
+ *
+ * The beneficiary rows are sample data, and the page labels them so.
+ */
+import Button from '../components/landing/Button.astro';
+import Icon from '../components/landing/Icon.astro';
+import Logo from '../components/landing/Logo.astro';
+import TrainingPanels from '../components/landing/TrainingPanels.astro';
+import StackOrbit from '../components/landing/StackOrbit.astro';
+import CtaBand from '../components/landing/CtaBand.astro';
+import BlogGrid from '../components/landing/BlogGrid.astro';
+import BuildGrid from '../components/landing/BuildGrid.astro';
+import TeamGrid from '../components/landing/TeamGrid.astro';
+import PartnerWall from '../components/landing/PartnerWall.astro';
+import ProcessFlow from '../components/landing/ProcessFlow.astro';
+import Tbd from '../components/landing/Tbd.astro';
+import {
+	CONTRIBUTIONS,
+	CTA,
+	HEADLINE,
+	HOME_TOWN,
+	LEGAL_NAME,
+	OFFERS,
+	OPEN_SOURCE,
+	NAMED_PARTNERS,
+	PARTNERS,
+	YOUTUBE,
+	isTBD,
+} from '../data/landing';
+import { KINDS, RANGES, STATUSES, VILLAGES } from '../data/sample-programme';
+import LandingLayout from '../layouts/LandingLayout.astro';
 
-const description = 'We solve problems with Frappe Framework and apps.';
+const COLS = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+const HEAD = ['Name', 'Village', 'Phone', 'Last visit', 'Visited?', 'Case', 'Notes'];
+const HIDE_ON_MOBILE = new Set([2, 3, 5, 6]);
+
+type MessRow = {
+	cells: string[];
+	dup?: boolean;
+	error?: number;
+	highlight?: number[];
+	comment?: { col: number; text: string };
+};
+
+// Eight rows, four ways to write "yes", one person twice, and a formula error.
+const MESS: MessRow[] = [
+	{ cells: ['Lakshmi B.', 'Kondagaon', '98271 •••••', '12/03/26', 'yes', 'Food', 'see WA group'] },
+	{ cells: ['Ramesh Netam', 'kondagaon ', '+91 94060•••••', '3 March', 'Y', 'food', ''] },
+	{
+		cells: ['Sunita Kashyap', 'Bastar', '—', '2026-03-04', 'done ✓', 'Shelter', 'dup? check w/ Priya'],
+		highlight: [6],
+		comment: { col: 4, text: 'Who changed this??' },
+	},
+	{ cells: ['Lakshmi Bai', 'Kondagaon', '98271 •••••', '12-3-2026', 'Yes', 'FOOD', ''], dup: true, highlight: [0] },
+	{ cells: ['Manoj Baghel', 'Jagdalpur', '70004 •••••', '#VALUE!', '?', 'Health', ''], error: 3 },
+	{ cells: ['Devki Mandavi', 'Bastar', '98931 •••••', 'Mar-5', 'no', 'Health', 'call back'] },
+	{ cells: ['Anil Sori', 'Dantewada', '88710 •••••', '06/03', 'yes', 'Rescue', ''], highlight: [0, 1, 2, 3, 4, 5, 6] },
+	{ cells: ['Geeta Poyam', 'Bijapur', '', '', '', 'Shelter', 'from Google Form'] },
+];
+
+const STATUS_KEY = { Visited: 'visited', 'Follow up': 'follow', Due: 'due' } as const;
+const FILTERS = [
+	{ key: 'range', icon: 'calendar', label: 'Date range', options: RANGES.map((range) => ({ value: range.id, label: range.label })) },
+	{ key: 'village', icon: 'map-pin', label: 'Village', options: [{ value: '', label: 'All villages' }, ...VILLAGES.map((v) => ({ value: v, label: v }))] },
+	{ key: 'kind', icon: 'tag', label: 'Case', options: [{ value: '', label: 'All cases' }, ...KINDS.map((k) => ({ value: k, label: k }))] },
+];
+const KPIS = [
+	{ key: 'people', label: 'Beneficiaries' },
+	{ key: 'visited', label: 'Visited' },
+	{ key: 'due', label: 'Due a visit' },
+	{ key: 'visits', label: 'Visits' },
+];
+
+const TABLE_FIRST_ROW = 10;
+const TABS = [
+	{ id: 'sheet', label: 'The mess' },
+	{ id: 'changes', label: 'What changes' },
+	{ id: 'partners', label: 'Partners' },
+	{ id: 'team', label: 'Team' },
+	{ id: 'build', label: 'What we build' },
+	{ id: 'open-source', label: 'Open source' },
+	{ id: 'training', label: 'Training' },
+	{ id: 'blog', label: 'Blog' },
+	{ id: 'tell-us', label: 'Tell us' },
+];
+
+
+
+// Who BWH is, for search engines: the same facts as the footer.
+const ORGANIZATION = {
+	'@context': 'https://schema.org',
+	'@type': 'Organization',
+	name: LEGAL_NAME,
+	alternateName: 'BWH',
+	url: 'https://bwh.tech',
+	logo: 'https://bwh.tech/favicon.svg',
+	description: 'Technology for nonprofits: MIS, dashboards, case management and training, built on open source.',
+	address: { '@type': 'PostalAddress', addressLocality: 'Jagdalpur', addressRegion: 'Chhattisgarh', addressCountry: 'IN' },
+	sameAs: [OPEN_SOURCE.href, YOUTUBE.href],
+};
+const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025em] text-ink-gray-9 sm:text-[34px] [text-wrap:balance]';
 ---
 
-<AppLayout title={SITE_TITLE} description={description} ogImage="/og/home.jpg">
-	<main
-		id="main-content"
-		class="mx-auto flex min-h-screen w-full max-w-[820px] flex-col items-center justify-center gap-9 px-4 text-center sm:px-5"
-	>
-		<div class="flex flex-col items-center gap-5">
-			<p class="text-xs uppercase tracking-widest text-ink-gray-5">BWH</p>
-			<h1
-				class="max-w-[650px] text-[34px] font-semibold leading-[1.1] tracking-tight text-ink-gray-9 sm:text-[52px]"
-			>
-				Bunch of <em>Problem Solvers</em>.
-			</h1>
-			<p class="max-w-[480px] text-p-lg text-ink-gray-6">We solve it, with Frappe.</p>
-		</div>
-
-		<div class="flex w-full flex-col items-center gap-6">
-			<svg
-				aria-hidden="true"
-				class="text-ink-gray-4"
-				width="40"
-				height="12"
-				viewBox="0 0 40 12"
-				fill="none"
-			>
-				<path d="M0 6H14" stroke="currentColor" stroke-width="1"></path>
-				<path d="M26 6H40" stroke="currentColor" stroke-width="1"></path>
-				<circle cx="20" cy="6" r="2.5" fill="currentColor"></circle>
-			</svg>
-
-			<a
-				class="inline-flex h-10 items-center rounded-5 bg-surface-gray-10 px-4 text-lg-medium text-ink-base no-underline transition-colors hover:bg-surface-gray-9 active:bg-surface-gray-8"
-				href="/meet"
-				data-s-event="Book a Call"
-				data-s-event-props="source=home"
-			>
-				Talk to us
-			</a>
-
-			<a
-				class="group inline-flex min-h-8 items-center gap-1.5 text-sm text-ink-gray-5 no-underline transition-colors hover:text-ink-gray-9"
-				href="/blog"
-			>
-				<span>Read the blog</span>
-				<svg
-					aria-hidden="true"
-					class="size-4 transition-transform group-hover:translate-x-0.5"
-					viewBox="0 0 24 24"
-					fill="none"
-				>
-					<path
-						d="M9 6l6 6-6 6"
-						stroke="currentColor"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"></path>
-				</svg>
-			</a>
-
-			<!-- client:idle rather than visible: it is above the fold on every
-			     viewport, so an observer would fire at once anyway. -->
-			<div class="mt-4 w-full max-w-[560px]">
-				<NewsletterForm client:idle placement="home" />
+<LandingLayout
+	title="Technology for nonprofits"
+	description="BWH replaces the spreadsheets, forms and scripts your nonprofit runs on with one open-source system your team owns: MIS, dashboards, case management and training."
+	noindex={false}
+	ogImage="/og/home.jpg"
+>
+	<script type="application/ld+json" slot="head" set:html={JSON.stringify(ORGANIZATION)} />
+	<div class="sheet-page" data-sheet-page data-chrome="sheet">
+		<!-- Header: the spreadsheet's title bar and formula bar, which become the
+		     app's, then a plain site header once the scene is behind us. It is
+		     fixed over a spacer, so folding the second row never moves the page. -->
+		<div class="h-[77px]" aria-hidden="true"></div>
+		<header class="site-header fixed inset-x-0 top-0 z-30 border-b border-outline-gray-2 bg-surface-base" data-header>
+			<div class="flex h-11 items-center gap-3 px-3 sm:px-4">
+				<Logo size={24} />
+				<div class="relative min-w-0 flex-1">
+					<p data-hdr-a class="flex items-center gap-2 truncate text-base text-ink-gray-8">
+						<span class="truncate">Beneficiaries_FINAL_v3 (2).xlsx</span>
+						<span class="hidden items-center gap-1 text-xs text-ink-gray-5 md:inline-flex">
+							<Icon name="cloud-off" size={13} />Last edit by someone who left
+						</span>
+					</p>
+					<p data-hdr-b class="absolute inset-0 flex items-center gap-1.5 truncate text-base text-ink-gray-8 opacity-0">
+						<span class="font-semibold text-ink-gray-9">BWH</span>
+						<Icon name="chevron-right" size={14} class="text-ink-gray-4" />
+						<span class="truncate">Your programme, one system</span>
+					</p>
+					<div data-hdr-c class="hdr-site absolute inset-0 flex items-center gap-6">
+						<a href="#sheet" class="font-semibold text-ink-gray-9 no-underline">BWH</a>
+						<nav aria-label="Sections" class="hidden items-center gap-1 lg:flex">
+							{TABS.filter((tab) => tab.id !== 'sheet').map((tab) => (
+								<a href={`#${tab.id}`} data-tab={tab.id} class="site-link">{tab.label}</a>
+							))}
+						</nav>
+					</div>
+				</div>
+				<Button href={CTA.meetHref} variant="primary">Talk to Us</Button>
 			</div>
-		</div>
-	</main>
-</AppLayout>
+			<div class="hdr-row2 relative h-8 border-t border-outline-gray-1 text-sm">
+				<div data-hdr-a class="absolute inset-0 flex items-center">
+					<span data-name-box class="flex h-full w-14 shrink-0 items-center justify-center border-r border-outline-gray-1 font-data text-xs text-ink-gray-7 sm:w-16">A1</span>
+					<span class="flex h-full w-9 shrink-0 items-center justify-center border-r border-outline-gray-1 font-data text-xs italic text-ink-gray-5">fx</span>
+					<span data-formula class="truncate px-3 font-data text-xs text-ink-gray-8">="{HEADLINE.title}"</span>
+				</div>
+				<div data-hdr-b class="absolute inset-0 flex items-center gap-2 px-3 opacity-0 sm:px-4">
+					<Icon name="search" size={14} class="text-ink-gray-5" />
+					<span class="text-sm text-ink-gray-5">Search beneficiaries, visits, cases</span>
+					<span class="ml-auto hidden items-center gap-1.5 text-xs text-ink-gray-5 sm:flex"><span class="live-dot" aria-hidden="true"></span>Everyone sees the same data</span>
+				</div>
+			</div>
+		</header>
+
+		<main id="main-content">
+			<!-- The scene. Tall on purpose: scrolling through it drives the change. -->
+			<section id="sheet" data-scene aria-labelledby="sheet-title" class="sheet-scene relative">
+				<div data-stage class="sheet-stage">
+					<!-- Before: the sheet. Its data stays quiet so the headline leads. -->
+					<div class="layer layer-sheet" data-sheet-layer>
+						<!-- Column letters -->
+						<div class="sheet-band h-6" aria-hidden="true">
+							<div class="rownum corner"></div>
+							<div class="sheet-cols">
+								{COLS.map((col, index) => <div class:list={['colhead', HIDE_ON_MOBILE.has(index) && 'c-hide']}>{col}</div>)}
+							</div>
+						</div>
+
+						<!-- Rows 1 to 5, merged: the headline. -->
+						<div class="sheet-band">
+							<div class="rownums" aria-hidden="true">
+								{[1, 2, 3, 4, 5].map((row) => <div class="rownum flex-1">{row}</div>)}
+							</div>
+							<div class="relative min-w-0 flex-1">
+								<div
+									data-cell
+									data-ref="A1"
+									data-formula={`="${HEADLINE.title}"`}
+									class="merged relative flex flex-col gap-3 px-4 py-5 sm:px-6 sm:py-7"
+								>
+									<span class="merged-frame" aria-hidden="true"></span>
+									<span class="selection" aria-hidden="true"><span class="fill-handle"></span></span>
+									<h1
+										id="sheet-title"
+										class="max-w-[18ch] text-[36px] font-semibold leading-[1.04] tracking-[-0.035em] text-ink-gray-9 [text-wrap:balance] sm:text-[52px] lg:text-[60px]"
+									>
+										{HEADLINE.title}
+									</h1>
+									<p class="max-w-[58ch] text-p-base text-ink-gray-6 sm:text-p-lg">{HEADLINE.lede}</p>
+								</div>
+							</div>
+						</div>
+
+						<!-- Rows 6 to 9: a total nobody trusts. -->
+						<div class="sheet-band">
+							<div class="rownums" aria-hidden="true">
+								{[6, 7, 8, 9].map((row) => <div class="rownum row-h">{row}</div>)}
+							</div>
+							<div class="relative min-w-0 flex-1" aria-hidden="true">
+								{[0, 1, 2, 3].map((row) => (
+									<div class="sheet-cols row-h">
+										{COLS.map((_, col) => {
+											const label = row === 1 && col === 0;
+											const value = row === 1 && col === 1;
+											return (
+												<div
+													class:list={['cell', HIDE_ON_MOBILE.has(col) && 'c-hide', label && 'cell-label', value && 'cell-total relative font-data']}
+													data-cell={label || value ? '' : undefined}
+													data-ref={value ? 'B7' : label ? 'A7' : undefined}
+													data-formula={value ? '=COUNTIF(E11:E18,"yes")' : label ? 'Visited this month' : undefined}
+												>
+													{label && 'Visited this month'}
+													{value && (
+														<>
+															3
+															<span class="comment-mark" data-mess />
+															<span class="comment">Priya says it is 5?</span>
+														</>
+													)}
+												</div>
+											);
+										})}
+									</div>
+								))}
+								<!-- Where the Sources chip first appears. -->
+								<span class="chip-home" data-chip-home></span>
+							</div>
+						</div>
+
+						<!-- Rows 10 to 18: the register. -->
+						<div class="sheet-band">
+							<div class="rownums" aria-hidden="true">
+								{Array.from({ length: MESS.length + 1 }, (_, index) => <div class="rownum row-h">{TABLE_FIRST_ROW + index}</div>)}
+							</div>
+							<div class="relative min-w-0 flex-1">
+								<div role="table" aria-label="Sample data: the sheet before" class="relative">
+									<div role="row" class="sheet-cols row-h" data-a-row>
+										{HEAD.map((cell, col) => (
+											<div role="columnheader" class:list={['cell head', HIDE_ON_MOBILE.has(col) && 'c-hide']}>{cell}</div>
+										))}
+									</div>
+									{MESS.map((row, index) => (
+										<div
+											role="row"
+											class="sheet-cols row-h"
+											data-a-row
+											data-dup={row.dup ? '' : undefined}
+											data-after-dup={MESS.findIndex((r) => r.dup) < index ? '' : undefined}
+										>
+											{row.cells.map((cell, col) => (
+												<div
+													role="cell"
+													data-cell
+													data-ref={`${COLS[col]}${TABLE_FIRST_ROW + index + 1}`}
+													data-formula={cell}
+													class:list={[
+														'cell',
+														HIDE_ON_MOBILE.has(col) && 'c-hide',
+														(col === 2 || col === 3) && 'font-data',
+														row.highlight?.includes(col) && 'hl',
+														row.error === col && 'err',
+														row.comment?.col === col && 'relative',
+													]}
+												>
+													{cell}
+													{row.comment?.col === col && (
+														<>
+															<span class="comment-mark" data-mess />
+															<span class="comment">{row.comment.text}</span>
+														</>
+													)}
+												</div>
+											))}
+										</div>
+									))}
+								</div>
+
+								<!-- The other places the data lives. They turn up as you scroll, then fly into "Sources". -->
+								<div class="artifact form-card" data-fly data-rot="2.5" aria-hidden="true">
+									<span class="block h-1.5 rounded-t-[7px] bg-surface-violet-7"></span>
+									<span class="flex flex-col gap-1 px-3 py-2.5">
+										<span class="text-sm font-medium text-ink-gray-9">Field visit form (Copy 3)</span>
+										<span class="text-xs text-ink-gray-5">214 responses</span>
+										<span class="text-xs text-ink-red-5">Not linked to any sheet</span>
+									</span>
+								</div>
+								<div class="artifact chat" data-fly data-rot="-2" aria-hidden="true">
+									<span class="bubble">Didi, which sheet is the latest?</span>
+									<span class="bubble mine">Use FINAL_v3. No wait, v4</span>
+								</div>
+								<div class="artifact terminal" data-fly data-rot="1.5" aria-hidden="true">
+									<span class="text-[#9ca3af]">$ python merge_sheets.py</span>
+									<span class="text-[#fca5a5]">KeyError: 'Village '</span>
+									<span class="text-[#6b7280]"># written by a volunteer, 2023</span>
+								</div>
+							</div>
+						</div>
+
+						<!-- Rows below: empty sheet. -->
+						<div class="sheet-band filler flex-1" aria-hidden="true">
+							<div class="rownum filler-nums"></div>
+							<div class="sheet-cols filler-grid flex-1">
+								{COLS.map((_, col) => <div class:list={['filler-col', HIDE_ON_MOBILE.has(col) && 'c-hide']}></div>)}
+							</div>
+						</div>
+					</div>
+
+					<!-- After: the same people as a live dashboard. -->
+					<section class="layer layer-dash" data-dash aria-label="Sample dashboard: the same programme in one system">
+						<div class="dash">
+							<div class="dash-head">
+								<p class="dash-title">Programme overview</p>
+								<span class="chip-dock" data-chip-dock aria-hidden="true"></span>
+							</div>
+
+							<div class="dash-filters" role="toolbar" aria-label="Filters">
+								{FILTERS.map((filter) => (
+									<div class="filter" data-filter={filter.key}>
+										<button type="button" class="filter-button" data-filter-button aria-haspopup="menu" aria-expanded="false" aria-label={filter.label}>
+											<Icon name={filter.icon} size={14} class="filter-icon text-ink-gray-5" />
+											<span data-filter-label>{filter.options[filter.key === 'range' ? 1 : 0].label}</span>
+											<Icon name="chevron-down" size={14} class="text-ink-gray-5" />
+										</button>
+										<div class="filter-menu shadow-xl" role="menu" aria-label={filter.label} data-menu hidden>
+											{filter.options.map((option) => (
+												<button type="button" role="menuitemradio" data-value={option.value} aria-checked="false" tabindex="-1">
+													<Icon name="check" size={14} class="menu-check" />
+													{option.label}
+												</button>
+											))}
+										</div>
+									</div>
+								))}
+								<button type="button" class="clear-button" data-clear hidden>
+									<Icon name="x" size={14} />Clear
+								</button>
+							</div>
+
+							<dl class="dash-kpis">
+								{KPIS.map((kpi) => (
+									<div class="kpi" data-kpi={kpi.key}>
+										<dt>{kpi.label}</dt>
+										<dd class="kpi-value font-data" data-kpi-value>0</dd>
+										<dd class="kpi-note" data-kpi-note></dd>
+									</div>
+								))}
+							</dl>
+
+							<div class="dash-charts">
+								<figure class="card card-area">
+									<figcaption class="card-head">
+										<span class="card-title">Visits</span>
+										<span class="card-meta" data-area-meta>Per week</span>
+									</figcaption>
+									<div class="area" data-area tabindex="0" role="group" aria-label="Visits over time. Use the arrow keys to read each point.">
+										<svg class="area-svg" aria-hidden="true"></svg>
+										<div class="viz-tip" data-tip hidden>
+											<span class="viz-tip-value"><span class="font-data" data-tip-value></span> visits</span>
+											<span class="viz-tip-label" data-tip-label></span>
+										</div>
+										<p class="sr-only" data-summary></p>
+									</div>
+								</figure>
+
+								<figure class="card card-donut">
+									<figcaption class="card-head">
+										<span class="card-title">Status</span>
+										<span class="card-meta">Beneficiaries</span>
+									</figcaption>
+									<div class="donut" data-donut role="img">
+										<div class="donut-ring">
+											<svg viewBox="0 0 120 120" aria-hidden="true"></svg>
+											<span class="donut-center" aria-hidden="true">
+												<span class="donut-value font-data" data-donut-value>0</span>
+												<span class="donut-label" data-donut-label>visited</span>
+											</span>
+										</div>
+										<ul class="legend" aria-hidden="true">
+											{STATUSES.map((status) => (
+												<li data-legend={STATUS_KEY[status]}>
+													<span class:list={['swatch', `viz-${STATUS_KEY[status]}`]}></span>
+													<span class="legend-label">{status}</span>
+													<span class="legend-n font-data" data-legend-n>0</span>
+													<span class="legend-share font-data" data-legend-share></span>
+												</li>
+											))}
+										</ul>
+									</div>
+								</figure>
+
+								<figure class="card card-villages">
+									<figcaption class="card-head">
+										<span class="card-title">Visits by village</span>
+										<span class="card-meta">Click to filter</span>
+									</figcaption>
+									<div class="villages" data-villages>
+										{VILLAGES.map((village) => (
+											<button type="button" class="village" data-village={village} aria-pressed="false">
+												<span class="village-name">{village}</span>
+												<span class="village-track"><span class="village-bar"></span><span class="village-n font-data" data-village-n>0</span></span>
+											</button>
+										))}
+									</div>
+								</figure>
+							</div>
+
+							<div class="card card-table">
+								<div class="card-head">
+									<span class="card-title">Beneficiaries</span>
+									<span class="card-meta" data-table-count></span>
+								</div>
+								<div class="table-scroll">
+									<table class="people">
+										<thead>
+											<tr>
+												<th scope="col">Beneficiary</th>
+												<th scope="col" class="col-visit">Last visit</th>
+												<th scope="col">Status</th>
+												<th scope="col" class="col-kind">Case</th>
+												<th scope="col" class="col-who"><span class="sr-only">Assigned to</span></th>
+											</tr>
+										</thead>
+										<tbody data-rows></tbody>
+									</table>
+									<p class="empty" data-empty hidden>
+										No beneficiaries match these filters.
+										<button type="button" data-empty-clear>Clear filters</button>
+									</p>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<span data-wipe class="wipe-line" aria-hidden="true"></span>
+
+					<!-- Every source lands here, and it stays in the dashboard's header. -->
+					<span data-sources class="sources-chip" hidden>
+						<Icon name="git-merge" size={13} class="text-ink-blue-6" />
+						<span data-sources-text>Sources: 0 merged</span>
+					</span>
+
+					<!-- Caption: where we are in the story. -->
+					<div class="caption-wrap pointer-events-none absolute inset-x-0 bottom-3 z-10 flex justify-center px-3 sm:bottom-4 lg:justify-start lg:pl-14" data-print-hide>
+						<div class="caption-pill pointer-events-auto flex max-w-[640px] items-center gap-3 rounded-[20px] border border-outline-gray-2 bg-surface-elevation-2 py-2 pl-3 pr-4 shadow-lg">
+							<span class="flex shrink-0 gap-1" aria-hidden="true">
+								{[0, 1, 2, 3].map((step) => <span data-dot={step} class="size-1.5 rounded-full bg-surface-gray-4 transition-colors duration-200" />)}
+							</span>
+							<p data-caption aria-live="polite" class="text-p-sm text-ink-gray-8">
+								Sound familiar? Four ways to write “yes”, one person twice, and a total nobody trusts.
+							</p>
+							<div data-toggle hidden class="flex shrink-0 gap-1">
+								<button type="button" data-show="0" aria-pressed="true" class="rounded-full px-2 py-0.5 text-xs text-ink-gray-7 aria-pressed:bg-surface-gray-10 aria-pressed:text-ink-base">Before</button>
+								<button type="button" data-show="1" aria-pressed="false" class="rounded-full px-2 py-0.5 text-xs text-ink-gray-7 aria-pressed:bg-surface-gray-10 aria-pressed:text-ink-base">After</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- From here on, the page lives in the system. -->
+			<div class="mx-auto flex max-w-[1120px] flex-col gap-24 px-4 pb-32 pt-20 sm:px-6">
+				<section id="changes" aria-labelledby="changes-title" class="flex scroll-mt-24 flex-col gap-10">
+					<div class="flex flex-col gap-3">
+						<h2 id="changes-title" class:list={[sectionTitle, 'max-w-[22ch]']}>We engineer processes that make your life easier.</h2>
+						<p class="max-w-[60ch] text-p-lg text-ink-gray-6">
+							Most teams juggle Google Forms, sheets, WhatsApp groups and a script someone vibe-coded once. We replace them with one system, the single source of truth for everything else.
+						</p>
+					</div>
+					<ProcessFlow />
+				</section>
+
+				<section id="partners" aria-labelledby="partners-title" class="flex scroll-mt-24 flex-col gap-8">
+					<div class="flex flex-col gap-3">
+						<h2 id="partners-title" class:list={[sectionTitle, 'max-w-[24ch]']}>Teams we have solved problems with.</h2>
+						<p class="max-w-[60ch] text-p-lg text-ink-gray-6">From homeless care and migration to legal aid and open-source software.</p>
+					</div>
+					<PartnerWall />
+				</section>
+
+				<section id="team" aria-labelledby="team-title" class="flex scroll-mt-24 flex-col gap-8">
+					<h2 id="team-title" class:list={[sectionTitle, 'max-w-[24ch]']}>Who solves your problems?</h2>
+					<TeamGrid />
+				</section>
+
+				<section id="build" aria-labelledby="build-title" class="flex scroll-mt-24 flex-col gap-8">
+					<div class="flex flex-col gap-3">
+						<h2 id="build-title" class:list={[sectionTitle, 'max-w-[24ch]']}>Here is what we help you build.</h2>
+						<p class="max-w-[60ch] text-p-lg text-ink-gray-6">One system, in parts that fit your programme. It runs on open source, so there are no per-seat licences and it stays yours.</p>
+					</div>
+					<BuildGrid />
+				</section>
+
+				<section id="open-source" aria-labelledby="oss-title" class="grid scroll-mt-24 gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center">
+					<div class="flex flex-col gap-4">
+						<h2 id="oss-title" class:list={[sectionTitle, 'max-w-[22ch]']}>Solutions powered by Open Source, so you have complete control.</h2>
+						<p class="max-w-[48ch] text-p-lg text-ink-gray-6">
+							We think Open Source and Non-Profits are a match made in heaven. No per-seat licences, and the code is
+							yours to take anywhere.
+						</p>
+						<a href={OPEN_SOURCE.href} class="flex items-center gap-1 text-sm text-ink-gray-6 underline hover:text-ink-gray-9">
+							{OPEN_SOURCE.repos} open-source repos of our own <Icon name="arrow-up-right" size={13} />
+						</a>
+					</div>
+					<StackOrbit />
+				</section>
+
+				<section id="training" aria-labelledby="training-title" class="flex scroll-mt-24 flex-col gap-8">
+					<h2 id="training-title" class={sectionTitle}>Then we train your team to run it.</h2>
+					<TrainingPanels />
+				</section>
+
+
+				<section id="blog" aria-labelledby="blog-title" class="flex scroll-mt-24 flex-col gap-8">
+					<div class="flex flex-wrap items-end justify-between gap-4">
+						<h2 id="blog-title" class={sectionTitle}>Straight from our blog</h2>
+						<a href="/blog" class="flex items-center gap-1 text-sm text-ink-gray-6 no-underline transition-colors hover:text-ink-gray-9">All posts <Icon name="arrow-right" size={14} /></a>
+					</div>
+					<BlogGrid />
+				</section>
+
+				<CtaBand />
+
+				<footer class="site-footer" aria-label="About BWH">
+					<div class="flex items-center gap-3">
+						<Logo size={22} />
+						<span class="text-xs font-semibold uppercase tracking-[0.14em] text-ink-gray-9">{LEGAL_NAME}</span>
+						<span class="hidden text-sm text-ink-gray-5 sm:inline">{HOME_TOWN}</span>
+					</div>
+					<nav aria-label="Elsewhere" class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+						<a href="/blog" class="footer-link">Blog</a>
+						<a href={YOUTUBE.href} class="footer-link">YouTube</a>
+						<a href={OPEN_SOURCE.href} class="footer-link">GitHub</a>
+						<a href={CTA.meetHref} class="footer-link">Book a call</a>
+					</nav>
+				</footer>
+			</div>
+		</main>
+
+		<!-- Sheet tabs, which are the page's sections, and the status bar. Only
+		     while the sheet is on screen; it slides away when the dashboard takes over. -->
+		<nav aria-label="Sheet tabs" data-print-hide data-sheet-bar class="sheet-bar fixed inset-x-0 bottom-0 z-30 flex h-9 items-stretch border-t border-outline-gray-2 bg-surface-gray-1 text-sm">
+			<div class="flex min-w-0 flex-1 items-stretch overflow-x-auto [scrollbar-width:none]">
+				{TABS.map((tab) => (
+					<a href={`#${tab.id}`} data-tab={tab.id} class="flex shrink-0 items-center border-r border-outline-gray-2 px-3 text-ink-gray-6 no-underline transition-colors hover:bg-surface-gray-2 hover:text-ink-gray-9 aria-[current=true]:bg-surface-base aria-[current=true]:font-medium aria-[current=true]:text-ink-gray-9 aria-[current=true]:shadow-[inset_0_2px_0_var(--ink-blue-6)]">
+						{tab.label}
+					</a>
+				))}
+				<span class="flex shrink-0 items-center px-3 italic text-ink-gray-5" aria-hidden="true">Copy of FINAL (3)</span>
+			</div>
+			<p class="flex shrink-0 items-center gap-2 border-l border-outline-gray-2 px-2.5 font-data text-[11px] text-ink-gray-5 md:hidden">
+				<span>Count {NAMED_PARTNERS.length} · Sum {CONTRIBUTIONS.total.toLocaleString('en-IN')}</span>
+			</p>
+			<p class="hidden shrink-0 items-center gap-4 border-l border-outline-gray-2 px-4 font-data text-xs text-ink-gray-5 md:flex">
+				<span>Count: {NAMED_PARTNERS.length} partners</span>
+				<span>Sum: {CONTRIBUTIONS.total.toLocaleString('en-IN')} PRs merged</span>
+			</p>
+		</nav>
+	</div>
+</LandingLayout>
+
+<style>
+	.sheet-page {
+		--row: 30px;
+		--rownum: 2.5rem;
+		--sheet-template: minmax(9rem, 1.3fr) minmax(6rem, 0.9fr) minmax(7rem, 1fr) minmax(6.5rem, 0.9fr) minmax(5.5rem, 0.7fr) minmax(5.5rem, 0.7fr) minmax(8rem, 1.4fr);
+		/* frappe-ui's chart ramp ("Jewel"), so these charts match the ones in Insights. */
+		--viz-blue: #2283c3;
+		--viz-blue-soft: #b8def2;
+		--viz-visited: #289e60;
+		--viz-follow: #2283c3;
+		--viz-due: #c98c28;
+		padding-bottom: 36px;
+	}
+	:global([data-theme='dark']) .sheet-page {
+		--viz-blue: #137ab9;
+		--viz-blue-soft: #1b4f72;
+		--viz-visited: #189557;
+		--viz-follow: #137ab9;
+		--viz-due: #bf8319;
+	}
+	@media (max-width: 639px) {
+		.sheet-page {
+			--row: 28px;
+			--rownum: 1.75rem;
+			--sheet-template: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 0.8fr);
+		}
+		/* Wins over .cell and .colhead, which set display later in this sheet. */
+		.c-hide {
+			display: none !important;
+		}
+	}
+
+	/* The scene is tall; the stage pins inside it. Both layers share one grid
+	   cell, so the stage is as tall as the taller of them when it does not pin. */
+	.sheet-scene {
+		height: 420vh;
+		/* The dashboard redraws while pinned. Scroll anchoring would pick a node
+		   in it and jump the page when that node moves. */
+		overflow-anchor: none;
+	}
+	/* Chrome states: sheet (title bar, formula bar, sheet tabs), app (the
+	   dashboard's breadcrumb and search; no tabs) and site (one plain row). */
+	.sheet-bar {
+		transition: translate 450ms var(--lab-ease);
+	}
+	[data-chrome='app'] .sheet-bar,
+	[data-chrome='site'] .sheet-bar {
+		translate: 0 100%;
+	}
+	/* While pinned, the strip the tabs leave shows the scene, so it matches the dashboard. */
+	[data-chrome='app'] .sheet-scene {
+		background: var(--surface-gray-1);
+	}
+	.hdr-row2 {
+		overflow: hidden;
+		transition:
+			height 400ms var(--lab-ease),
+			border-color 400ms var(--lab-ease);
+	}
+	[data-chrome='site'] .hdr-row2 {
+		height: 0;
+		border-top-color: transparent;
+		border-top-width: 0;
+	}
+	.hdr-site {
+		opacity: 0;
+		visibility: hidden;
+		transform: translateY(4px);
+		transition:
+			opacity 300ms var(--lab-ease),
+			transform 400ms var(--lab-ease),
+			visibility 0s 300ms;
+	}
+	[data-chrome='site'] .hdr-site {
+		opacity: 1;
+		visibility: visible;
+		transform: none;
+		transition:
+			opacity 300ms var(--lab-ease) 80ms,
+			transform 400ms var(--lab-ease) 80ms;
+	}
+	[data-chrome='site'] [data-hdr-a],
+	[data-chrome='site'] [data-hdr-b] {
+		opacity: 0 !important;
+		visibility: hidden;
+	}
+	.site-link {
+		display: flex;
+		height: 28px;
+		align-items: center;
+		padding: 0 10px;
+		border-radius: 8px;
+		font-size: 14px;
+		color: var(--ink-gray-6);
+		text-decoration: none;
+		transition:
+			background-color 150ms,
+			color 150ms;
+	}
+	.site-link:hover {
+		background: var(--surface-gray-2);
+		color: var(--ink-gray-9);
+	}
+	.site-link[aria-current='true'] {
+		color: var(--ink-gray-9);
+		font-weight: 500;
+	}
+	.sheet-stage {
+		position: sticky;
+		top: 77px;
+		height: calc(100vh - 77px - 36px);
+		height: calc(100dvh - 77px - 36px);
+		min-height: 620px;
+		display: grid;
+		grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+		overflow: hidden;
+		background: var(--surface-base);
+	}
+	.layer {
+		grid-area: 1 / 1;
+		min-width: 0;
+		min-height: 0;
+	}
+	.layer-sheet {
+		display: flex;
+		flex-direction: column;
+		background: var(--surface-base);
+	}
+	/* Closed until the wipe opens it. Without a script the page keeps the sheet. */
+	.layer-dash {
+		overflow: hidden;
+		background: var(--surface-gray-1);
+		clip-path: inset(0 100% 0 0);
+	}
+	html:not([data-motion='on']) .sheet-scene {
+		height: auto;
+	}
+	html:not([data-motion='on']) .sheet-stage {
+		position: relative;
+		top: 0;
+		height: auto;
+		min-height: 0;
+	}
+	html:not([data-motion='on']) .layer-sheet {
+		padding-bottom: 4.5rem;
+	}
+	/* Not pinned, the dashboard takes its natural height and the list shows in full. */
+	html:not([data-motion='on']) .dash {
+		height: auto;
+		padding-bottom: 104px;
+	}
+	html:not([data-motion='on']) .card-table,
+	html:not([data-motion='on']) .table-scroll {
+		flex: none;
+	}
+
+	.sheet-band {
+		display: flex;
+		position: relative;
+	}
+	.sheet-cols {
+		display: grid;
+		grid-template-columns: var(--sheet-template);
+		flex: 1;
+		min-width: 0;
+	}
+	.row-h {
+		height: var(--row);
+	}
+	.rownums {
+		display: flex;
+		flex-direction: column;
+		width: var(--rownum);
+		flex-shrink: 0;
+	}
+	.rownum,
+	.colhead {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: var(--surface-gray-1);
+		color: var(--ink-gray-5);
+		font-family: GeistMono, ui-monospace, monospace;
+		font-size: 11px;
+		border-right: 1px solid var(--outline-gray-1);
+		border-bottom: 1px solid var(--outline-gray-1);
+	}
+	.rownum {
+		width: var(--rownum);
+		flex-shrink: 0;
+	}
+	.corner {
+		height: 100%;
+	}
+	/* The sheet's data is quiet on purpose: small, grey, no bold. The headline
+	   is the one loud thing; the mess is there to recognise, not to read. */
+	.cell {
+		display: flex;
+		align-items: center;
+		min-width: 0;
+		padding: 0 0.5rem;
+		font-size: 12px;
+		color: var(--ink-gray-5);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		border-right: 1px solid var(--outline-gray-1);
+		border-bottom: 1px solid var(--outline-gray-1);
+	}
+	.cell.relative {
+		overflow: visible;
+	}
+	.cell.head {
+		font-weight: 500;
+		background: var(--surface-amber-1);
+		color: var(--ink-gray-6);
+	}
+	.cell.hl {
+		background: color-mix(in oklch, var(--surface-amber-1) 55%, var(--surface-base));
+	}
+	/* The same brick red as the failure in the process diagram. */
+	.cell.err {
+		color: #b54a32;
+	}
+	:global([data-theme='dark']) .cell.err {
+		color: #e8795f;
+	}
+	.cell-label {
+		color: var(--ink-gray-6);
+	}
+	.cell-total {
+		color: var(--ink-gray-7);
+	}
+	.merged {
+		min-height: calc(5 * var(--row));
+	}
+	.merged-frame {
+		position: absolute;
+		inset: 0;
+		border-right: 1px solid var(--outline-gray-1);
+		border-bottom: 1px solid var(--outline-gray-1);
+		pointer-events: none;
+	}
+	.selection {
+		position: absolute;
+		inset: -1px;
+		border: 2px solid var(--outline-blue-6);
+		pointer-events: none;
+	}
+	.fill-handle {
+		position: absolute;
+		right: -4px;
+		bottom: -4px;
+		width: 7px;
+		height: 7px;
+		background: var(--surface-blue-8);
+		border: 1px solid var(--surface-base);
+	}
+	/* A note shows on hover, as in Excel: the red corner is all you see at rest. */
+	.comment-mark {
+		position: absolute;
+		top: 0;
+		right: 0;
+		border-top: 6px solid var(--surface-red-5);
+		border-left: 6px solid transparent;
+	}
+	.comment {
+		display: none;
+		font-family: InterVar, Inter, ui-sans-serif, system-ui, sans-serif;
+		position: absolute;
+		left: calc(100% - 4px);
+		top: -6px;
+		z-index: 5;
+		white-space: nowrap;
+		padding: 4px 8px;
+		font-size: 12px;
+		color: var(--ink-gray-8);
+		background: var(--surface-amber-2);
+		border: 1px solid var(--outline-amber-3);
+		box-shadow: 0 2px 6px rgb(0 0 0 / 0.08);
+	}
+	.cell:hover > .comment {
+		display: block;
+	}
+	@media (max-width: 639px) {
+		.comment {
+			left: auto;
+			right: calc(100% - 6px);
+			top: calc(100% - 2px);
+		}
+	}
+	.filler-grid {
+		background-image: repeating-linear-gradient(
+			to bottom,
+			transparent 0 calc(var(--row) - 1px),
+			var(--outline-gray-1) calc(var(--row) - 1px) var(--row)
+		);
+	}
+	.filler-col {
+		border-right: 1px solid var(--outline-gray-1);
+	}
+	.filler-nums {
+		align-self: stretch;
+		background-image: repeating-linear-gradient(
+			to bottom,
+			transparent 0 calc(var(--row) - 1px),
+			var(--outline-gray-1) calc(var(--row) - 1px) var(--row)
+		);
+		background-color: var(--surface-gray-1);
+	}
+
+	/* The wipe: left of the line is the system, right of it the sheet. */
+	.wipe-line {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 6;
+		width: 2px;
+		margin-left: -1px;
+		background: var(--surface-blue-8);
+		box-shadow: 0 0 0 3px color-mix(in oklch, var(--surface-blue-8) 18%, transparent);
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	/* Where the sources land. It sits in the sheet first, then rides the wipe
+	   into the dashboard's header. */
+	.chip-home {
+		position: absolute;
+		right: 12px;
+		top: calc(var(--row) + (var(--row) - 28px) / 2);
+		height: 28px;
+	}
+	.sources-chip {
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: 7;
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		height: 28px;
+		padding: 0 10px;
+		border-radius: 999px;
+		border: 1px solid var(--outline-gray-2);
+		background: var(--surface-base);
+		font-size: 12px;
+		color: var(--ink-gray-7);
+		white-space: nowrap;
+		will-change: transform;
+	}
+
+	/* The other places the data lives. */
+	.artifact {
+		position: absolute;
+		z-index: 6;
+		pointer-events: none;
+		will-change: transform, opacity;
+	}
+	html[data-motion='on'] .artifact {
+		opacity: 0;
+	}
+	.form-card {
+		right: 3%;
+		top: calc(var(--row) * 2.4);
+		width: 220px;
+		border-radius: 8px;
+		background: var(--surface-elevation-2);
+		border: 1px solid var(--outline-gray-2);
+		box-shadow: 0 8px 24px rgb(0 0 0 / 0.1);
+		transform: rotate(2.5deg);
+	}
+	.chat {
+		right: 30%;
+		top: calc(var(--row) * 5.2);
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		transform: rotate(-2deg);
+	}
+	.bubble {
+		max-width: 230px;
+		padding: 6px 10px;
+		border-radius: 10px;
+		font-size: 13px;
+		color: var(--ink-gray-9);
+		background: var(--surface-elevation-2);
+		border: 1px solid var(--outline-gray-2);
+		box-shadow: 0 6px 18px rgb(0 0 0 / 0.08);
+	}
+	.bubble.mine {
+		align-self: flex-end;
+		background: var(--surface-green-2);
+		border-color: var(--outline-green-2);
+	}
+	.terminal {
+		left: 18%;
+		top: calc(var(--row) * 7.6);
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		padding: 10px 12px;
+		border-radius: 8px;
+		background: #111214;
+		font-family: GeistMono, ui-monospace, monospace;
+		font-size: 12px;
+		box-shadow: 0 10px 28px rgb(0 0 0 / 0.22);
+		transform: rotate(1.5deg);
+	}
+	@media (max-width: 639px) {
+		.artifact {
+			scale: 0.62;
+			transform-origin: top right;
+		}
+		.form-card {
+			top: calc(var(--row) * 1.2);
+			right: 2%;
+		}
+		.chat {
+			top: calc(var(--row) * 4.6);
+			right: 2%;
+		}
+		.terminal {
+			top: calc(var(--row) * 7.4);
+			left: 6%;
+			transform-origin: top left;
+		}
+	}
+
+	/* The dashboard. Desk Grey under Paper cards, frappe-ui's own sizes. */
+	.dash {
+		height: 100%;
+		max-width: 1320px;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		padding: 18px 24px 76px;
+	}
+	.dash-head {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		min-height: 28px;
+	}
+	.dash-title {
+		font-size: 18px;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		color: var(--ink-gray-9);
+	}
+	.chip-dock {
+		margin-left: auto;
+		height: 28px;
+		flex-shrink: 0;
+	}
+
+	.dash-filters {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 8px;
+	}
+	.filter {
+		position: relative;
+	}
+	.filter-button {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		height: 28px;
+		padding: 0 8px 0 10px;
+		border-radius: 8px;
+		border: 1px solid var(--outline-gray-2);
+		background: var(--surface-base);
+		font-size: 13px;
+		color: var(--ink-gray-8);
+		white-space: nowrap;
+		transition:
+			background-color 150ms,
+			border-color 150ms;
+	}
+	.filter-button:hover {
+		border-color: var(--outline-gray-3);
+	}
+	.filter-button[aria-expanded='true'] {
+		border-color: var(--outline-gray-4);
+	}
+	.filter-button[data-on] {
+		background: var(--surface-blue-2);
+		border-color: var(--outline-blue-3);
+		color: var(--ink-blue-8);
+	}
+	.filter-button[data-on] :global(svg) {
+		color: var(--ink-blue-6);
+	}
+	.filter-menu {
+		position: absolute;
+		top: calc(100% + 4px);
+		left: 0;
+		z-index: 20;
+		min-width: 11rem;
+		padding: 4px;
+		border-radius: 10px;
+		border: 1px solid var(--outline-gray-1);
+		background: var(--surface-elevation-2, var(--surface-base));
+	}
+	.filter-menu button {
+		display: flex;
+		width: 100%;
+		align-items: center;
+		gap: 8px;
+		height: 28px;
+		padding: 0 10px 0 8px;
+		border-radius: 6px;
+		font-size: 13px;
+		color: var(--ink-gray-8);
+		text-align: left;
+		white-space: nowrap;
+	}
+	.filter-menu button:hover,
+	.filter-menu button:focus-visible {
+		background: var(--surface-gray-2);
+		outline: none;
+	}
+	.filter-menu button[aria-checked='true'] {
+		font-weight: 500;
+		color: var(--ink-gray-9);
+	}
+	.filter-menu :global(.menu-check) {
+		visibility: hidden;
+	}
+	.filter-menu button[aria-checked='true'] :global(.menu-check) {
+		visibility: visible;
+	}
+	.clear-button {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		height: 28px;
+		padding: 0 8px;
+		border-radius: 8px;
+		font-size: 13px;
+		color: var(--ink-gray-7);
+	}
+	.clear-button:hover {
+		background: var(--surface-gray-2);
+		color: var(--ink-gray-9);
+	}
+
+	.dash-kpis {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		flex-shrink: 0;
+		border: 1px solid var(--outline-gray-1);
+		border-radius: 10px;
+		background: var(--surface-base);
+	}
+	.kpi {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+		padding: 12px 16px;
+	}
+	.kpi + .kpi {
+		border-left: 1px solid var(--outline-gray-1);
+	}
+	.kpi dt {
+		font-size: 12px;
+		color: var(--ink-gray-5);
+	}
+	.kpi-value {
+		margin-top: 4px;
+		font-size: 28px;
+		font-weight: 500;
+		line-height: 1.05;
+		color: var(--ink-gray-9);
+	}
+	.kpi-note {
+		margin-top: 4px;
+		font-size: 12px;
+		color: var(--ink-gray-6);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.dash-charts {
+		display: grid;
+		grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr) minmax(0, 1fr);
+		gap: 12px;
+		flex-shrink: 0;
+		height: clamp(190px, 30dvh, 270px);
+	}
+	.card {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+		min-height: 0;
+		border: 1px solid var(--outline-gray-1);
+		border-radius: 10px;
+		background: var(--surface-base);
+	}
+	.card-head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 8px;
+		padding: 12px 14px 0;
+	}
+	.card-donut {
+		container-type: inline-size;
+	}
+	.card-title {
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--ink-gray-9);
+	}
+	.card-meta {
+		font-size: 12px;
+		color: var(--ink-gray-5);
+		white-space: nowrap;
+	}
+
+	.area {
+		position: relative;
+		flex: 1;
+		min-height: 0;
+		margin: 4px 4px 4px 2px;
+		border-radius: 6px;
+	}
+	.area-svg {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+	}
+	.area :global(.viz-grid) {
+		stroke: var(--outline-gray-1);
+		stroke-width: 1;
+	}
+	.area :global(.viz-tick) {
+		fill: var(--ink-gray-5);
+		font-family: GeistMono, ui-monospace, monospace;
+		font-size: 10px;
+		font-variant-numeric: tabular-nums;
+	}
+	.area :global(.viz-line) {
+		fill: none;
+		stroke: var(--viz-blue);
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+	.area :global(.viz-cross) {
+		stroke: var(--outline-gray-3);
+		stroke-width: 1;
+	}
+	.area :global(.viz-dot) {
+		fill: var(--viz-blue);
+		stroke: var(--surface-base);
+		stroke-width: 2;
+	}
+	.area :global(.viz-end) {
+		fill: var(--ink-gray-8);
+		font-family: GeistMono, ui-monospace, monospace;
+		font-size: 11px;
+		font-weight: 500;
+	}
+	.viz-tip {
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: 3;
+		display: flex;
+		flex-direction: column;
+		gap: 1px;
+		padding: 6px 8px;
+		border-radius: 8px;
+		border: 1px solid var(--outline-gray-2);
+		background: var(--surface-base);
+		box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
+		pointer-events: none;
+		white-space: nowrap;
+	}
+	.viz-tip-value {
+		font-size: 13px;
+		font-weight: 500;
+		color: var(--ink-gray-9);
+	}
+	.viz-tip-label {
+		font-size: 11px;
+		color: var(--ink-gray-5);
+	}
+
+	.donut {
+		flex: 1;
+		min-height: 0;
+		display: flex;
+		align-items: center;
+		gap: 18px;
+		padding: 10px 14px 14px;
+	}
+	.donut-ring {
+		position: relative;
+		flex-shrink: 0;
+		height: min(100%, 132px);
+		aspect-ratio: 1;
+	}
+	.donut-ring svg {
+		width: 100%;
+		height: 100%;
+	}
+	.donut :global(.viz-seg) {
+		fill: none;
+		stroke-width: 14;
+		transition: opacity 150ms;
+	}
+	.donut :global(circle.viz-visited) {
+		stroke: var(--viz-visited);
+	}
+	.donut :global(circle.viz-follow) {
+		stroke: var(--viz-follow);
+	}
+	.donut :global(circle.viz-due) {
+		stroke: var(--viz-due);
+	}
+	.donut-center {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+	.donut-value {
+		font-size: 20px;
+		font-weight: 500;
+		line-height: 1;
+		color: var(--ink-gray-9);
+	}
+	.donut-label {
+		margin-top: 3px;
+		font-size: 11px;
+		color: var(--ink-gray-5);
+	}
+	.legend {
+		flex: 1;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	.legend li {
+		display: grid;
+		grid-template-columns: 8px minmax(0, 1fr) auto 2.25rem;
+		align-items: center;
+		gap: 8px;
+		font-size: 12px;
+		color: var(--ink-gray-7);
+		transition: opacity 150ms;
+	}
+	.legend li[data-dim] {
+		opacity: 0.45;
+	}
+	.legend-label {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.swatch {
+		width: 8px;
+		height: 8px;
+		border-radius: 2px;
+	}
+	.swatch.viz-visited {
+		background: var(--viz-visited);
+	}
+	.swatch.viz-follow {
+		background: var(--viz-follow);
+	}
+	.swatch.viz-due {
+		background: var(--viz-due);
+	}
+	.legend-n {
+		text-align: right;
+		color: var(--ink-gray-9);
+	}
+	.legend-share {
+		text-align: right;
+		font-size: 11px;
+		color: var(--ink-gray-5);
+	}
+	/* A narrow card keeps the ring and the counts, and drops the shares. */
+	@container (max-width: 340px) {
+		.donut {
+			gap: 12px;
+		}
+		.donut-ring {
+			height: min(100%, 100px);
+		}
+		.donut-value {
+			font-size: 17px;
+		}
+		.legend li {
+			grid-template-columns: 8px minmax(0, 1fr) auto;
+		}
+		.legend-share {
+			display: none;
+		}
+	}
+
+	.villages {
+		flex: 1;
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		padding: 6px 8px 10px;
+	}
+	.village {
+		--w: 0;
+		display: grid;
+		grid-template-columns: 5.25rem minmax(0, 1fr);
+		align-items: center;
+		gap: 8px;
+		flex: 1;
+		max-height: 34px;
+		min-height: 24px;
+		padding: 0 6px;
+		border-radius: 6px;
+		text-align: left;
+		transition: background-color 150ms;
+	}
+	.village:hover {
+		background: var(--surface-gray-1);
+	}
+	.village-name {
+		font-size: 12px;
+		color: var(--ink-gray-7);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.village[aria-pressed='true'] .village-name {
+		font-weight: 500;
+		color: var(--ink-gray-9);
+	}
+	.village-track {
+		display: flex;
+		align-items: center;
+		min-width: 0;
+	}
+	.village-bar {
+		height: 10px;
+		width: calc(var(--w) * (100% - 2.75rem));
+		border-radius: 0 4px 4px 0;
+		background: var(--viz-blue);
+		transition: background-color 200ms;
+	}
+	.village[data-muted] .village-bar {
+		background: var(--viz-blue-soft);
+	}
+	.village-n {
+		margin-left: 6px;
+		font-size: 11px;
+		color: var(--ink-gray-7);
+	}
+
+	.card-table {
+		flex: 1;
+	}
+	.table-scroll {
+		flex: 1;
+		min-height: 0;
+		margin-top: 8px;
+		overflow: hidden;
+	}
+	.people {
+		width: 100%;
+		table-layout: fixed;
+		border-collapse: collapse;
+		font-size: 13px;
+	}
+	.people th {
+		height: 28px;
+		padding: 0 14px;
+		text-align: left;
+		font-size: 12px;
+		font-weight: 400;
+		color: var(--ink-gray-5);
+		background: var(--surface-gray-1);
+		border-top: 1px solid var(--outline-gray-1);
+		border-bottom: 1px solid var(--outline-gray-1);
+	}
+	.people .col-visit {
+		width: 8.5rem;
+	}
+	.people th:nth-child(3) {
+		width: 7rem;
+	}
+	.people .col-kind {
+		width: 6rem;
+	}
+	.people .col-who {
+		width: 3.5rem;
+	}
+	.people :global(td) {
+		height: 32px;
+		padding: 0 14px;
+		border-bottom: 1px solid var(--outline-gray-1);
+		color: var(--ink-gray-7);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.people :global(td.col-visit) {
+		font-size: 12px;
+	}
+	.people :global(.p-cell) {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		min-width: 0;
+	}
+	.people :global(.p-name) {
+		font-weight: 500;
+		color: var(--ink-gray-9);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.people :global(.p-place) {
+		font-size: 12px;
+		color: var(--ink-gray-5);
+		white-space: nowrap;
+	}
+	.people :global(.p-merged) {
+		display: inline-flex;
+		align-items: center;
+		height: 20px;
+		padding: 0 6px;
+		border-radius: 999px;
+		background: var(--surface-gray-2);
+		font-size: 11px;
+		color: var(--ink-gray-7);
+		white-space: nowrap;
+	}
+	.people :global(.badge) {
+		display: inline-flex;
+		align-items: center;
+		height: 20px;
+		padding: 0 8px;
+		border-radius: 999px;
+		font-size: 12px;
+		font-weight: 500;
+	}
+	.people :global(.badge-visited) {
+		background: var(--surface-green-2);
+		color: var(--ink-green-8);
+	}
+	.people :global(.badge-follow) {
+		background: var(--surface-blue-2);
+		color: var(--ink-blue-8);
+	}
+	.people :global(.badge-due) {
+		background: var(--surface-amber-2);
+		color: var(--ink-amber-8);
+	}
+	.people :global(td.col-who) {
+		text-align: right;
+	}
+	.people :global(.avatar) {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 24px;
+		height: 24px;
+		border-radius: 999px;
+		background: var(--surface-gray-2);
+		font-size: 11px;
+		font-weight: 500;
+		color: var(--ink-gray-7);
+	}
+	.empty {
+		padding: 16px 14px;
+		font-size: 13px;
+		color: var(--ink-gray-6);
+	}
+	.empty button {
+		margin-left: 4px;
+		color: var(--ink-gray-8);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	@media (max-width: 1023px) {
+		.dash-charts {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			grid-template-rows: minmax(0, 1.25fr) minmax(0, 1fr);
+			height: clamp(330px, 44dvh, 460px);
+		}
+		.card-area {
+			grid-column: 1 / -1;
+		}
+	}
+	@media (max-width: 639px) {
+		.dash {
+			gap: 10px;
+			padding: 12px 12px 72px;
+		}
+		.dash-head {
+			gap: 8px;
+		}
+		.dash-title {
+			font-size: 15px;
+			white-space: nowrap;
+		}
+		.sources-chip {
+			gap: 4px;
+			padding: 0 8px;
+			font-size: 11px;
+		}
+		.dash-kpis {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+		.kpi {
+			padding: 8px 12px;
+		}
+		.kpi + .kpi {
+			border-left: 0;
+		}
+		.kpi:nth-child(even) {
+			border-left: 1px solid var(--outline-gray-1);
+		}
+		.kpi:nth-child(n + 3) {
+			border-top: 1px solid var(--outline-gray-1);
+		}
+		.kpi-value {
+			font-size: 22px;
+		}
+		.kpi-note {
+			font-size: 11px;
+		}
+		.dash-charts {
+			grid-template-columns: minmax(0, 1fr);
+			grid-template-rows: 160px 150px;
+			height: auto;
+		}
+		.donut-value {
+			font-size: 17px;
+		}
+		.dash-filters :global(.filter-icon) {
+			display: none;
+		}
+		.card-villages {
+			display: none;
+		}
+		.people .col-visit,
+		.people .col-kind,
+		.people .col-who,
+		.people :global(td.col-visit),
+		.people :global(td.col-kind),
+		.people :global(td.col-who) {
+			display: none;
+		}
+		.people :global(.p-place) {
+			display: none;
+		}
+	}
+	/* Most phones have no room left for the list under the charts. */
+	@media (max-width: 639px) and (max-height: 959px) {
+		html[data-motion='on'] .card-table {
+			display: none;
+		}
+		html[data-motion='on'] .dash-charts {
+			flex: 1;
+			min-height: 0;
+			grid-template-rows: minmax(140px, 1fr) 150px;
+		}
+	}
+	/* On tablets the lab switcher fills the bottom edge, so the caption sits above it. */
+	@media (min-width: 640px) and (max-width: 1023px) {
+		.caption-wrap {
+			bottom: 64px;
+		}
+		.dash {
+			padding-bottom: 124px;
+		}
+	}
+	/* Between 1024 and 1280 the lab switcher takes the right half of the bottom edge. */
+	@media (min-width: 1024px) and (max-width: 1279px) {
+		.caption-pill {
+			max-width: calc(100vw - 600px);
+		}
+	}
+	/* Under 800px tall there is no room for a useful list: the charts take the height. */
+	@media (min-width: 640px) and (max-height: 799px) {
+		html[data-motion='on'] .card-table {
+			display: none;
+		}
+		html[data-motion='on'] .dash-charts {
+			flex: 1;
+			height: auto;
+			min-height: 0;
+		}
+	}
+	/* Short laptop screens: tighter spacing so the list keeps its rows. */
+	@media (min-width: 1024px) and (max-height: 820px) {
+		.dash {
+			gap: 10px;
+			padding-top: 14px;
+		}
+		.kpi {
+			padding: 10px 16px;
+		}
+		.kpi-value {
+			font-size: 24px;
+		}
+	}
+
+	.site-footer {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		padding-top: 24px;
+		border-top: 1px solid var(--outline-gray-2);
+	}
+	.footer-link {
+		color: var(--ink-gray-6);
+		text-decoration: none;
+		transition: color 150ms;
+	}
+	.footer-link:hover {
+		color: var(--ink-gray-9);
+	}
+	.partner-cols {
+		display: grid;
+		grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr) minmax(0, 0.9fr) minmax(0, 1.6fr);
+		column-gap: 1rem;
+	}
+	@media (max-width: 767px) {
+		.partner-cols {
+			grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr) minmax(0, 0.9fr);
+		}
+	}
+	@media (max-width: 639px) {
+		.partner-cols {
+			grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+		}
+	}
+
+	@media print {
+		.sheet-scene {
+			height: auto;
+		}
+		.sheet-stage {
+			position: relative;
+			height: auto;
+		}
+	}
+</style>
+
+<script>
+	import { createDashboard } from '../scripts/landing/dashboard';
+	import { boot, motionAllowed } from '../scripts/landing/motion';
+
+	boot();
+
+	const scene = document.querySelector<HTMLElement>('[data-scene]')!;
+	const stage = scene.querySelector<HTMLElement>('[data-stage]')!;
+	const header = document.querySelector<HTMLElement>('[data-header]')!;
+	const caption = stage.querySelector<HTMLElement>('[data-caption]')!;
+	const dots = stage.querySelectorAll<HTMLElement>('[data-dot]');
+	const sheetLayer = stage.querySelector<HTMLElement>('[data-sheet-layer]')!;
+	const dashLayer = stage.querySelector<HTMLElement>('[data-dash]')!;
+	const chip = stage.querySelector<HTMLElement>('[data-sources]')!;
+	const chipText = chip.querySelector<HTMLElement>('[data-sources-text]')!;
+	const chipIcon = chip.querySelector('svg') ?? chip;
+	const chipHome = stage.querySelector<HTMLElement>('[data-chip-home]')!;
+	const chipDock = stage.querySelector<HTMLElement>('[data-chip-dock]')!;
+	const wipe = stage.querySelector<HTMLElement>('[data-wipe]')!;
+	const mess = [...stage.querySelectorAll<HTMLElement>('[data-mess]')];
+	const flyers = [...stage.querySelectorAll<HTMLElement>('[data-fly]')];
+	const hdrA = [...header.querySelectorAll<HTMLElement>('[data-hdr-a]')];
+	const hdrB = [...header.querySelectorAll<HTMLElement>('[data-hdr-b]')];
+	const dup = stage.querySelector<HTMLElement>('[data-dup]');
+	const afterDup = [...stage.querySelectorAll<HTMLElement>('[data-after-dup]')];
+
+	// The dashboard is drawn now but stays shut and unreachable until it is live.
+	dashLayer.inert = true;
+	const dashboard = createDashboard(dashLayer);
+	chip.hidden = false;
+	chip.style.opacity = '0';
+
+	const CAPTIONS = [
+		'Sound familiar? Four ways to write “yes”, one person twice, and a total nobody trusts.',
+		'We listen first. Then every sheet, form and chat goes into one place.',
+		'One record per person, and the dashboard builds itself from it.',
+		'It is live: try the filters. Then we train your team to run it.',
+	];
+	const LIVE_AT = 0.84;
+
+	const clamp = (value: number) => Math.min(1, Math.max(0, value));
+	const seg = (p: number, from: number, to: number) => clamp((p - from) / (to - from));
+	const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+	const smooth = (t: number) => t * t * (3 - 2 * t);
+	const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+	// Positions inside the stage: where the chip appears, where it docks in the
+	// dashboard, and how far each card travels to reach it.
+	let geo = { home: { x: 0, y: 0 }, dock: { x: 0, y: 0 }, targets: [] as { dx: number; dy: number }[] };
+	function measure() {
+		flyers.forEach((el) => (el.style.transform = ''));
+		const box = stage.getBoundingClientRect();
+		const width = chip.offsetWidth;
+		chipDock.style.width = `${width}px`;
+		const home = chipHome.getBoundingClientRect();
+		const dock = chipDock.getBoundingClientRect();
+		geo.home = { x: home.right - box.left - width, y: home.top - box.top };
+		geo.dock = { x: dock.left - box.left, y: dock.top - box.top };
+		const icon = { x: box.left + geo.home.x + (chipIcon as HTMLElement | SVGElement).getBoundingClientRect().left - chip.getBoundingClientRect().left + 6, y: box.top + geo.home.y + 14 };
+		geo.targets = flyers.map((el) => {
+			const card = el.getBoundingClientRect();
+			// Phones shrink the cards with `scale`, which also shrinks the travel.
+			const scale = Number.parseFloat(getComputedStyle(el).scale) || 1;
+			return {
+				dx: (icon.x - (card.left + card.width / 2)) / scale,
+				dy: (icon.y - (card.top + card.height / 2)) / scale,
+			};
+		});
+	}
+
+	// Which chrome fits what is on screen: the sheet's, the dashboard's, or,
+	// once most of the scene has scrolled away, the plain site header.
+	const page = document.querySelector<HTMLElement>('[data-sheet-page]')!;
+	const switcher = document.querySelector<HTMLElement>('.lab-switcher');
+	if (switcher) switcher.style.transition = 'bottom 450ms cubic-bezier(0.16, 1, 0.3, 1)';
+	let sceneP = 0;
+	function updateChrome() {
+		const past = scene.getBoundingClientRect().bottom < window.innerHeight * 0.5;
+		const next = past ? 'site' : sceneP < 0.56 ? 'sheet' : 'app';
+		if (page.dataset.chrome === next) return;
+		page.dataset.chrome = next;
+		if (switcher) switcher.style.bottom = `${next === 'sheet' ? 48 : 12}px`;
+	}
+	window.addEventListener('scroll', updateChrome, { passive: true });
+	window.addEventListener('resize', updateChrome);
+	updateChrome();
+
+	let step = -1;
+	let live = false;
+	function render(p: number) {
+		sceneP = p;
+		updateChrome();
+		mess.forEach((el) => (el.style.opacity = String(1 - seg(p, 0.14, 0.24))));
+
+		// The form, the chat and the script turn up, then each flies into the chip
+		// and is gone before it arrives. The count rises as each one lands.
+		let merged = 0;
+		flyers.forEach((el, i) => {
+			const appear = ease(seg(p, 0.03 + i * 0.025, 0.1 + i * 0.025));
+			const t = ease(seg(p, 0.15 + i * 0.06, 0.33 + i * 0.06));
+			const fade = clamp((t - 0.5) / 0.4);
+			const rot = Number(el.dataset.rot ?? 0) * (1 - t);
+			const { dx, dy } = geo.targets[i] ?? { dx: 0, dy: 0 };
+			el.style.transform = `translate(${dx * t}px, ${dy * t + (1 - appear) * 10}px) rotate(${rot}deg) scale(${(1 - 0.7 * t) * (0.96 + 0.04 * appear)})`;
+			el.style.opacity = String(appear * (1 - fade));
+			el.style.filter = fade > 0 ? `blur(${fade * 6}px)` : '';
+			if (fade >= 1) merged += 1;
+		});
+		chipText.textContent = `Sources: ${merged} merged`;
+
+		// The chip appears beside the total, then rides the wipe into the header.
+		const chipIn = ease(seg(p, 0.1, 0.15));
+		const ride = smooth(seg(p, 0.5, 0.64));
+		chip.style.opacity = String(chipIn);
+		chip.style.transform = `translate(${lerp(geo.home.x, geo.dock.x, ride)}px, ${lerp(geo.home.y, geo.dock.y, ride)}px) scale(${0.92 + 0.08 * chipIn})`;
+
+		const rowHeight = dup?.offsetHeight || 30;
+		if (dup) {
+			const d = ease(seg(p, 0.36, 0.44));
+			dup.style.opacity = String(1 - d);
+			dup.style.transform = `scaleY(${1 - d})`;
+			dup.style.transformOrigin = 'top';
+			afterDup.forEach((el) => (el.style.translate = `0 ${-rowHeight * d}px`));
+		}
+
+		// One straight wipe across the whole stage, with the line as its front.
+		const w = smooth(seg(p, 0.46, 0.64));
+		sheetLayer.style.clipPath = w > 0 ? `inset(0 0 0 ${w * 100}%)` : '';
+		dashLayer.style.clipPath = w >= 1 ? 'none' : `inset(0 ${(1 - w) * 100}% 0 0)`;
+		wipe.style.left = `${w * 100}%`;
+		wipe.style.opacity = w > 0 && w < 1 ? '1' : '0';
+		hdrA.forEach((el) => (el.style.opacity = String(1 - ease(seg(p, 0.5, 0.62)))));
+		hdrB.forEach((el) => (el.style.opacity = String(ease(seg(p, 0.56, 0.68)))));
+
+		dashboard.progress(seg(p, 0.64, LIVE_AT));
+		if (p >= LIVE_AT !== live) {
+			live = p >= LIVE_AT;
+			dashboard.setLive(live);
+		}
+
+		const next = p < 0.12 ? 0 : p < 0.46 ? 1 : p < LIVE_AT ? 2 : 3;
+		if (next !== step) {
+			step = next;
+			caption.textContent = CAPTIONS[step];
+			dots.forEach((dot, i) => {
+				dot.classList.toggle('bg-surface-blue-8', i <= step);
+				dot.classList.toggle('bg-surface-gray-4', i > step);
+			});
+		}
+	}
+
+	if (motionAllowed()) {
+		let frame = 0;
+		// Progress is how far the scene has scrolled under the header, over the
+		// distance the pinned stage can travel inside it.
+		const update = () => {
+			frame = 0;
+			const travel = scene.offsetHeight - stage.offsetHeight;
+			// 77px: the header at full height, the same in every chrome state.
+			render(clamp((77 - scene.getBoundingClientRect().top) / travel));
+		};
+		const queue = () => (frame ||= requestAnimationFrame(update));
+		const remeasure = () => {
+			measure();
+			queue();
+		};
+		window.addEventListener('scroll', queue, { passive: true });
+		window.addEventListener('resize', remeasure);
+		document.fonts?.ready.then(remeasure);
+		measure();
+		update();
+	} else {
+		// Reduced motion: no scroll scene. A Before / After toggle instead, and
+		// After is the live dashboard.
+		const toggle = stage.querySelector<HTMLElement>('[data-toggle]')!;
+		toggle.hidden = false;
+		let shown = 0;
+		const show = (which: number) => {
+			shown = which;
+			render(which ? 1 : 0.145);
+			toggle.querySelectorAll('button').forEach((button) => button.setAttribute('aria-pressed', String(Number(button.dataset.show) === which)));
+		};
+		toggle.querySelectorAll<HTMLButtonElement>('button').forEach((button) =>
+			button.addEventListener('click', () => show(Number(button.dataset.show))),
+		);
+		window.addEventListener('resize', () => {
+			measure();
+			show(shown);
+		});
+		measure();
+		show(0);
+	}
+
+	// The formula bar reads whatever cell you point at.
+	const nameBox = header.querySelector('[data-name-box]')!;
+	const formula = header.querySelector('[data-formula]')!;
+	const DEFAULT = { ref: nameBox.textContent ?? 'A1', formula: formula.textContent ?? '' };
+	stage.querySelectorAll<HTMLElement>('[data-cell][data-ref]').forEach((cell) => {
+		cell.addEventListener('pointerenter', () => {
+			nameBox.textContent = cell.dataset.ref ?? '';
+			formula.textContent = cell.dataset.formula ?? '';
+		});
+		cell.addEventListener('pointerleave', () => {
+			nameBox.textContent = DEFAULT.ref;
+			formula.textContent = DEFAULT.formula;
+		});
+	});
+
+	// Tabs, in the sheet bar and the site header, follow the section in view.
+	const TABS_IDS = [...new Set([...document.querySelectorAll<HTMLAnchorElement>('[data-tab]')].map((tab) => `#${tab.dataset.tab}`))].join(', ');
+	const tabs = document.querySelectorAll<HTMLAnchorElement>('[data-tab]');
+	const observer = new IntersectionObserver(
+		(entries) =>
+			entries.forEach((entry) => {
+				if (!entry.isIntersecting) return;
+				tabs.forEach((tab) => tab.setAttribute('aria-current', String(tab.dataset.tab === entry.target.id)));
+			}),
+		{ rootMargin: '-35% 0px -55% 0px' },
+	);
+	document.querySelectorAll(TABS_IDS).forEach((el) => observer.observe(el));
+</script>
