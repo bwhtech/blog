@@ -44,3 +44,13 @@
 		url('../assets/fonts/Inter-Italic.var.woff2') format('woff2');
 	src: url('../assets/fonts/Inter-Italic.var.woff2') format('woff2') tech('variations');
 }
+
+/* Geist Mono (SIL OFL 1.1, from the `geist` npm package 1.8.2), for data on
+   the landing pages. Only pages that use `font-data` download it. */
+@font-face {
+	font-family: 'GeistMono';
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url('../assets/fonts/GeistMono.var.woff2') format('woff2');
+}

@@ -1,0 +1,167 @@
+---
+/**
+ * The team, from the blog's authors (src/data/authors.yaml). Each card opens
+ * the person's page at /author/<id>/. A missing role shows a TBD chip rather
+ * than a guessed title.
+ */
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Tbd from './Tbd.astro';
+
+// Founder first, then everyone else by id (the collection's own order).
+const FIRST = 'hussain-nagaria';
+const people = (await getCollection('authors')).sort((a, b) => Number(b.id === FIRST) - Number(a.id === FIRST));
+---
+
+<ul class="team" data-team style={`--n:${Math.min(people.length, 8)}`}>
+	{people.map((person) => (
+		<li data-person>
+			<a href={`/author/${person.id}/`} class="card">
+				<span class="photo">
+					<Image src={person.data.avatar} alt="" width={240} height={240} densities={[1, 2]} class="img mono" />
+					<Image src={person.data.avatar} alt="" width={240} height={240} densities={[1, 2]} class="img tint" />
+					<span class="go" aria-hidden="true">
+						<svg viewBox="0 0 16 16" width="14" height="14"><path d="M5 11 11 5M6 5h5v5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+					</span>
+				</span>
+				<span class="name">{person.data.name}</span>
+				<span class="role">{person.data.role ?? <Tbd note="designation" />}</span>
+			</a>
+		</li>
+	))}
+</ul>
+
+<style>
+	.team {
+		display: grid;
+		/* One row on desktop, however many people there are (up to eight). */
+		grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+		gap: 24px 16px;
+	}
+	@media (max-width: 1023px) {
+		.team {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+		}
+	}
+	@media (max-width: 639px) {
+		.team {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+	.card {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		border-radius: 12px;
+		color: inherit;
+		text-decoration: none;
+		outline-offset: 4px;
+	}
+	/* Black and white at rest. Hover or focus wipes the colour up from the
+	   bottom while the photo eases in a little closer. */
+	.photo {
+		position: relative;
+		display: block;
+		overflow: hidden;
+		aspect-ratio: 1;
+		margin-bottom: 10px;
+		border-radius: 12px;
+		background: var(--surface-gray-2);
+	}
+	.photo::after {
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.06);
+		content: '';
+		pointer-events: none;
+	}
+	.photo :global(.img) {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition:
+			transform 700ms var(--lab-ease),
+			clip-path 700ms var(--lab-ease);
+	}
+	.photo :global(.mono) {
+		filter: grayscale(1) contrast(1.12) brightness(1.04);
+	}
+	.photo :global(.tint) {
+		clip-path: inset(100% 0 0 0);
+	}
+	.card:hover :global(.img),
+	.card:focus-visible :global(.img) {
+		transform: scale(1.05);
+	}
+	.card:hover :global(.tint),
+	.card:focus-visible :global(.tint) {
+		clip-path: inset(0 0 0 0);
+	}
+	.go {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		display: flex;
+		width: 26px;
+		height: 26px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+		background: rgb(255 255 255 / 0.92);
+		color: #171717;
+		box-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
+		opacity: 0;
+		transform: translate(-4px, 4px) scale(0.9);
+		transition:
+			opacity 300ms var(--lab-ease),
+			transform 500ms var(--lab-ease);
+	}
+	.card:hover .go,
+	.card:focus-visible .go {
+		opacity: 1;
+		transform: none;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.photo :global(.img),
+		.go {
+			transition-duration: 1ms;
+		}
+	}
+	.name {
+		font-size: 14px;
+		font-weight: 600;
+		color: var(--ink-gray-9);
+	}
+	.card:hover .name {
+		text-decoration: underline;
+		text-underline-offset: 3px;
+		text-decoration-color: var(--outline-gray-4);
+	}
+	.role {
+		font-size: 13px;
+		color: var(--ink-gray-6);
+	}
+	html[data-motion='on'] .team [data-person] {
+		opacity: 0;
+	}
+</style>
+
+<script>
+	import { animate, stagger } from 'motion';
+	import { motionAllowed, once } from '../../scripts/landing/motion';
+
+	document.querySelectorAll<HTMLElement>('[data-team]').forEach((grid) => {
+		if (!motionAllowed()) return;
+		const items = grid.querySelectorAll<HTMLElement>('[data-person]');
+		once(grid, () =>
+			animate(
+				items,
+				{ opacity: [0, 1], transform: ['translateY(12px)', 'translateY(0)'] },
+				{ type: 'spring', bounce: 0, duration: 0.6, delay: stagger(0.06) },
+			),
+		);
+	});
+</script>

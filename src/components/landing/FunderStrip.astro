@@ -1,0 +1,36 @@
+---
+import { CTA, FUNDERS } from '../../data/landing';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+	class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<section
+	id="funders"
+	aria-labelledby="funders-title"
+	class:list={[
+		'scroll-mt-20 flex flex-col gap-4 rounded-5 border border-outline-gray-1 bg-surface-gray-1 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6',
+		className,
+	]}
+>
+	<div class="flex items-start gap-3">
+		<span
+			class="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-4 bg-surface-violet-2 text-ink-violet-7"
+		>
+			<Icon name="layers" size={16} />
+		</span>
+		<div class="flex flex-col gap-1">
+			<h2 id="funders-title" class="text-xl font-semibold text-ink-gray-9">{FUNDERS.title}</h2>
+			<p class="max-w-[62ch] text-p-base text-ink-gray-7">{FUNDERS.body}</p>
+		</div>
+	</div>
+	<Button href={CTA.meetHref} variant="outline" class="self-start sm:self-auto">
+		Talk about a portfolio
+		<Icon name="arrow-up-right" size={14} />
+	</Button>
+</section>

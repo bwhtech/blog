@@ -23,11 +23,13 @@
   "dependencies": {
     "@astrojs/mdx": "^7.0.8",
     "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
     "@astrojs/vue": "^7.0.2",
     "astro": "^7.1.6",
     "cuelume": "^0.2.2",
     "frappe-ui": "^1.0.0-beta.55",
     "mermaid": "^11.16.1",
+    "motion": "^14.6.0",
     "vue": "^3.5.41",
     "vue-router": "^4.6.4"
   },

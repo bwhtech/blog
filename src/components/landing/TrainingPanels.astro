@@ -1,0 +1,631 @@
+---
+/**
+ * How a team ends up running its own system, in three panels: we teach them,
+ * they get no-code tools to change it, and AI agents do routine work for them.
+ * The two illustrations play short loops while on screen; each state is a
+ * `data-at` value the stylesheet draws, so nothing depends on a script to show.
+ */
+import Icon from './Icon.astro';
+import { Image } from 'astro:assets';
+import teaching from '../../assets/landing/hussain-teaching.jpg';
+
+const PALETTE = [
+	{ icon: 'type', label: 'Text' },
+	{ icon: 'calendar', label: 'Date' },
+	{ icon: 'list', label: 'Choice' },
+	{ icon: 'camera', label: 'Photo' },
+];
+// The agent's answer: visits by village this quarter, top three and the rest.
+const VISITS = [
+	{ name: 'Kondagaon', count: 216, tone: 'a' },
+	{ name: 'Bastar', count: 144, tone: 'b' },
+	{ name: 'Jagdalpur', count: 125, tone: 'c' },
+	{ name: 'Others', count: 177, tone: 'd' },
+];
+const TOTAL = VISITS.reduce((sum, v) => sum + v.count, 0);
+// Each slice as a share of 100, with where it starts, for a pathLength=100 ring.
+const SLICES = VISITS.reduce<{ name: string; count: number; tone: string; pct: number; start: number }[]>((list, v) => {
+	const start = list.length ? list[list.length - 1].start + list[list.length - 1].pct : 0;
+	return [...list, { ...v, pct: Math.round((v.count / TOTAL) * 100), start }];
+}, []);
+---
+
+<div class="train">
+	<!-- 1: teaching -->
+	<article class="panel teach">
+		<div class="photo-slot">
+			<Image
+				src={teaching}
+				alt="Hussain at a lectern with a laptop, teaching a session"
+				widths={[480, 720, 1040]}
+				sizes="(min-width: 1024px) 420px, (min-width: 640px) 100vw, 100vw"
+				class="photo"
+			/>
+		</div>
+		<div class="caption">
+			<span class="num">1</span>
+			<div>
+				<h3>We teach your team</h3>
+				<p>Hands-on sessions with the people who will run the system, until they can teach the rest.</p>
+			</div>
+		</div>
+	</article>
+
+	<!-- 2: no-code -->
+	<article class="panel">
+		<div class="art" data-builder data-at="0" aria-hidden="true">
+			<div class="win">
+				<div class="win-bar">
+					<span class="win-title"><Icon name="file-text" size={13} />Visit form</span>
+					<span class="toggle"><i></i>Published</span>
+				</div>
+				<div class="palette">
+					{PALETTE.map((item) => (
+						<span class:list={['chip', item.label === 'Photo' && 'chip-pick']} data-pick={item.label === 'Photo' ? '' : undefined}>
+							<Icon name={item.icon} size={12} />{item.label}
+						</span>
+					))}
+				</div>
+				<div class="canvas">
+					<div class="f"><span>Name</span><b></b></div>
+					<div class="f"><span>Village</span><b></b></div>
+					<div class="f-new" data-slot><div class="f"><span>Photo</span><b><Icon name="camera" size={12} />Take photo</b></div></div>
+				</div>
+				<span class="ghost" data-ghost><Icon name="camera" size={12} />Photo</span>
+				<span class="saved"><Icon name="circle-check" size={13} />Live on every phone</span>
+			</div>
+		</div>
+		<div class="caption">
+			<span class="num">2</span>
+			<div>
+				<h3>Tools to change it yourself</h3>
+				<p>Add a field, change a form or build a report, with no code.</p>
+			</div>
+		</div>
+	</article>
+
+	<!-- 3: agents -->
+	<article class="panel">
+		<div class="art" data-agent data-at="0" aria-hidden="true">
+			<div class="win">
+				<div class="win-bar">
+					<span class="win-title"><Icon name="sparkles" size={13} />Agent</span>
+					<span class="status"><i></i><span class="s-work">Working</span><span class="s-done">Answered</span></span>
+				</div>
+				<div class="ask">Which villages had the most visits this quarter?</div>
+				<div class="thinking"><span></span><span></span><span></span>Reading {TOTAL} visits</div>
+				<div class="answer">
+					<span class="pie-wrap">
+					<svg class="pie" viewBox="0 0 100 100">
+						{SLICES.map((slice) => (
+							<circle cx="50" cy="50" r="38" pathLength="100" class:list={['slice', slice.tone]} style={`--pct:${slice.pct - 1};--start:${-slice.start}`} />
+						))}
+					</svg>
+					<span class="pie-label"><b>{SLICES[0].pct}%</b><small>{SLICES[0].name}</small></span>
+					</span>
+					<ul class="legend-pie">
+						{SLICES.map((slice) => (
+							<li><i class={slice.tone}></i><span>{slice.name}</span><b>{slice.count}</b></li>
+						))}
+					</ul>
+				</div>
+				<p class="reply">Kondagaon leads with {SLICES[0].count} visits, a third of the total.</p>
+			</div>
+		</div>
+		<div class="caption">
+			<span class="num">3</span>
+			<div>
+				<h3>AI agents that do the work</h3>
+				<p>Ask a question in plain words.</p>
+			</div>
+		</div>
+	</article>
+</div>
+
+<style>
+	.train {
+		display: grid;
+		grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr);
+		gap: 12px;
+	}
+	@media (max-width: 1023px) {
+		.train {
+			grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		}
+		.teach {
+			grid-column: 1 / -1;
+		}
+	}
+	@media (max-width: 639px) {
+		.train {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+	/* Picture and caption rows line up across the panels, whatever the caption length. */
+	.panel {
+		display: grid;
+		grid-row: span 2;
+		grid-template-rows: subgrid;
+		row-gap: 0;
+		overflow: hidden;
+		border: 1px solid var(--outline-gray-2);
+		border-radius: 14px;
+		background: var(--surface-base);
+	}
+	.photo-slot,
+	.art {
+		position: relative;
+		display: flex;
+		flex: 1;
+		min-height: 330px;
+		padding: 20px 0;
+		align-items: center;
+		justify-content: center;
+		border-bottom: 1px solid var(--outline-gray-1);
+		background:
+			radial-gradient(circle at 1px 1px, var(--outline-gray-2) 1px, transparent 0) 0 0 / 18px 18px,
+			var(--surface-gray-1);
+	}
+	.photo-slot {
+		overflow: hidden;
+		background: var(--surface-gray-2);
+	}
+	.photo-slot :global(.photo) {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: 40% 60%;
+		/* Black and white, like the team photos, so it sits with the illustrations. */
+		filter: grayscale(1) contrast(1.12) brightness(1.04);
+	}
+	/* The white wall glares on a dark page; take it down a little. */
+	:global([data-theme='dark']) .photo-slot :global(.photo) {
+		filter: grayscale(1) contrast(1.08) brightness(0.86);
+	}
+	.caption {
+		display: flex;
+		gap: 12px;
+		padding: 16px 18px 18px;
+	}
+	.num {
+		display: flex;
+		width: 24px;
+		height: 24px;
+		flex-shrink: 0;
+		align-items: center;
+		justify-content: center;
+		border-radius: 999px;
+		background: var(--ink-gray-9);
+		font-size: 12px;
+		font-weight: 600;
+		color: var(--surface-base);
+	}
+	.caption h3 {
+		font-size: 15px;
+		font-weight: 600;
+		line-height: 1.4;
+		color: var(--ink-gray-9);
+	}
+	.caption p {
+		margin-top: 3px;
+		font-size: 13px;
+		line-height: 1.5;
+		color: var(--ink-gray-6);
+		text-wrap: pretty;
+	}
+
+	/* The little app window both illustrations sit in. */
+	.win {
+		position: relative;
+		display: flex;
+		width: min(100% - 32px, 300px);
+		flex-direction: column;
+		gap: 10px;
+		padding: 12px;
+		border: 1px solid var(--outline-gray-2);
+		border-radius: 12px;
+		background: var(--surface-base);
+		box-shadow: 0 16px 34px -20px rgb(0 0 0 / 0.35);
+		font-size: 12px;
+		color: var(--ink-gray-8);
+	}
+	.win-bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.win-title {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-weight: 600;
+		color: var(--ink-gray-9);
+	}
+	.win-title :global(svg) {
+		color: var(--ink-gray-5);
+	}
+
+	/* 2: the form builder. 0 rest, 1 the Photo field lifts and travels,
+	   2 it lands in the form, 3 the form is published. */
+	.toggle {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 11px;
+		color: var(--ink-gray-5);
+	}
+	.toggle i {
+		position: relative;
+		width: 24px;
+		height: 14px;
+		border-radius: 999px;
+		background: var(--surface-gray-4);
+		transition: background-color 300ms var(--lab-ease);
+	}
+	.toggle i::after {
+		position: absolute;
+		top: 2px;
+		left: 2px;
+		width: 10px;
+		height: 10px;
+		border-radius: 999px;
+		background: #fff;
+		content: '';
+		transition: transform 300ms var(--lab-ease);
+	}
+	[data-at='3'] .toggle i {
+		background: var(--viz-visited);
+	}
+	[data-at='3'] .toggle i::after {
+		transform: translateX(10px);
+	}
+	.palette {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 5px;
+		padding-bottom: 10px;
+		border-bottom: 1px dashed var(--outline-gray-2);
+	}
+	.chip,
+	.ghost {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		padding: 4px 8px;
+		border: 1px solid var(--outline-gray-2);
+		border-radius: 7px;
+		background: var(--surface-base);
+		font-size: 11px;
+		color: var(--ink-gray-7);
+	}
+	.chip-pick {
+		transition: opacity 250ms var(--lab-ease);
+	}
+	[data-at='1'] .chip-pick {
+		opacity: 0.35;
+	}
+	.ghost {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 2;
+		border-color: var(--ink-gray-9);
+		box-shadow: 0 10px 20px -8px rgb(0 0 0 / 0.4);
+		color: var(--ink-gray-9);
+		opacity: 0;
+		pointer-events: none;
+		transform: translate(var(--from-x, 0), var(--from-y, 0));
+	}
+	[data-at='1'] .ghost {
+		opacity: 1;
+		transform: translate(var(--to-x, 0), var(--to-y, 0)) rotate(-3deg);
+		transition:
+			opacity 150ms,
+			transform 900ms cubic-bezier(0.65, 0, 0.35, 1) 150ms;
+	}
+	.canvas {
+		display: flex;
+		flex-direction: column;
+		gap: 7px;
+	}
+	.f {
+		display: flex;
+		flex-direction: column;
+		gap: 3px;
+	}
+	.f span {
+		font-size: 10px;
+		color: var(--ink-gray-5);
+	}
+	.f b {
+		display: flex;
+		height: 24px;
+		align-items: center;
+		gap: 5px;
+		padding: 0 8px;
+		border-radius: 6px;
+		background: var(--surface-gray-2);
+		font-size: 11px;
+		font-weight: 400;
+		color: var(--ink-gray-6);
+	}
+	/* The new field: room for it opens as the chip lands. */
+	.f-new {
+		display: grid;
+		grid-template-rows: 0fr;
+		opacity: 0;
+		transition:
+			grid-template-rows 450ms var(--lab-ease),
+			opacity 300ms var(--lab-ease);
+	}
+	.f-new > .f {
+		min-height: 0;
+		overflow: hidden;
+		padding: 2px;
+		margin: -2px;
+	}
+	[data-at='2'] .f-new,
+	[data-at='3'] .f-new {
+		grid-template-rows: 1fr;
+		opacity: 1;
+	}
+	[data-at='2'] .f-new b {
+		box-shadow: 0 0 0 2px var(--ink-gray-9);
+	}
+	.saved,
+	.done {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 11.5px;
+		font-weight: 500;
+	}
+	.saved {
+		position: absolute;
+		right: 12px;
+		bottom: -14px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: var(--ink-gray-9);
+		color: var(--surface-base);
+		box-shadow: 0 10px 22px -8px rgb(0 0 0 / 0.4);
+		opacity: 0;
+		transform: translateY(6px);
+		transition:
+			opacity 250ms var(--lab-ease),
+			transform 450ms var(--lab-ease);
+	}
+	.saved :global(svg) {
+		color: var(--viz-visited);
+	}
+	[data-at='3'] .saved {
+		opacity: 1;
+		transform: none;
+	}
+
+	/* 3: the agent. 0 the question, 1 it reads the data, 2 the chart draws, 3 the answer holds. */
+	.status {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 11px;
+		color: var(--ink-gray-5);
+	}
+	.status i {
+		width: 7px;
+		height: 7px;
+		border-radius: 999px;
+		background: var(--viz-due);
+		transition: background-color 300ms;
+	}
+	.s-done,
+	[data-at='3'] .s-work {
+		display: none;
+	}
+	[data-at='3'] .s-done {
+		display: inline;
+	}
+	[data-at='3'] .status i {
+		background: var(--viz-visited);
+	}
+	.ask {
+		align-self: flex-end;
+		max-width: 88%;
+		padding: 7px 10px;
+		border-radius: 10px 10px 2px 10px;
+		background: var(--ink-gray-9);
+		line-height: 1.4;
+		color: var(--surface-base);
+	}
+	.thinking {
+		display: flex;
+		align-items: center;
+		gap: 3px;
+		height: 0;
+		overflow: hidden;
+		font-size: 11px;
+		color: var(--ink-gray-5);
+		opacity: 0;
+		transition:
+			opacity 250ms,
+			height 300ms var(--lab-ease);
+	}
+	.thinking span {
+		width: 4px;
+		height: 4px;
+		border-radius: 999px;
+		background: var(--ink-gray-5);
+	}
+	.thinking span:last-of-type {
+		margin-right: 5px;
+	}
+	html[data-motion='on'] .thinking span {
+		animation: pulse 1s ease-in-out infinite;
+	}
+	.thinking span:nth-child(2) { animation-delay: 150ms; }
+	.thinking span:nth-child(3) { animation-delay: 300ms; }
+	@keyframes pulse {
+		50% {
+			opacity: 0.25;
+		}
+	}
+	[data-at='1'] .thinking {
+		height: 16px;
+		opacity: 1;
+	}
+	.answer {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		padding: 10px;
+		border: 1px solid var(--outline-gray-1);
+		border-radius: 10px;
+		background: var(--surface-gray-1);
+		opacity: 0;
+		transform: translateY(6px);
+		transition:
+			opacity 300ms var(--lab-ease),
+			transform 450ms var(--lab-ease);
+	}
+	:is([data-at='2'], [data-at='3']) .answer {
+		opacity: 1;
+		transform: none;
+	}
+	.pie {
+		width: 86px;
+		height: 86px;
+		flex-shrink: 0;
+		transform: rotate(-90deg);
+	}
+	.slice {
+		fill: none;
+		stroke-width: 16;
+		stroke-dasharray: 0 100;
+		stroke-dashoffset: var(--start);
+		transition: stroke-dasharray 900ms var(--lab-ease);
+	}
+	:is([data-at='2'], [data-at='3']) .slice {
+		stroke-dasharray: var(--pct) calc(100 - var(--pct));
+	}
+	.slice.b { transition-delay: 120ms; }
+	.slice.c { transition-delay: 240ms; }
+	.slice.d { transition-delay: 360ms; }
+	.a { stroke: var(--viz-blue); background: var(--viz-blue); }
+	.b { stroke: var(--viz-visited); background: var(--viz-visited); }
+	.c { stroke: var(--viz-due); background: var(--viz-due); }
+	.d { stroke: var(--surface-gray-4); background: var(--surface-gray-4); }
+	.pie-wrap {
+		position: relative;
+		display: flex;
+		flex-shrink: 0;
+	}
+	.pie-label {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		line-height: 1.1;
+	}
+	.pie-label b {
+		font-size: 15px;
+		font-weight: 600;
+		color: var(--ink-gray-9);
+	}
+	.pie-label small {
+		font-size: 8px;
+		color: var(--ink-gray-5);
+	}
+	.legend-pie {
+		display: flex;
+		min-width: 0;
+		flex: 1;
+		flex-direction: column;
+		gap: 5px;
+		font-size: 11px;
+	}
+	.legend-pie li {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		color: var(--ink-gray-7);
+	}
+	.legend-pie i {
+		width: 7px;
+		height: 7px;
+		flex-shrink: 0;
+		border-radius: 2px;
+	}
+	.legend-pie b {
+		margin-left: auto;
+		font-weight: 500;
+		color: var(--ink-gray-9);
+		font-variant-numeric: tabular-nums;
+	}
+	.reply {
+		font-size: 11.5px;
+		line-height: 1.45;
+		color: var(--ink-gray-7);
+		opacity: 0;
+		transition: opacity 400ms var(--lab-ease) 500ms;
+	}
+	:is([data-at='2'], [data-at='3']) .reply {
+		opacity: 1;
+	}
+</style>
+
+<script>
+	import { inView } from 'motion';
+	import { motionAllowed } from '../../scripts/landing/motion';
+
+	/** Steps through `data-at` values while the element is on screen. */
+	function loop(el: HTMLElement, holds: number[], onStep?: (at: number) => void) {
+		let at = 0;
+		let timer = 0;
+		const tick = () => {
+			at = (at + 1) % holds.length;
+			onStep?.(at);
+			el.dataset.at = String(at);
+			timer = window.setTimeout(tick, holds[at]);
+		};
+		inView(el, () => {
+			timer = window.setTimeout(tick, holds[at]);
+			return () => window.clearTimeout(timer);
+		});
+	}
+
+	const builder = document.querySelector<HTMLElement>('[data-builder]');
+	const agent = document.querySelector<HTMLElement>('[data-agent]');
+
+	if (!motionAllowed()) {
+		// Still pictures: the finished state of each.
+		if (builder) builder.dataset.at = '3';
+		if (agent) agent.dataset.at = '3';
+	} else {
+		if (builder) {
+			const win = builder.querySelector<HTMLElement>('.win')!;
+			const ghost = builder.querySelector<HTMLElement>('[data-ghost]')!;
+			const pick = builder.querySelector<HTMLElement>('[data-pick]')!;
+			const slot = builder.querySelector<HTMLElement>('[data-slot]')!;
+			// The chip travels from its place in the palette to where the field will open.
+			const place = () => {
+				const box = win.getBoundingClientRect();
+				const from = pick.getBoundingClientRect();
+				const to = slot.getBoundingClientRect();
+				ghost.style.setProperty('--from-x', `${from.left - box.left}px`);
+				ghost.style.setProperty('--from-y', `${from.top - box.top}px`);
+				ghost.style.setProperty('--to-x', `${to.left - box.left + 8}px`);
+				ghost.style.setProperty('--to-y', `${to.top - box.top + 6}px`);
+			};
+			// Measured while the form is at rest, so the chip starts from the palette.
+			place();
+			document.fonts?.ready.then(place);
+			window.addEventListener('resize', place);
+			loop(builder, [1400, 1200, 1100, 2200], (at) => at === 0 && requestAnimationFrame(place));
+		}
+		if (agent) loop(agent, [1300, 1300, 900, 3200]);
+	}
+</script>

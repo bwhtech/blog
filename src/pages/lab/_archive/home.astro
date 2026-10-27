@@ -1,0 +1,74 @@
+---
+import NewsletterForm from '../../../components/islands/NewsletterForm.vue';
+import { SITE_TITLE } from '../../../consts';
+import AppLayout from '../../../layouts/AppLayout.astro';
+
+const description = 'We solve problems with Frappe Framework and apps.';
+---
+
+<AppLayout title={SITE_TITLE} description={description} ogImage="/og/home.jpg">
+	<main
+		id="main-content"
+		class="mx-auto flex min-h-screen w-full max-w-[820px] flex-col items-center justify-center gap-9 px-4 text-center sm:px-5"
+	>
+		<div class="flex flex-col items-center gap-5">
+			<p class="text-xs uppercase tracking-widest text-ink-gray-5">BWH</p>
+			<h1
+				class="max-w-[650px] text-[34px] font-semibold leading-[1.1] tracking-tight text-ink-gray-9 sm:text-[52px]"
+			>
+				Bunch of <em>Problem Solvers</em>.
+			</h1>
+			<p class="max-w-[480px] text-p-lg text-ink-gray-6">We solve it, with Frappe.</p>
+		</div>
+
+		<div class="flex w-full flex-col items-center gap-6">
+			<svg
+				aria-hidden="true"
+				class="text-ink-gray-4"
+				width="40"
+				height="12"
+				viewBox="0 0 40 12"
+				fill="none"
+			>
+				<path d="M0 6H14" stroke="currentColor" stroke-width="1"></path>
+				<path d="M26 6H40" stroke="currentColor" stroke-width="1"></path>
+				<circle cx="20" cy="6" r="2.5" fill="currentColor"></circle>
+			</svg>
+
+			<a
+				class="inline-flex h-10 items-center rounded-5 bg-surface-gray-10 px-4 text-lg-medium text-ink-base no-underline transition-colors hover:bg-surface-gray-9 active:bg-surface-gray-8"
+				href="/meet"
+				data-s-event="Book a Call"
+				data-s-event-props="source=home"
+			>
+				Talk to us
+			</a>
+
+			<a
+				class="group inline-flex min-h-8 items-center gap-1.5 text-sm text-ink-gray-5 no-underline transition-colors hover:text-ink-gray-9"
+				href="/blog"
+			>
+				<span>Read the blog</span>
+				<svg
+					aria-hidden="true"
+					class="size-4 transition-transform group-hover:translate-x-0.5"
+					viewBox="0 0 24 24"
+					fill="none"
+				>
+					<path
+						d="M9 6l6 6-6 6"
+						stroke="currentColor"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"></path>
+				</svg>
+			</a>
+
+			<!-- client:idle rather than visible: it is above the fold on every
+			     viewport, so an observer would fire at once anyway. -->
+			<div class="mt-4 w-full max-w-[560px]">
+				<NewsletterForm client:idle placement="home" />
+			</div>
+		</div>
+	</main>
+</AppLayout>

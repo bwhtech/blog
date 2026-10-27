@@ -1,0 +1,41 @@
+---
+/** One "what's breaking?" option: a checkbox drawn as a toggle chip. */
+import Icon from './Icon.astro';
+
+interface Props {
+	id: string;
+	label: string;
+	form?: string;
+	size?: 'md' | 'lg';
+}
+
+const { id, label, form, size = 'md' } = Astro.props;
+---
+
+<label class="group relative inline-flex cursor-pointer select-none">
+	<input type="checkbox" name="problem" value={id} form={form} class="peer sr-only" />
+	<span
+		class:list={[
+			'inline-flex items-center gap-1.5 rounded-full border border-outline-gray-2 bg-surface-base text-ink-gray-7 transition-[background-color,border-color,color,transform] duration-150 ease-out',
+			'hover:border-outline-gray-3 hover:text-ink-gray-9 active:scale-[0.98]',
+			'peer-checked:border-outline-blue-3 peer-checked:bg-surface-blue-2 peer-checked:text-ink-blue-8',
+			'peer-focus-visible:ring-2 peer-focus-visible:ring-outline-blue-4 peer-focus-visible:ring-offset-1',
+			size === 'lg' ? 'min-h-10 px-3.5 py-2 text-p-base' : 'min-h-8 px-3 py-1.5 text-p-sm',
+		]}
+	>
+		<span class="relative size-3.5" aria-hidden="true">
+			<Icon
+				name="plus"
+				size={14}
+				class="absolute inset-0 transition-[opacity,transform] duration-150 group-has-[:checked]:rotate-90 group-has-[:checked]:opacity-0"
+			/>
+			<Icon
+				name="check"
+				size={14}
+				strokeWidth={2.25}
+				class="absolute inset-0 scale-50 opacity-0 transition-[opacity,transform] duration-150 group-has-[:checked]:scale-100 group-has-[:checked]:opacity-100"
+			/>
+		</span>
+		<span data-problem-label={id}>{label}</span>
+	</span>
+</label>

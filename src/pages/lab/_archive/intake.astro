@@ -1,0 +1,689 @@
+---
+/**
+ * Variant 4, Intake desk: the page is the request form. Each problem the
+ * visitor picks adds a part to a live preview of their system; a board shows
+ * where the request goes next; the same form collects their details at the
+ * end. Front end only, see src/scripts/landing/intake.ts.
+ */
+import { Image } from 'astro:assets';
+import aiPhoto from '../../../assets/landing/cs17-ai-presentation.jpg';
+import studentsPhoto from '../../../assets/landing/cs17-students.jpg';
+import Button from '../../../components/landing/Button.astro';
+import FunderStrip from '../../../components/landing/FunderStrip.astro';
+import Icon from '../../../components/landing/Icon.astro';
+import Logo from '../../../components/landing/Logo.astro';
+import ProblemChip from '../../../components/landing/ProblemChip.astro';
+import TextField from '../../../components/landing/TextField.astro';
+import {
+	CONTRIBUTIONS,
+	COURSES,
+	CS17,
+	CTA,
+	HEADLINE,
+	HOME_TOWN,
+	LEGAL_NAME,
+	OFFERS,
+	OPEN_SOURCE,
+	PARTNERS,
+	PROBLEMS,
+	PROCESS,
+	STACK,
+	YOUTUBE,
+	isTBD,
+} from '../../../data/landing';
+import LandingLayout from '../../../layouts/LandingLayout.astro';
+
+const FORM = 'intake-form';
+
+const MODULE_ICON: Record<string, string> = {
+	register: 'id-card',
+	phone: 'smartphone',
+	report: 'file-chart-column',
+	chart: 'chart-column',
+	bolt: 'zap',
+	people: 'users',
+	ledger: 'hand-coins',
+	teach: 'graduation-cap',
+};
+
+// What we have done that is closest to each problem. Only Changemakers and
+// CS17 are public; the rest wait for partners to confirm.
+const CHANGEMAKERS = 'Frappe Changemakers, which our founder built at Frappe before BWH for Azim Premji Foundation';
+const CLOSEST: Record<string, string> = {
+	sheets: `Closest work: ${CHANGEMAKERS}. One record per beneficiary.`,
+	forms: `Closest work: ${CHANGEMAKERS}. Field workers log rescues and visits on their phones.`,
+	trust: `Closest work: ${CHANGEMAKERS}. Cases and services in one place.`,
+	team: 'Closest work: CS17, where we train people in Jagdalpur to build and run software.',
+};
+
+// One line per part, for the overview once several are picked.
+const TILE: Record<string, string> = {
+	sheets: 'One record per person',
+	forms: 'Filled in on the phone',
+	reports: 'In the funder’s format',
+	trust: 'The same figures for everyone',
+	script: 'Rules you can read',
+	hr: 'Leave, attendance, salary',
+	accounts: 'A budget per grant',
+	team: 'Your people teach your people',
+};
+
+const SAMPLE_PEOPLE = [
+	{ name: 'Lakshmi Bai', place: 'Kondagaon', status: 'Visited' },
+	{ name: 'Ramesh Netam', place: 'Kondagaon', status: 'Visited' },
+	{ name: 'Manoj Baghel', place: 'Jagdalpur', status: 'Due' },
+	{ name: 'Devki Mandavi', place: 'Bastar', status: 'Follow up' },
+];
+const statusTone = (status: string) =>
+	status === 'Visited' ? 'bg-surface-green-2 text-ink-green-8' : status === 'Due' ? 'bg-surface-amber-2 text-ink-amber-8' : 'bg-surface-blue-2 text-ink-blue-8';
+
+const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025em] text-ink-gray-9 sm:text-[34px] [text-wrap:balance]';
+---
+
+<LandingLayout
+	title="Intake desk"
+	description="Tell BWH what is breaking in your programme and see the system that would fix it."
+	variant="intake"
+>
+	<div class="intake">
+		<!-- Header: the request's own header, with its status. -->
+		<header class="sticky top-0 z-30 border-b border-outline-gray-1 bg-surface-base" data-print-hide>
+			<div class="mx-auto flex h-14 max-w-[1280px] items-center gap-3 px-4 sm:px-6">
+				<a href="/lab/intake" class="flex items-center gap-2 no-underline" aria-label="BWH">
+					<Logo size={26} />
+					<span class="text-base-semibold text-ink-gray-9">BWH</span>
+				</a>
+				<span class="h-5 w-px bg-surface-gray-3" aria-hidden="true"></span>
+				<span class="text-base text-ink-gray-7 max-sm:hidden">New request</span>
+				<span data-status class="inline-flex h-6 items-center gap-1.5 rounded-full bg-surface-gray-2 px-2 text-xs font-medium text-ink-gray-7" aria-live="polite">
+					<span class="size-1.5 rounded-full bg-current opacity-70"></span>
+					<span data-status-text>Draft</span>
+					</span>
+					<span data-ticket-head class="hidden font-data text-xs text-ink-gray-5 md:inline">BWH-···· · not sent</span>
+				<div class="ml-auto flex items-center gap-2">
+					<Button href={CTA.meetHref} variant="ghost" class="max-sm:hidden">{CTA.secondary}</Button>
+					<Button href="#tell-us" variant="primary">Send request</Button>
+				</div>
+			</div>
+		</header>
+
+		<a
+				href="#system"
+				data-tray
+				hidden
+				class="fixed inset-x-0 top-14 z-20 flex items-center gap-2 border-b border-outline-blue-2 bg-surface-blue-1 px-4 py-2 text-sm text-ink-blue-8 no-underline shadow-sm lg:!hidden"
+			>
+				<Icon name="blocks" size={15} />
+				<span data-tray-text class="min-w-0 flex-1 truncate">Your system</span>
+				<span class="shrink-0 font-medium underline">View</span>
+			</a>
+
+			<main id="main-content">
+			<!-- First viewport: the question, and the system it builds. -->
+			<section aria-labelledby="intake-title" class="mx-auto grid max-w-[1280px] gap-10 px-4 pb-16 pt-10 sm:px-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-12 lg:pt-14">
+				<div class="flex flex-col gap-7">
+					<div class="flex flex-col gap-4">
+						<h1 id="intake-title" class="max-w-[15ch] text-[38px] font-semibold leading-[1.04] tracking-[-0.035em] text-ink-gray-9 [text-wrap:balance] sm:text-[54px]">
+							{HEADLINE.title}
+						</h1>
+						<p class="max-w-[54ch] text-p-lg text-ink-gray-6">{HEADLINE.lede}</p>
+					</div>
+					<fieldset class="flex flex-col gap-3">
+						<legend class="mb-3 text-xl font-semibold text-ink-gray-9">What's breaking?</legend>
+						<p class="-mt-1 text-p-sm text-ink-gray-5">Pick everything that sounds familiar. Your system builds itself as you pick.</p>
+						<div class="flex flex-wrap gap-2 pt-1">
+							{PROBLEMS.map((problem) => <ProblemChip id={problem.id} label={problem.label} form={FORM} size="lg" />)}
+						</div>
+					</fieldset>
+					<a href="#tell-us" class="flex items-center gap-1.5 self-start text-base text-ink-gray-7 underline hover:text-ink-gray-9">
+						Tell us more in your own words <Icon name="arrow-down" size={15} />
+					</a>
+				</div>
+
+				<!-- The system, assembling. -->
+				<div id="system" class="field relative flex scroll-mt-28 flex-col gap-4 rounded-6 p-3 sm:p-5 lg:sticky lg:top-20 lg:self-start" data-field>
+					<div class="window overflow-hidden rounded-5 bg-surface-base shadow-xl">
+						<div class="flex h-10 items-center gap-2 border-b border-outline-gray-1 px-3">
+							<span class="text-sm font-medium text-ink-gray-9">Your system</span>
+							<span class="rounded-full bg-surface-gray-2 px-1.5 py-0.5 text-[11px] text-ink-gray-6">Sample</span>
+							<span data-module-count class="ml-auto font-data text-xs text-ink-gray-5">0 parts</span>
+						</div>
+						<div class="grid min-h-[360px] grid-cols-[12rem_minmax(0,1fr)] max-sm:grid-cols-1">
+							<nav aria-label="Parts of your system" class="flex flex-col gap-0.5 border-r border-outline-gray-1 bg-surface-gray-1 p-2 max-sm:flex-row max-sm:flex-wrap max-sm:border-b max-sm:border-r-0">
+								<button type="button" data-overview hidden class="module-item flex h-8 items-center gap-2 rounded-4 px-2 text-left text-sm text-ink-gray-7 transition-colors hover:bg-surface-gray-2 aria-[current=true]:bg-surface-base aria-[current=true]:text-ink-gray-9 aria-[current=true]:shadow-sm">
+									<Icon name="layout-grid" size={14} class="text-ink-gray-5" />
+									<span class="truncate">Overview</span>
+								</button>
+								{PROBLEMS.map((problem) => (
+									<button type="button" data-module={problem.id} disabled class="module-item flex h-8 items-center gap-2 rounded-4 px-2 text-left text-sm text-ink-gray-7 transition-[background-color,color,opacity] duration-200 hover:bg-surface-gray-2 disabled:cursor-default disabled:opacity-35 disabled:hover:bg-transparent aria-[current=true]:bg-surface-base aria-[current=true]:text-ink-gray-9 aria-[current=true]:shadow-sm">
+										<Icon name={MODULE_ICON[problem.icon]} size={14} class="text-ink-gray-5" />
+										<span class="truncate">{problem.module}</span>
+									</button>
+								))}
+							</nav>
+
+							<div class="relative min-w-0 p-4">
+								<div data-preview="empty" class="flex h-full min-h-[320px] flex-col gap-3" aria-label="Your system, empty">
+									<span class="h-4 w-36 rounded-4 bg-surface-gray-2"></span>
+									<span class="grid grid-cols-3 gap-2">
+										{[0, 1, 2].map(() => <span class="h-12 rounded-4 bg-surface-gray-1" />)}
+									</span>
+									<span class="flex flex-col gap-2 rounded-4 border border-outline-gray-1 p-3">
+										{[72, 58, 64, 46].map((width) => (
+											<span class="flex items-center gap-2"><span class="size-5 rounded-full bg-surface-gray-2" /><span class="h-2.5 rounded-full bg-surface-gray-2" style={`width: ${width}%`} /></span>
+										))}
+									</span>
+									<p class="mt-auto text-center text-p-sm text-ink-gray-6">Pick what is breaking. Each problem lights up the part that fixes it.</p>
+								</div>
+
+								<div data-preview="overview" hidden class="flex flex-col gap-3">
+									<p class="text-base-semibold text-ink-gray-9">Your system so far</p>
+									<ul class="flex flex-col gap-1.5">
+										{PROBLEMS.map((problem) => (
+											<li data-tile={problem.id} hidden>
+												<button type="button" data-open={problem.id} class="flex w-full items-center gap-2.5 rounded-4 border border-outline-gray-1 bg-surface-base px-3 py-2 text-left transition-[border-color,background-color] duration-200 hover:border-outline-gray-3 data-[new]:border-outline-blue-3 data-[new]:bg-surface-blue-1">
+													<span class="flex size-7 shrink-0 items-center justify-center rounded-4 bg-surface-blue-2 text-ink-blue-7"><Icon name={MODULE_ICON[problem.icon]} size={14} /></span>
+													<span class="min-w-0 flex-1 truncate text-sm font-medium text-ink-gray-9">{problem.module}</span>
+													<span class="shrink-0 text-xs text-ink-gray-6 max-sm:hidden">{TILE[problem.id]}</span>
+												</button>
+											</li>
+										))}
+									</ul>
+									<p class="text-xs text-ink-gray-5">One system: a beneficiary, a visit and a payment are the same record in every part.</p>
+								</div>
+
+								<!-- One preview per part. Sample content, labelled so. -->
+								<div data-preview="sheets" hidden class="flex flex-col gap-3">
+									<p class="text-base-semibold text-ink-gray-9">Beneficiaries</p>
+									<ul class="divide-y divide-outline-gray-1 rounded-4 border border-outline-gray-1">
+										{SAMPLE_PEOPLE.map((person) => (
+											<li class="flex items-center gap-2 px-3 py-2">
+												<span class="flex size-6 items-center justify-center rounded-full bg-surface-gray-2 text-[11px] font-medium text-ink-gray-7">{person.name.split(' ').map((part) => part[0]).join('')}</span>
+												<span class="flex min-w-0 flex-1 flex-col"><span class="truncate text-sm text-ink-gray-9">{person.name}</span><span class="text-xs text-ink-gray-5">{person.place}</span></span>
+												<span class:list={['rounded-full px-2 py-0.5 text-xs font-medium', statusTone(person.status)]}>{person.status}</span>
+											</li>
+										))}
+									</ul>
+									<p class="text-xs text-ink-gray-5">One record per person, with every visit and case on it.</p>
+								</div>
+
+								<div data-preview="forms" hidden class="flex items-start gap-5 max-sm:flex-col">
+									<div class="w-[180px] shrink-0 rounded-[22px] border-[6px] border-surface-gray-9 bg-surface-base p-3 shadow-md">
+										<p class="text-xs text-ink-gray-5">Visit</p>
+										<p class="text-sm font-medium text-ink-gray-9">Lakshmi Bai</p>
+										<div class="mt-3 flex flex-col gap-2">
+											<span class="flex flex-col gap-1"><span class="text-[10px] text-ink-gray-5">Visited?</span><span class="flex gap-1"><span class="rounded-4 bg-surface-blue-2 px-2 py-0.5 text-[11px] text-ink-blue-8">Yes</span><span class="rounded-4 bg-surface-gray-2 px-2 py-0.5 text-[11px] text-ink-gray-6">No</span></span></span>
+											<span class="flex flex-col gap-1"><span class="text-[10px] text-ink-gray-5">Service</span><span class="rounded-4 bg-surface-gray-2 px-2 py-1 text-[11px] text-ink-gray-8">Food distribution</span></span>
+											<span class="flex flex-col gap-1"><span class="text-[10px] text-ink-gray-5">Notes</span><span class="h-8 rounded-4 bg-surface-gray-2"></span></span>
+											<span class="mt-1 rounded-4 bg-surface-blue-9 py-1.5 text-center text-[11px] font-medium text-ink-base">Save visit</span>
+										</div>
+									</div>
+									<div class="flex flex-col gap-2 pt-2">
+										<p class="text-base-semibold text-ink-gray-9">Field app</p>
+										<p class="max-w-[28ch] text-p-sm text-ink-gray-6">The field team fills this on a phone. The office sees the same record a moment later. No more copying from WhatsApp.</p>
+									</div>
+								</div>
+
+								<div data-preview="reports" hidden class="flex flex-col gap-3">
+									<div class="flex items-center justify-between"><p class="text-base-semibold text-ink-gray-9">Quarterly report for the funder</p><span class="inline-flex items-center gap-1 rounded-4 border border-outline-gray-2 px-2 py-1 text-xs text-ink-gray-7"><Icon name="download" size={12} />PDF</span></div>
+									<table class="w-full text-left text-sm">
+										<thead><tr class="text-xs text-ink-gray-5"><th class="py-1.5 font-normal">Indicator</th><th class="py-1.5 text-right font-normal">This quarter</th></tr></thead>
+										<tbody class="divide-y divide-outline-gray-1 text-ink-gray-8">
+											<tr><td class="py-2">Beneficiaries reached</td><td class="py-2 text-right font-data">212</td></tr>
+											<tr><td class="py-2">Visits completed</td><td class="py-2 text-right font-data">486</td></tr>
+											<tr><td class="py-2">Cases closed</td><td class="py-2 text-right font-data">57</td></tr>
+										</tbody>
+									</table>
+									<p class="text-xs text-ink-gray-5">Sample numbers. Your indicators, from live data, in the funder's format.</p>
+								</div>
+
+								<div data-preview="trust" hidden class="flex flex-col gap-3">
+									<p class="text-base-semibold text-ink-gray-9">Dashboard</p>
+									<div class="grid grid-cols-3 divide-x divide-outline-gray-1 rounded-4 border border-outline-gray-1">
+										{[['Reached', '212'], ['Visits', '486'], ['Open cases', '31']].map(([label, value]) => (
+											<div class="flex flex-col gap-0.5 px-3 py-2"><span class="text-xs text-ink-gray-5">{label}</span><span class="font-data text-lg text-ink-gray-9">{value}</span></div>
+										))}
+									</div>
+									<div class="flex h-28 items-end gap-2 rounded-4 border border-outline-gray-1 px-3 pb-2 pt-3">
+										{[38, 52, 47, 64, 71, 86].map((value, index) => (
+											<span class:list={['flex-1 rounded-t-[3px]', index === 5 ? 'bg-surface-blue-8' : 'bg-surface-blue-4']} style={`height: ${value}%`} />
+										))}
+									</div>
+									<p class="text-xs text-ink-gray-5">Sample numbers. Everyone sees the same figures, so the board meeting is about the work.</p>
+								</div>
+
+								<div data-preview="script" hidden class="flex flex-col gap-3">
+									<p class="text-base-semibold text-ink-gray-9">Automations</p>
+									<ul class="flex flex-col gap-2">
+										{[
+											['When a visit is logged', 'Tell the case worker'],
+											['When a case has no visit for 14 days', 'Flag it on the dashboard'],
+											['Every Monday morning', 'Send the funder summary'],
+										].map(([when, then]) => (
+											<li class="flex items-center gap-2 rounded-4 border border-outline-gray-1 px-3 py-2 text-sm">
+												<Icon name="zap" size={14} class="text-ink-amber-6" />
+												<span class="text-ink-gray-8">{when}</span>
+												<Icon name="arrow-right" size={13} class="text-ink-gray-4" />
+												<span class="text-ink-gray-9">{then}</span>
+											</li>
+										))}
+									</ul>
+									<p class="text-xs text-ink-gray-5">Rules you can read and change, instead of a script nobody understands.</p>
+								</div>
+
+								<div data-preview="hr" hidden class="flex flex-col gap-3">
+									<p class="text-base-semibold text-ink-gray-9">Attendance, with Frappe HR</p>
+									<div class="overflow-hidden rounded-4 border border-outline-gray-1 text-xs">
+										<div class="grid grid-cols-[6rem_repeat(6,minmax(0,1fr))] bg-surface-gray-1 text-ink-gray-5">
+											<span class="px-2 py-1.5"></span>{['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => <span class="py-1.5 text-center">{day}</span>)}
+										</div>
+										{[['Priya K.', 'pppplp'], ['Ravi S.', 'ppppph'], ['Anita N.', 'pplppp']].map(([name, days]) => (
+											<div class="grid grid-cols-[6rem_repeat(6,minmax(0,1fr))] border-t border-outline-gray-1">
+												<span class="truncate px-2 py-1.5 text-ink-gray-8">{name}</span>
+												{[...days].map((day) => (
+													<span class="flex items-center justify-center"><span class:list={['size-2 rounded-full', day === 'p' ? 'bg-surface-green-7' : day === 'l' ? 'bg-surface-amber-7' : 'bg-surface-gray-4']} /></span>
+												))}
+											</div>
+										))}
+									</div>
+									<p class="text-xs text-ink-gray-5">Leave, attendance and salary slips. Sample names.</p>
+								</div>
+
+								<div data-preview="accounts" hidden class="flex flex-col gap-3">
+									<p class="text-base-semibold text-ink-gray-9">Grants, with ERPNext</p>
+									<ul class="flex flex-col gap-3">
+										{[['Grant A, nutrition', 62], ['Grant B, shelter', 38], ['Grant C, health camps', 81]].map(([name, used]) => (
+											<li class="flex flex-col gap-1.5">
+												<span class="flex justify-between text-sm"><span class="text-ink-gray-8">{name}</span><span class="font-data text-xs text-ink-gray-6">{used}% used</span></span>
+												<span class="h-1.5 rounded-full bg-surface-gray-2"><span class="block h-full rounded-full bg-surface-blue-7" style={`width: ${used}%`} /></span>
+											</li>
+										))}
+									</ul>
+									<p class="text-xs text-ink-gray-5">Books, budgets per grant and donation receipts. Sample grants.</p>
+								</div>
+
+								<div data-preview="team" hidden class="flex flex-col gap-3">
+									<p class="text-base-semibold text-ink-gray-9">Training plan</p>
+									<ol class="flex flex-col">
+										{[
+											['Your admins', 'Run the system, add users, change a form.'],
+											['Your field team', 'Fill visits and cases on the phone.'],
+											['Your trainers', 'Teach the next people. We stay a call away.'],
+										].map(([who, what], index) => (
+											<li class="grid grid-cols-[1.75rem_minmax(0,1fr)] gap-2 border-t border-outline-gray-1 py-2.5 first:border-t-0">
+												<span class="flex size-6 items-center justify-center rounded-full bg-surface-violet-2 font-data text-[11px] text-ink-violet-8">{index + 1}</span>
+												<span class="flex flex-col"><span class="text-sm font-medium text-ink-gray-9">{who}</span><span class="text-xs text-ink-gray-6">{what}</span></span>
+											</li>
+										))}
+									</ol>
+									<p class="text-xs text-ink-gray-5">Train the trainer: your people teach your people.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<p data-closest class="flex min-h-5 items-start gap-2 px-1 text-p-sm field-ink" aria-live="polite">
+						<Icon name="sparkles" size={15} class="mt-0.5 shrink-0 opacity-70" />
+						<span data-closest-text>Every part runs on the same open-source stack, so they work as one system.</span>
+					</p>
+				</div>
+			</section>
+
+			<!-- Where the request goes next. -->
+			<section aria-labelledby="board-title" class="border-y border-outline-gray-1 bg-surface-gray-1">
+				<div class="mx-auto flex max-w-[1280px] flex-col gap-6 px-4 py-16 sm:px-6">
+					<div class="flex flex-col gap-2">
+						<h2 id="board-title" class={sectionTitle}>Where your request goes next</h2>
+						<p class="max-w-[60ch] text-p-lg text-ink-gray-6">Tell us the problem; we work out the solution with you. We keep listening at every step.</p>
+					</div>
+					<ol class="flex gap-3 overflow-x-auto pb-2 [scrollbar-width:thin]" data-board>
+						{PROCESS.map((step, index) => (
+							<li class="flex min-w-[13rem] flex-1 flex-col gap-2 rounded-5 bg-surface-gray-2 p-2">
+								<p class="flex items-center justify-between px-1.5 pt-1 text-sm font-medium text-ink-gray-8">
+									{step.title}
+									<span class="font-data text-xs font-normal text-ink-gray-6">{index + 1}</span>
+								</p>
+								{index === 0 && (
+									<div data-ticket class="flex flex-col gap-2 rounded-4 border border-outline-blue-3 bg-surface-elevation-1 p-3 shadow-sm">
+										<span class="flex items-center justify-between">
+											<span class="text-sm font-medium text-ink-gray-9">Your request</span>
+											<span data-ticket-status class="rounded-full bg-surface-gray-2 px-1.5 py-0.5 text-[11px] text-ink-gray-6">Draft</span>
+										</span>
+										<ul data-ticket-list class="flex flex-col gap-1 text-xs text-ink-gray-6">
+											<li>Nothing picked yet</li>
+										</ul>
+									</div>
+								)}
+								<div class="flex flex-col gap-1 rounded-4 bg-surface-elevation-1 p-3 shadow-sm">
+									<p class="text-p-sm text-ink-gray-7">{step.body}</p>
+								</div>
+							</li>
+						))}
+					</ol>
+				</div>
+			</section>
+
+			<div class="mx-auto flex max-w-[1280px] flex-col gap-20 px-4 pb-24 pt-20 sm:px-6">
+				<!-- Who you would be working with. -->
+				<section aria-labelledby="who-title" class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+					<div class="flex flex-col gap-5">
+						<h2 id="who-title" class={sectionTitle}>Who you would be working with</h2>
+						<p class="max-w-[54ch] text-p-lg text-ink-gray-6">
+							A team of problem solvers in {HOME_TOWN}. We build on an open-source stack and help build it: our team has{' '}
+							<span class="tabular-nums text-ink-gray-9">{CONTRIBUTIONS.total.toLocaleString('en-IN')}</span> pull requests merged
+								into Frappe's repositories (<a href="https://github.com/frappe" class="underline hover:text-ink-gray-9">GitHub</a>, October 2026).
+						</p>
+						<ul class="flex flex-wrap gap-x-4 gap-y-2">
+								{STACK.map((item) => (
+								<li class="flex items-center gap-2 text-sm text-ink-gray-8"><img src={item.src} alt="" width="20" height="20" class="size-5" />{item.label}</li>
+							))}
+						</ul>
+						<div class="flex flex-col gap-2 border-t border-outline-gray-1 pt-5">
+							<h3 class="text-sm text-ink-gray-5">Organisations we have worked with</h3>
+							<ul class="flex flex-wrap gap-1.5">
+								{PARTNERS.map((partner) => (
+									<li class="inline-flex h-7 items-center rounded-full border border-outline-gray-2 px-3 text-sm text-ink-gray-8">
+										{isTBD(partner.name) ? <span class="tbd">TBD</span> : partner.name}
+									</li>
+								))}
+							</ul>
+						</div>
+						<div class="grid gap-4 border-t border-outline-gray-1 pt-5 sm:grid-cols-2">
+							<div class="flex flex-col gap-1.5">
+								<h3 class="text-base-semibold text-ink-gray-9">{OFFERS[1].title}</h3>
+								<p class="text-p-sm text-ink-gray-6">{OFFERS[1].summary}</p>
+								<a href="/train-your-team" class="flex items-center gap-1 text-sm text-ink-gray-8 underline hover:text-ink-gray-9">Training for teams <Icon name="arrow-right" size={13} /></a>
+							</div>
+							<div class="flex flex-col gap-1.5">
+								<h3 class="text-base-semibold text-ink-gray-9">{OFFERS[2].title}</h3>
+								<p class="text-p-sm text-ink-gray-6">{OFFERS[2].summary}</p>
+								<p class="text-xs text-ink-gray-5">{COURSES[0].learners.toLocaleString('en-IN')} enrolments in our largest Frappe School course · {YOUTUBE.subscribers} YouTube subscribers · October 2026</p>
+							</div>
+						</div>
+					</div>
+					<div class="grid grid-cols-2 gap-3 self-start">
+						<figure class="col-span-2 flex flex-col gap-2">
+							<Image src={studentsPhoto} alt="CS17 students working together on laptops" widths={[640, 960, 1280]} sizes="(min-width: 1024px) 600px, 100vw" class="aspect-[16/9] w-full rounded-5 object-cover" />
+						</figure>
+						<figure class="flex flex-col gap-2">
+							<Image src={aiPhoto} alt="Two CS17 students present a game, with a slide that says they used AI tools to make its graphics" widths={[360, 540]} sizes="(min-width: 1024px) 300px, 50vw" class="photo-mono aspect-[4/3] w-full rounded-5 object-cover" />
+						</figure>
+						<div class="flex flex-col justify-start gap-1 text-p-sm text-ink-gray-6">
+							<span class="text-base-medium text-ink-gray-9">{CS17.name}, our own programme</span>
+							Young women in {HOME_TOWN} learn to build software for 18 months, fully funded. Here, students present a game they made with AI tools.{' '}
+							<a href={CS17.href} class="text-sm text-ink-gray-8 underline hover:text-ink-gray-9">cs17.org</a>
+						</div>
+					</div>
+				</section>
+
+				<FunderStrip />
+
+				<!-- The rest of the request. The chips above belong to this form. -->
+				<section id="tell-us" aria-labelledby="send-title" class="scroll-mt-20 rounded-6 border border-outline-gray-1 p-5 sm:p-8">
+					<form id={FORM} data-intake data-intake-custom class="outline-none">
+						<div data-intake-body class="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+							<div class="flex flex-col gap-3">
+								<h2 id="send-title" class={sectionTitle}>Send us your request</h2>
+								<p class="text-p-base text-ink-gray-6">You picked:</p>
+								<ul data-summary class="flex flex-col gap-1.5 text-p-sm text-ink-gray-8">
+									<li class="text-ink-gray-5">Nothing yet. <a href="#intake-title" class="underline">Pick what is breaking</a>, or just write to us.</li>
+								</ul>
+							</div>
+							<div class="flex flex-col gap-4">
+								<TextField form={FORM} type="textarea" rows={4} name="story" label="In your words" placeholder="Our field team sends updates on WhatsApp and someone copies them into Excel every Friday." />
+								<div class="grid gap-4 sm:grid-cols-3">
+									<TextField form={FORM} name="name" label="Your name" autocomplete="name" />
+									<TextField form={FORM} name="org" label="Organisation" autocomplete="organization" />
+									<TextField form={FORM} name="contact" label="Email or phone" autocomplete="email" required />
+								</div>
+								<div class="flex flex-wrap items-center gap-x-4 gap-y-3">
+									<Button type="submit" variant="primary" size="lg">Send request <Icon name="arrow-right" size={16} /></Button>
+									<a href={CTA.meetHref} class="text-base text-ink-gray-6 underline hover:text-ink-gray-9">or book a call</a>
+									<p class="text-p-xs text-ink-gray-5 sm:ml-auto">Prototype: nothing is sent yet.</p>
+								</div>
+							</div>
+						</div>
+
+						<div data-intake-done hidden tabindex="-1" class="flex flex-col gap-4 outline-none">
+							<div class="flex items-center gap-3">
+								<span class="flex size-10 items-center justify-center rounded-full bg-surface-green-2 text-ink-green-7"><Icon name="check" size={20} strokeWidth={2.25} /></span>
+								<span data-ticket-id class="font-data text-sm text-ink-gray-6">BWH-0000</span>
+							</div>
+							<h2 data-intake-greeting class={sectionTitle}>Thanks.</h2>
+							<div class="flex flex-col gap-2 text-p-base text-ink-gray-7">
+								<p>We have your request about:</p>
+								<ul data-intake-list class="list-disc pl-5 text-ink-gray-8"></ul>
+								<p>We'll reply at <span data-intake-contact class="font-medium text-ink-gray-9"></span>.</p>
+							</div>
+							<div class="flex flex-wrap items-center gap-3">
+								<Button href={CTA.meetHref} variant="primary">Book a call now</Button>
+								<Button data-intake-reset variant="ghost">Start over</Button>
+							</div>
+							<p class="text-p-xs text-ink-gray-5">Prototype: this request did not leave your browser.</p>
+						</div>
+					</form>
+				</section>
+			</div>
+		</main>
+
+		<footer class="border-t border-outline-gray-1 bg-surface-gray-1">
+			<div class="mx-auto flex max-w-[1280px] flex-wrap items-center gap-x-5 gap-y-3 px-4 py-5 sm:px-6">
+				<span data-status-footer class="inline-flex h-6 items-center gap-1.5 rounded-full bg-surface-gray-2 px-2 text-xs font-medium text-ink-gray-7">
+					<span class="size-1.5 rounded-full bg-current opacity-70"></span>
+					<span data-status-footer-text>Draft</span>
+				</span>
+				<span data-ticket-foot class="font-data text-xs text-ink-gray-5">BWH-···· · not sent</span>
+				<div class="flex items-center gap-2">
+					<Button href="#tell-us" variant="primary">Send request</Button>
+					<Button href={CTA.meetHref} variant="ghost">{CTA.secondary}</Button>
+				</div>
+				<p class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-gray-5 md:ml-auto">
+					<span class="max-md:basis-full">{LEGAL_NAME}, {HOME_TOWN}</span>
+					<a href="/blog" class="underline hover:text-ink-gray-9">Blog</a>
+					<a href={YOUTUBE.href} class="underline hover:text-ink-gray-9">YouTube</a>
+					<a href={OPEN_SOURCE.href} class="underline hover:text-ink-gray-9">GitHub</a>
+				</p>
+			</div>
+		</footer>
+	</div>
+
+	<script type="application/json" id="intake-closest" set:html={JSON.stringify(CLOSEST)} is:inline></script>
+</LandingLayout>
+
+<style>
+	/* The deep blue field the system sits on. In dark mode it is a deep blue
+	   still, not the light blue the same token would give. */
+	.field {
+		background: var(--surface-blue-9);
+	}
+	.field-ink {
+		color: color-mix(in oklch, var(--ink-base) 82%, transparent);
+	}
+	:global([data-theme='dark']) .field {
+		background: var(--surface-blue-2);
+	}
+	:global([data-theme='dark']) .field-ink {
+		color: var(--ink-blue-8);
+	}
+	.window {
+		box-shadow:
+			0 1px 2px rgb(0 0 0 / 0.1),
+			0 24px 48px -12px rgb(0 0 0 / 0.35);
+	}
+</style>
+
+<script>
+	import { animate, stagger } from 'motion';
+	import { initIntake, pickedProblems } from '../../../scripts/landing/intake';
+	import { boot, EASE_OUT, motionAllowed } from '../../../scripts/landing/motion';
+
+	boot();
+
+	const form = document.querySelector<HTMLFormElement>('#intake-form')!;
+	const closest = JSON.parse(document.querySelector('#intake-closest')?.textContent ?? '{}') as Record<string, string>;
+	const modules = [...document.querySelectorAll<HTMLButtonElement>('[data-module]')];
+	const overviewButton = document.querySelector<HTMLButtonElement>('[data-overview]')!;
+	const previews = [...document.querySelectorAll<HTMLElement>('[data-preview]')];
+	const tiles = [...document.querySelectorAll<HTMLElement>('[data-tile]')];
+	const count = document.querySelector('[data-module-count]')!;
+	const closestText = document.querySelector('[data-closest-text]')!;
+	const field = document.querySelector<HTMLElement>('[data-field]')!;
+	const tray = document.querySelector<HTMLAnchorElement>('[data-tray]')!;
+	const trayText = document.querySelector('[data-tray-text]')!;
+	const ticketList = document.querySelector('[data-ticket-list]')!;
+	const summary = document.querySelector('[data-summary]')!;
+	const contact = form.elements.namedItem('contact') as HTMLInputElement;
+
+	const moduleName = (id: string) => modules.find((m) => m.dataset.module === id)?.textContent?.trim() ?? id;
+	const label = (id: string) => document.querySelector(`[data-problem-label="${id}"]`)?.textContent?.trim() ?? id;
+	const DEFAULT_CLOSEST = closestText.textContent ?? '';
+	const EMPTY_SUMMARY = [...summary.childNodes].map((node) => node.cloneNode(true));
+
+	// The request has a number from the moment the page opens.
+	// A request number exists only once something is sent.
+	const setTicket = (text: string) => document.querySelectorAll('[data-ticket-head], [data-ticket-foot]').forEach((el) => (el.textContent = text));
+	setTicket('BWH-···· · not sent');
+
+	let pickedCount = 0;
+	let fieldVisible = true;
+	const syncTray = () => (tray.hidden = pickedCount === 0 || fieldVisible);
+
+	let shown = 'empty';
+	function show(id: string) {
+		if (id === shown) return;
+		const next = previews.find((preview) => preview.dataset.preview === id);
+		if (!next) return;
+		previews.forEach((preview) => (preview.hidden = preview !== next));
+		modules.forEach((module) => module.setAttribute('aria-current', String(module.dataset.module === id)));
+		overviewButton.setAttribute('aria-current', String(id === 'overview'));
+		if (motionAllowed()) {
+			animate(next, { opacity: [0, 1], transform: ['translateY(6px)', 'translateY(0)'] }, { duration: 0.3, ease: EASE_OUT });
+		}
+		shown = id;
+	}
+
+	// The signature: a picked chip's label flies to its slot in the system.
+	function fly(id: string) {
+		const chip = document.querySelector<HTMLElement>(`[data-problem-label="${id}"]`)?.parentElement;
+		const slot = modules.find((module) => module.dataset.module === id);
+		if (!chip || !slot || !motionAllowed() || matchMedia('(max-width: 1023px)').matches) return;
+		const from = chip.getBoundingClientRect();
+		const to = slot.getBoundingClientRect();
+		const ghost = document.createElement('span');
+		ghost.textContent = moduleName(id);
+		ghost.className = 'fixed z-50 rounded-full bg-surface-blue-9 px-3 py-1 text-sm font-medium text-ink-base shadow-lg pointer-events-none';
+		ghost.style.left = `${from.left}px`;
+		ghost.style.top = `${from.top}px`;
+		document.body.append(ghost);
+		const dx = to.left - from.left;
+		const dy = to.top - from.top;
+		animate(
+			ghost,
+			{ transform: ['translate(0, 0) scale(1)', `translate(${dx}px, ${dy}px) scale(0.85)`], opacity: [1, 1, 0] },
+			{ duration: 0.55, ease: EASE_OUT },
+		).then(() => {
+			ghost.remove();
+			animate(slot, { backgroundColor: ['var(--surface-blue-2)', 'rgba(0,0,0,0)'] }, { duration: 0.6 });
+		});
+	}
+
+	function refresh(picked: string[], added?: string) {
+		modules.forEach((module) => (module.disabled = !picked.includes(module.dataset.module!)));
+		overviewButton.hidden = picked.length < 2;
+		tiles.forEach((tile) => {
+			tile.hidden = !picked.includes(tile.dataset.tile!);
+			tile.querySelector('button')?.toggleAttribute('data-new', tile.dataset.tile === added);
+		});
+		count.textContent = `${picked.length} ${picked.length === 1 ? 'part' : 'parts'}`;
+
+		// One part: show it. Several: show the system as a whole, newest marked.
+		if (!picked.length) show('empty');
+		else if (picked.length === 1) show(picked[0]);
+		else show('overview');
+		if (added) fly(added);
+
+		const newest = added ?? picked[picked.length - 1];
+		closestText.textContent = (newest && closest[newest]) ?? DEFAULT_CLOSEST;
+
+		pickedCount = picked.length;
+		syncTray();
+		trayText.textContent = picked.length
+			? `Your system · ${picked.length} ${picked.length === 1 ? 'part' : 'parts'} · newest: ${moduleName(newest)}`
+			: 'Your system';
+
+		ticketList.replaceChildren(
+			...(picked.length ? picked.map((id) => `Added ${moduleName(id)}`) : ['Nothing picked yet']).map((text) => {
+				const li = document.createElement('li');
+				li.textContent = text;
+				return li;
+			}),
+		);
+		if (picked.length) {
+			summary.classList.add('list-disc', 'pl-5');
+			summary.replaceChildren(
+				...picked.map((id) => {
+					const li = document.createElement('li');
+					li.textContent = label(id);
+					return li;
+				}),
+			);
+		} else {
+			summary.classList.remove('list-disc', 'pl-5');
+			summary.replaceChildren(...EMPTY_SUMMARY.map((node) => node.cloneNode(true)));
+		}
+		updateStatus(picked);
+	}
+
+	const TONES = {
+		gray: ['bg-surface-gray-2', 'text-ink-gray-7'],
+		blue: ['bg-surface-blue-2', 'text-ink-blue-8'],
+		green: ['bg-surface-green-2', 'text-ink-green-8'],
+	};
+	function setStatus(tone: keyof typeof TONES, text: string) {
+		document.querySelectorAll<HTMLElement>('[data-status], [data-status-footer], [data-ticket-status]').forEach((element) => {
+			Object.values(TONES).flat().forEach((name) => element.classList.remove(name));
+			element.classList.add(...TONES[tone]);
+		});
+		document.querySelectorAll('[data-status-text], [data-status-footer-text], [data-ticket-status]').forEach((el) => (el.textContent = text));
+	}
+	function updateStatus(picked = pickedProblems(form)) {
+		if (contact.value.trim() && picked.length) setStatus('green', 'Ready to send');
+		else if (picked.length) setStatus('blue', `${picked.length} ${picked.length === 1 ? 'problem' : 'problems'}`);
+		else setStatus('gray', 'Draft');
+	}
+
+	let lastPicked: string[] = [];
+	initIntake(form, (picked) => {
+		const added = picked.find((id) => !lastPicked.includes(id));
+		lastPicked = picked;
+		refresh(picked, added);
+	});
+	contact.addEventListener('input', () => updateStatus());
+	modules.forEach((module) => module.addEventListener('click', () => show(module.dataset.module!)));
+	overviewButton.addEventListener('click', () => show('overview'));
+	document.querySelectorAll<HTMLButtonElement>('[data-open]').forEach((button) => button.addEventListener('click', () => show(button.dataset.open!)));
+
+	// The tray only shows while the system itself is off screen.
+	new IntersectionObserver(
+		([entry]) => {
+			fieldVisible = entry.isIntersecting;
+			syncTray();
+		},
+		{ threshold: 0.25 },
+	).observe(field);
+
+	// Once, on arrival: the faint parts light up in turn, showing what the
+	// window will become.
+	if (motionAllowed()) {
+		animate(modules, { opacity: [0.35, 1, 0.35] }, { duration: 0.9, delay: stagger(0.08, { startDelay: 0.5 }), ease: 'easeInOut' }).then(() =>
+			modules.forEach((module) => (module.style.opacity = '')),
+		);
+	}
+
+	form.addEventListener('intake:sent', () => {
+		const ticket = `BWH-${String(Math.floor(1000 + Math.random() * 9000))}`;
+		const ticketId = document.querySelector('[data-ticket-id]');
+		if (ticketId) ticketId.textContent = ticket;
+		setTicket(`${ticket} · sent just now`);
+		setStatus('green', 'Sent');
+	});
+</script>

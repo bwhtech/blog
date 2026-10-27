@@ -1,0 +1,291 @@
+---
+/**
+ * Round 4: the tools are replaced, not connected. One system takes their
+ * place and becomes the source everything else reads from.
+ */
+import Icon from '../../../components/landing/Icon.astro';
+import LandingLayout from '../../../layouts/LandingLayout.astro';
+
+const TITLE = 'We engineer processes that make your life easier.';
+const LEDE =
+	'Most teams juggle Google Forms, sheets, WhatsApp groups and a script someone vibe-coded once. We replace them with one system, the single source of truth for everything else.';
+const TOOLS = [
+	{ icon: 'clipboard-list', name: 'Google Forms', module: 'Field forms', mIcon: 'smartphone' },
+	{ icon: 'file-spreadsheet', name: 'Excel sheets', module: 'Beneficiary register', mIcon: 'users' },
+	{ icon: 'message-circle', name: 'WhatsApp groups', module: 'Alerts and follow-ups', mIcon: 'bell-ring' },
+	{ icon: 'square-terminal', name: 'Vibe-coded script', module: 'Automations', mIcon: 'git-merge' },
+	{ icon: 'mail', name: 'Email threads', module: 'Reports', mIcon: 'chart-column' },
+];
+const OUTPUTS = [
+	{ icon: 'smartphone', name: 'Field app' },
+	{ icon: 'chart-column', name: 'Dashboards' },
+	{ icon: 'file-text', name: 'Donor reports' },
+	{ icon: 'bell-ring', name: 'Follow-ups' },
+	{ icon: 'shield-check', name: 'Audit trail' },
+];
+const PEOPLE = [
+	{ icon: 'smartphone', name: 'Field team' },
+	{ icon: 'user-check', name: 'Programme lead' },
+	{ icon: 'chart-column', name: 'MEL team' },
+	{ icon: 'hand-coins', name: 'Funders' },
+];
+const Y = [70, 135, 200, 265, 330];
+const PY = [80, 160, 240, 320];
+---
+
+<LandingLayout title="Flow concepts, round 4" description="Replace, then serve: one system as the single source of truth.">
+	<main class="mx-auto flex max-w-[1280px] flex-col gap-16 px-10 py-12">
+		<!-- J -->
+		<section class="concept" data-concept="j">
+			<p class="concept-name">J · Retire the tools, one system feeds everything</p>
+			<div class="frame">
+				<h2 class="frame-title">{TITLE}</h2>
+				<p class="frame-lede">{LEDE}</p>
+				<div class="canvas">
+					<svg class="art" viewBox="0 0 1200 400" aria-hidden="true">
+						<path d="M250,62 Q262,62 262,78 L262,322 Q262,338 250,338" class="bracket" />
+						<line x1="270" y1="200" x2="548" y2="200" class="arrow" />
+						<path d="M540,193 L548,200 L540,207" class="arrow" />
+						{Y.map((y) => <path d={`M656,200 C800,200 800,${y} 940,${y}`} class="out" />)}
+						{Y.map((y, i) => <circle cx={760 + (i % 2) * 40} cy={200 + (y - 200) * (i % 2 ? 0.45 : 0.25)} r="3.5" class="pulse" />)}
+					</svg>
+					{TOOLS.map((tool, i) => (
+						<span class="tool retired" style={`left:32px;top:${Y[i]}px`}>
+							<span class="tile"><Icon name={tool.icon} size={18} /></span>
+							<s>{tool.name}</s>
+						</span>
+					))}
+					<span class="replaced" style="left:405px;top:174px">replaced by</span>
+					<span class="hub" style="left:560px;top:152px"><Icon name="database" size={26} /></span>
+					<span class="hub-label" style="left:608px;top:262px"><b>One system</b><span>Single source of truth</span></span>
+					{OUTPUTS.map((out, i) => (
+						<span class="tool out-tool" style={`left:952px;top:${Y[i]}px`}>
+							<span class="tile tile-ink"><Icon name={out.icon} size={18} /></span>
+							{out.name}
+						</span>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<!-- K -->
+		<section class="concept" data-concept="k">
+			<p class="concept-name">K · Each tool has its replacement, and everyone reads from one place</p>
+			<div class="frame">
+				<h2 class="frame-title">{TITLE}</h2>
+				<p class="frame-lede">{LEDE}</p>
+				<div class="canvas">
+					<svg class="art" viewBox="0 0 1200 400" aria-hidden="true">
+						{Y.map((y) => (
+							<>
+								<line x1="228" y1={y} x2="404" y2={y} class="swap" />
+								<path d={`M396,${y - 6} L404,${y} L396,${y + 6}`} class="swap-head" />
+							</>
+						))}
+						{PY.map((y) => <path d={`M760,200 C860,200 860,${y} 950,${y}`} class="out" />)}
+						{PY.map((y, i) => <circle cx={850} cy={200 + (y - 200) * 0.5} r="3.5" class="pulse" />)}
+					</svg>
+					{TOOLS.map((tool, i) => (
+						<span class="tool retired" style={`left:32px;top:${Y[i]}px`}>
+							<span class="tile"><Icon name={tool.icon} size={18} /></span>
+							<s>{tool.name}</s>
+						</span>
+					))}
+					<div class="system" style="left:420px;top:5px">
+						<p class="system-head"><Icon name="database" size={16} />One system<span>Single source of truth</span></p>
+						{TOOLS.map((tool) => (
+							<span class="module"><Icon name={tool.mIcon} size={15} />{tool.module}</span>
+						))}
+					</div>
+					{PEOPLE.map((person, i) => (
+						<span class="tool out-tool" style={`left:962px;top:${PY[i]}px`}>
+							<span class="tile tile-ink"><Icon name={person.icon} size={18} /></span>
+							{person.name}
+						</span>
+					))}
+				</div>
+			</div>
+		</section>
+	</main>
+</LandingLayout>
+
+<style>
+	.concept {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+	.concept-name {
+		font-size: 14px;
+		font-weight: 600;
+		color: var(--ink-gray-9);
+	}
+	.frame {
+		width: 1200px;
+		padding: 48px 0 40px;
+		background: var(--surface-base);
+	}
+	.frame-title {
+		max-width: 22ch;
+		font-size: 34px;
+		font-weight: 600;
+		line-height: 1.12;
+		letter-spacing: -0.025em;
+		color: var(--ink-gray-9);
+		text-wrap: balance;
+	}
+	.frame-lede {
+		max-width: 62ch;
+		margin-top: 12px;
+		font-size: 17px;
+		line-height: 1.6;
+		color: var(--ink-gray-6);
+		text-wrap: pretty;
+	}
+	.canvas {
+		position: relative;
+		width: 1200px;
+		height: 400px;
+		margin-top: 32px;
+	}
+	.art {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+	}
+	.tool {
+		position: absolute;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		translate: 0 -50%;
+		font-size: 13px;
+		color: var(--ink-gray-8);
+		white-space: nowrap;
+	}
+	.retired {
+		color: var(--ink-gray-5);
+	}
+	.retired s {
+		text-decoration-color: var(--ink-gray-4);
+	}
+	.retired .tile {
+		border-style: dashed;
+		opacity: 0.7;
+	}
+	.tile {
+		display: flex;
+		width: 40px;
+		height: 40px;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid var(--outline-gray-2);
+		border-radius: 10px;
+		background: var(--surface-base);
+		color: var(--ink-gray-5);
+	}
+	.tile-ink {
+		border-color: var(--ink-gray-9);
+		color: var(--ink-gray-9);
+	}
+	.out-tool {
+		font-weight: 500;
+		color: var(--ink-gray-9);
+	}
+	.bracket,
+	.arrow,
+	.swap,
+	.swap-head {
+		fill: none;
+		stroke: var(--outline-gray-3);
+		stroke-width: 1.5;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+	.swap {
+		stroke-dasharray: 3 4;
+	}
+	.out {
+		fill: none;
+		stroke: var(--ink-gray-9);
+		stroke-width: 1.75;
+	}
+	.pulse {
+		fill: var(--surface-green-7);
+		stroke: var(--surface-base);
+		stroke-width: 2;
+	}
+	.replaced {
+		position: absolute;
+		translate: -50% 0;
+		font-size: 12px;
+		color: var(--ink-gray-6);
+	}
+	.hub {
+		position: absolute;
+		display: flex;
+		width: 96px;
+		height: 96px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 24px;
+		background: var(--ink-gray-9);
+		color: var(--surface-base);
+	}
+	.hub-label {
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		translate: -50% 0;
+		white-space: nowrap;
+	}
+	.hub-label b {
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--ink-gray-9);
+	}
+	.hub-label span {
+		font-size: 12px;
+		color: var(--ink-gray-6);
+	}
+	.system {
+		position: absolute;
+		display: flex;
+		width: 340px;
+		flex-direction: column;
+		gap: 15px;
+		padding: 16px;
+		border-radius: 16px;
+		background: var(--ink-gray-9);
+	}
+	.system-head {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		height: 24px;
+		margin-bottom: -10px;
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--surface-base);
+	}
+	.system-head span {
+		margin-left: auto;
+		font-size: 12px;
+		font-weight: 400;
+		opacity: 0.7;
+	}
+	.module {
+		display: flex;
+		height: 50px;
+		align-items: center;
+		gap: 10px;
+		padding: 0 12px;
+		border-radius: 10px;
+		background: var(--surface-base);
+		font-size: 13px;
+		font-weight: 500;
+		color: var(--ink-gray-9);
+	}
+</style>

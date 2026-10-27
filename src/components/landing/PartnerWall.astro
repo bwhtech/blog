@@ -1,0 +1,217 @@
+---
+/**
+ * Logos of the organisations we have worked with, as one hairline panel.
+ * Each mark is drawn as a silhouette in the page's ink (a CSS mask), so it
+ * sits in both themes without a white tile. A soft light follows the pointer
+ * across the panel; in light mode the logo under it turns back to colour.
+ *
+ * Sources: Azim Premji Foundation, CMID and Frappe from the files the founder
+ * shared on 2026-10-27; Dhwani RIS (dhwaniris.com/assets/img/dhwani-logo-full.png)
+ * and ILF (indianlitigationfellowship.in) from their own sites. The *-mark.png
+ * files are the same logos with the white taken out.
+ */
+import apf from '../../assets/landing/partners/apf-mark.png';
+import cmid from '../../assets/landing/partners/cmid-mark.png';
+import dhwani from '../../assets/landing/partners/dhwani-mark.png';
+import frappe from '../../assets/landing/partners/frappe-mark.png';
+import ilf from '../../assets/landing/partners/ilf-mark.png';
+
+// Heights are set by eye so every mark carries about the same visual weight.
+const LOGOS = [
+	{ src: apf, name: 'Azim Premji Foundation', href: 'https://azimpremjifoundation.org', height: 70 },
+	{ src: cmid, name: 'CMID, Centre for Migration and Inclusive Development', href: 'https://cmid.org.in', height: 92 },
+	{ src: ilf, name: 'ILF, Indian Litigation Fellowship', href: 'https://indianlitigationfellowship.in', height: 72 },
+	{ src: dhwani, name: 'Dhwani Rural Information Systems', href: 'https://dhwaniris.com', height: 58 },
+	{ src: frappe, name: 'Frappe', href: 'https://frappe.io', height: 36 },
+];
+---
+
+<div class="wall" data-wall>
+	<span class="tick tl" aria-hidden="true"></span>
+	<span class="tick tr" aria-hidden="true"></span>
+	<span class="tick bl" aria-hidden="true"></span>
+	<span class="tick br" aria-hidden="true"></span>
+	<ul class="logos">
+		{LOGOS.map((logo) => (
+			<li data-logo>
+				<a href={logo.href} class="cell" target="_blank" rel="noopener" aria-label={logo.name}>
+					<span
+						class="mark"
+						style={`--mark:url(${logo.src.src});height:${logo.height}px;aspect-ratio:${logo.src.width}/${logo.src.height}`}
+					>
+						<img src={logo.src.src} alt="" class="colour" width={logo.src.width} height={logo.src.height} loading="lazy" />
+					</span>
+				</a>
+			</li>
+		))}
+	</ul>
+</div>
+
+<style>
+	.wall {
+		--mx: 50%;
+		--my: 50%;
+		position: relative;
+		border: 1px solid var(--outline-gray-2);
+		border-radius: 2px;
+	}
+	/* The light: a soft circle under the pointer, shown while it is over the panel. */
+	.wall::before {
+		position: absolute;
+		inset: 0;
+		background: radial-gradient(360px circle at var(--mx) var(--my), var(--surface-gray-2), transparent 70%);
+		content: '';
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 400ms var(--lab-ease);
+	}
+	.wall:hover::before {
+		opacity: 1;
+	}
+	/* Small crosses on the corners, like registration marks. */
+	.tick {
+		position: absolute;
+		z-index: 1;
+		width: 11px;
+		height: 11px;
+		pointer-events: none;
+	}
+	.tick::before,
+	.tick::after {
+		position: absolute;
+		background: var(--ink-gray-5);
+		content: '';
+	}
+	.tick::before {
+		top: 5px;
+		left: 0;
+		width: 11px;
+		height: 1px;
+	}
+	.tick::after {
+		top: 0;
+		left: 5px;
+		width: 1px;
+		height: 11px;
+	}
+	.tl {
+		top: -6px;
+		left: -6px;
+	}
+	.tr {
+		top: -6px;
+		right: -6px;
+	}
+	.bl {
+		bottom: -6px;
+		left: -6px;
+	}
+	.br {
+		right: -6px;
+		bottom: -6px;
+	}
+	.logos {
+		position: relative;
+		display: grid;
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+	}
+	.logos li + li {
+		border-left: 1px solid var(--outline-gray-2);
+	}
+	@media (max-width: 1023px) {
+		.logos {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+		.logos li {
+			border-left: 0 !important;
+		}
+		.logos li:nth-child(even) {
+			border-left: 1px solid var(--outline-gray-2) !important;
+		}
+		.logos li:nth-child(n + 3) {
+			border-top: 1px solid var(--outline-gray-2);
+		}
+		/* Five logos: the last one takes the full row rather than sitting alone. */
+		.logos li:last-child {
+			grid-column: 1 / -1;
+		}
+	}
+	.cell {
+		display: flex;
+		height: 168px;
+		align-items: center;
+		justify-content: center;
+		padding: 24px;
+		outline-offset: -4px;
+	}
+	@media (max-width: 639px) {
+		.cell {
+			height: 128px;
+		}
+		.mark {
+			scale: 0.8;
+		}
+	}
+	/* The silhouette: the logo's shape, filled with the page's ink. */
+	.mark {
+		position: relative;
+		display: block;
+		max-width: 100%;
+		background: var(--ink-gray-6);
+		-webkit-mask: var(--mark) center / contain no-repeat;
+		mask: var(--mark) center / contain no-repeat;
+		transition:
+			background-color 400ms var(--lab-ease),
+			transform 500ms var(--lab-ease);
+	}
+	.colour {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		opacity: 0;
+		transition: opacity 400ms var(--lab-ease);
+	}
+	.cell:hover .mark,
+	.cell:focus-visible .mark {
+		background: var(--ink-gray-9);
+		transform: scale(1.04);
+	}
+	/* Colour comes back only on a light page; on dark, two of the five logos are black. */
+	:global(html:not([data-theme='dark'])) .cell:hover .colour,
+	:global(html:not([data-theme='dark'])) .cell:focus-visible .colour {
+		opacity: 1;
+	}
+	html[data-motion='on'] .logos [data-logo] .mark {
+		opacity: 0;
+	}
+</style>
+
+<script>
+	import { animate, stagger } from 'motion';
+	import { motionAllowed, once } from '../../scripts/landing/motion';
+
+	document.querySelectorAll<HTMLElement>('[data-wall]').forEach((wall) => {
+		wall.addEventListener('pointermove', (event) => {
+			const box = wall.getBoundingClientRect();
+			wall.style.setProperty('--mx', `${event.clientX - box.left}px`);
+			wall.style.setProperty('--my', `${event.clientY - box.top}px`);
+		});
+		if (!motionAllowed()) return;
+		const marks = wall.querySelectorAll<HTMLElement>('.mark');
+		once(wall, () =>
+			animate(
+				marks,
+				{ opacity: [0, 1], filter: ['blur(6px)', 'blur(0px)'], transform: ['translateY(8px)', 'translateY(0)'] },
+				{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: stagger(0.08) },
+			).then(() =>
+				// Hand transform back to the stylesheet, so hover can scale the mark.
+				marks.forEach((mark) => {
+					mark.style.transform = '';
+					mark.style.filter = '';
+				}),
+			),
+		);
+	});
+</script>

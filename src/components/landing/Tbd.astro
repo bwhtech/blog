@@ -1,0 +1,13 @@
+---
+/** Marks copy we still owe. `note` says what is missing, e.g. "quote". */
+interface Props {
+	note?: string;
+	class?: string;
+}
+
+const { note, class: className } = Astro.props;
+---
+
+<span class:list={['tbd', className]} title={note ? `To be written: ${note}` : 'To be written'}>
+	TBD{note && <span>· {note}</span>}
+</span>

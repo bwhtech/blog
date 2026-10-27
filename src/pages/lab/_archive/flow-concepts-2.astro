@@ -1,0 +1,233 @@
+---
+/**
+ * Second round of concepts for the many-tools-to-one-process section:
+ * fewer elements, almost no text.
+ */
+import Icon from '../../../components/landing/Icon.astro';
+import LandingLayout from '../../../layouts/LandingLayout.astro';
+
+const TITLE = 'We engineer processes that make your life easier.';
+const LEDE = 'From forms, sheets, chats and scripts to one process.';
+const ICONS = ['clipboard-list', 'file-spreadsheet', 'message-circle', 'square-terminal', 'mail'];
+const STEPS = ['Collect', 'Check', 'Act', 'Report'];
+
+// D: icons in a column, curves converge into one node.
+const COL_Y = [70, 135, 200, 265, 330];
+// E: scattered tiles (x, y, rotation) on the left; the same tiles in a row on the right.
+const SCATTER = [
+	[70, 80, -8],
+	[230, 60, 6],
+	[140, 190, 4],
+	[300, 200, -5],
+	[90, 300, 7],
+];
+// F: one knotted line that straightens out.
+const KNOT =
+	'M60,210 C120,80 200,340 250,190 C290,70 360,120 330,230 C300,330 210,260 260,190 C320,110 420,300 470,220 C510,160 540,200 600,200';
+const KNOT_ICONS = [
+	[110, 150],
+	[230, 270],
+	[330, 120],
+	[300, 290],
+	[440, 250],
+];
+---
+
+<LandingLayout title="Flow concepts, round 2" description="Cleaner concepts for the fragmented-tools section.">
+	<main class="mx-auto flex max-w-[1280px] flex-col gap-16 px-10 py-12">
+		<section class="concept" data-concept="d">
+			<p class="concept-name">D · Converge</p>
+			<div class="frame">
+				<h2 class="frame-title">{TITLE}</h2>
+				<p class="frame-lede">{LEDE}</p>
+				<div class="canvas">
+					<svg class="art" viewBox="0 0 1200 400" aria-hidden="true">
+						{COL_Y.map((y) => <path d={`M150,${y} C380,${y} 380,200 560,200`} class="thread" />)}
+						<line x1="600" y1="200" x2="1110" y2="200" class="line" />
+						{[740, 860, 980, 1100].map((x) => <circle cx={x} cy="200" r="7" class="stop" />)}
+					</svg>
+					{ICONS.map((icon, i) => <span class="tile" style={`left:96px;top:${COL_Y[i] - 22}px`}><Icon name={icon} size={20} /></span>)}
+					<span class="node" style="left:552px;top:152px"><Icon name="database" size={26} /></span>
+					{STEPS.map((step, i) => <span class="word" style={`left:${740 + i * 120 - 50}px;top:222px`}>{step}</span>)}
+				</div>
+			</div>
+		</section>
+
+		<section class="concept" data-concept="e">
+			<p class="concept-name">E · Same tools, one system</p>
+			<div class="frame">
+				<h2 class="frame-title">{TITLE}</h2>
+				<p class="frame-lede">{LEDE}</p>
+				<div class="canvas">
+					<svg class="art" viewBox="0 0 1200 400" aria-hidden="true">
+						<path d="M450,200 L640,200" class="arrow" />
+						<path d="M630,192 L640,200 L630,208" class="arrow" />
+					</svg>
+					{ICONS.map((icon, i) => (
+						<span class="tile" style={`left:${SCATTER[i][0]}px;top:${SCATTER[i][1]}px;rotate:${SCATTER[i][2]}deg`}><Icon name={icon} size={20} /></span>
+					))}
+					<div class="system" style="left:700px;top:140px">
+						{ICONS.map((icon, i) => (
+							<>
+								{i > 0 && <span class="joint" />}
+								<span class="tile tile-on"><Icon name={icon} size={20} /></span>
+							</>
+						))}
+					</div>
+					<span class="word word-wide" style="left:700px;top:276px">One system your team owns</span>
+				</div>
+			</div>
+		</section>
+
+		<section class="concept" data-concept="f">
+			<p class="concept-name">F · Knot to line</p>
+			<div class="frame">
+				<h2 class="frame-title">{TITLE}</h2>
+				<p class="frame-lede">{LEDE}</p>
+				<div class="canvas">
+					<svg class="art" viewBox="0 0 1200 400" aria-hidden="true">
+						<path d={KNOT} class="knot" />
+						<line x1="600" y1="200" x2="1110" y2="200" class="line" />
+						{[740, 860, 980, 1100].map((x) => <circle cx={x} cy="200" r="7" class="stop" />)}
+					</svg>
+					{ICONS.map((icon, i) => <span class="tile tile-sm" style={`left:${KNOT_ICONS[i][0] - 18}px;top:${KNOT_ICONS[i][1] - 18}px`}><Icon name={icon} size={16} /></span>)}
+					{STEPS.map((step, i) => <span class="word" style={`left:${740 + i * 120 - 50}px;top:222px`}>{step}</span>)}
+				</div>
+			</div>
+		</section>
+	</main>
+</LandingLayout>
+
+<style>
+	.concept {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+	.concept-name {
+		font-size: 14px;
+		font-weight: 600;
+		color: var(--ink-gray-9);
+	}
+	.frame {
+		width: 1200px;
+		padding: 48px 0 40px;
+		background: var(--surface-base);
+	}
+	.frame-title {
+		max-width: 22ch;
+		font-size: 34px;
+		font-weight: 600;
+		line-height: 1.12;
+		letter-spacing: -0.025em;
+		color: var(--ink-gray-9);
+		text-wrap: balance;
+	}
+	.frame-lede {
+		margin-top: 12px;
+		font-size: 17px;
+		color: var(--ink-gray-6);
+	}
+	.canvas {
+		position: relative;
+		width: 1200px;
+		height: 400px;
+		margin-top: 32px;
+	}
+	.art {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+	}
+	.tile {
+		position: absolute;
+		display: flex;
+		width: 44px;
+		height: 44px;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid var(--outline-gray-2);
+		border-radius: 12px;
+		background: var(--surface-base);
+		color: var(--ink-gray-5);
+	}
+	.tile-sm {
+		width: 36px;
+		height: 36px;
+		border-radius: 10px;
+	}
+	.thread {
+		fill: none;
+		stroke: var(--outline-gray-3);
+		stroke-width: 1.5;
+	}
+	.knot {
+		fill: none;
+		stroke: var(--ink-gray-4);
+		stroke-width: 2;
+		stroke-linecap: round;
+	}
+	.line {
+		stroke: var(--surface-blue-8);
+		stroke-width: 3;
+		stroke-linecap: round;
+	}
+	.stop {
+		fill: var(--surface-base);
+		stroke: var(--surface-blue-8);
+		stroke-width: 3;
+	}
+	.arrow {
+		fill: none;
+		stroke: var(--outline-gray-3);
+		stroke-width: 1.5;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+	.node {
+		position: absolute;
+		display: flex;
+		width: 96px;
+		height: 96px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 24px;
+		background: var(--surface-blue-9);
+		color: var(--ink-base, #fff);
+	}
+	.word {
+		position: absolute;
+		width: 100px;
+		font-size: 13px;
+		font-weight: 500;
+		text-align: center;
+		color: var(--ink-gray-7);
+	}
+	.word-wide {
+		width: 420px;
+	}
+	.system {
+		position: absolute;
+		display: flex;
+		width: 420px;
+		height: 120px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 24px;
+		background: var(--surface-blue-9);
+	}
+	.system .tile {
+		position: static;
+	}
+	.tile-on {
+		border-color: transparent;
+		background: var(--surface-base);
+		color: var(--ink-blue-7);
+	}
+	.joint {
+		width: 20px;
+		height: 2px;
+		background: var(--surface-blue-3);
+	}
+</style>

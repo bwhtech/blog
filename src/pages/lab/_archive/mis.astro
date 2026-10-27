@@ -1,0 +1,1079 @@
+---
+/**
+ * Variant 1, Impact MIS: the landing page is a dashboard. The sidebar is the
+ * navigation, the KPIs and charts are real (see src/data/landing.ts), and the
+ * partner table opens each case study in a drawer.
+ */
+import { Image } from 'astro:assets';
+import aiPhoto from '../../../assets/landing/cs17-ai-presentation.jpg';
+import studentsPhoto from '../../../assets/landing/cs17-students.jpg';
+import Button from '../../../components/landing/Button.astro';
+import FunderStrip from '../../../components/landing/FunderStrip.astro';
+import Icon from '../../../components/landing/Icon.astro';
+import IntakeCompact from '../../../components/landing/IntakeCompact.astro';
+import Logo from '../../../components/landing/Logo.astro';
+import Tbd from '../../../components/landing/Tbd.astro';
+import {
+	CHECKED_ON,
+	CONTRIBUTIONS,
+	COURSES,
+	CS17,
+	CTA,
+	HEADLINE,
+	HOME_TOWN,
+	LEGAL_NAME,
+	OFFERS,
+	OPEN_SOURCE,
+	NAMED_PARTNERS,
+	PARTNERS,
+	PROCESS,
+	STACK,
+	TBD,
+	YOUTUBE,
+	isTBD,
+	type PinKey,
+} from '../../../data/landing';
+import indiaMap from '../../../data/india-map.json';
+import LandingLayout from '../../../layouts/LandingLayout.astro';
+
+const NAV = [
+	{ id: 'overview', label: 'Overview', icon: 'layout-dashboard' },
+	{ id: 'field', label: 'Systems in the field', icon: 'map-pin' },
+	{ id: 'build', label: 'What we build', icon: 'blocks' },
+	{ id: 'process', label: 'How we work', icon: 'chart-gantt' },
+	{ id: 'open-source', label: 'Open source', icon: 'git-pull-request' },
+	{ id: 'training', label: 'Training', icon: 'graduation-cap' },
+	{ id: 'cs17', label: 'CS17', icon: 'school' },
+	{ id: 'funders', label: 'For funders', icon: 'layers' },
+];
+
+type Row = {
+	id: string;
+	name: string;
+	fullName?: string;
+	sector: string;
+	place: string;
+	pins: PinKey[];
+	work: string;
+	outcome: string;
+	quote: string;
+	status: string;
+	link?: { label: string; href: string };
+	modules?: string[];
+};
+
+const STATUS: Record<string, string> = {
+	apf: 'In use',
+	oasis: 'Member',
+};
+
+const rows: Row[] = [
+	...PARTNERS.map((partner) => ({ ...partner, status: STATUS[partner.id] ?? TBD })),
+	{
+		id: 'cs17',
+		name: 'CS17',
+		fullName: 'Our own programme',
+		sector: 'Education',
+		place: HOME_TOWN,
+		pins: ['jagdalpur'],
+		work: 'Software development training for young women: 18 months, residential, fully funded.',
+		outcome: TBD,
+		quote: TBD,
+		status: 'Live',
+	},
+];
+
+const sectors = [...new Set(rows.map((row) => row.sector).filter((sector) => !isTBD(sector)))];
+const statusTone = (status: string) =>
+	status === 'Live' || status === 'In use'
+		? 'bg-surface-green-2 text-ink-green-8'
+		: status === 'Member'
+			? 'bg-surface-violet-2 text-ink-violet-8'
+			: '';
+
+// Map geometry. Arcs leave Jagdalpur and bend to the left of the line to
+// each partner, so neighbouring arcs fan out instead of overlapping.
+const points = indiaMap.points as Record<PinKey, [number, number]>;
+const home = points.jagdalpur;
+const pinRows = rows.filter((row) => row.id !== 'cs17' && row.pins.length);
+const pins = [...new Set(pinRows.flatMap((row) => row.pins))].map((key) => ({
+	key,
+	x: points[key][0],
+	y: points[key][1],
+	rows: pinRows.filter((row) => row.pins.includes(key)).map((row) => row.id),
+}));
+const arcs = pins.map((pin) => {
+	const mx = (home[0] + pin.x) / 2;
+	const my = (home[1] + pin.y) / 2;
+	const dx = pin.x - home[0];
+	const dy = pin.y - home[1];
+	const bend = 0.22;
+	return { key: pin.key, d: `M${home[0]} ${home[1]} Q${mx - dy * bend} ${my + dx * bend} ${pin.x} ${pin.y}` };
+});
+const CITY: Record<PinKey, string> = {
+	jagdalpur: 'Jagdalpur',
+	bengaluru: 'Bengaluru',
+	chennai: 'Chennai',
+	ernakulam: 'Ernakulam',
+	bhuj: 'Bhuj',
+	gurugram: 'Gurugram',
+};
+const LABEL_SIDE: Partial<Record<PinKey, 'left' | 'right'>> = { bengaluru: 'left', ernakulam: 'left' };
+
+const kpis = [
+	{ label: 'Partner organisations', value: NAMED_PARTNERS.length, display: String(NAMED_PARTNERS.length), meta: `named on this page, ${PARTNERS.length - NAMED_PARTNERS.length} more to come` },
+	{ label: 'Pull requests merged into Frappe', value: CONTRIBUTIONS.total, display: '1,043', meta: 'by our team, 2021 to today' },
+	{ label: 'Enrolments in our largest course', value: COURSES[0].learners, display: '18,608', meta: 'on Frappe School' },
+	{ label: 'YouTube subscribers', value: 10.9, display: YOUTUBE.subscribers, decimals: 1, suffix: 'K', meta: `${YOUTUBE.videos} videos, ${YOUTUBE.views} views` },
+];
+
+const activity = [
+	{ when: 'Oct 2026', text: `${CONTRIBUTIONS.byYear.at(-1)?.count} pull requests merged into Frappe repositories this year`, icon: 'git-pull-request' },
+	{ when: CS17.started, text: 'CS17’s first batch starts in Jagdalpur', icon: 'school' },
+	{ when: 'Jul 2025', text: 'BWH Studios opens in Jagdalpur, Chhattisgarh', icon: 'house' },
+	{ when: 'Oct 2022', text: 'Frappe Changemakers goes open source for the homeless care programme', icon: 'heart-handshake' },
+];
+
+const SOURCES = [
+	{ name: 'GitHub, frappe/* repositories', backs: 'Pull requests', href: 'https://github.com/frappe' },
+	{ name: 'Frappe School', backs: 'Enrolments', href: 'https://school.frappe.io/lms/courses' },
+	{ name: 'YouTube, @BuildWithHussain', backs: 'Subscribers', href: YOUTUBE.href },
+	{ name: 'cs17.org', backs: 'CS17', href: CS17.href },
+	{ name: 'BWH blog', backs: 'Changemakers, BWH Studios', href: '/blog/announcements/introducing-bwh-studios/' },
+];
+
+const MODULES = [
+	{ name: OFFERS[0].items[0], icon: 'chart-column', body: 'Numbers your board can trust, updated as the work happens.', who: 'Leadership' },
+	{ name: OFFERS[0].items[1], icon: 'id-card', body: 'One record per person, with every visit, case and service on it.', who: 'Programme team' },
+	{ name: OFFERS[0].items[2], icon: 'smartphone', body: 'Forms the field team fills on a phone. The office sees them at once.', who: 'Field team' },
+	{ name: OFFERS[0].items[3], icon: 'clipboard-list', body: 'Indicators from your logframe, reports in the format your funder asks for.', who: 'MEL' },
+	{ name: OFFERS[0].items[4], icon: 'users', body: 'Leave, attendance and salary slips in Frappe HR.', who: 'HR' },
+	{ name: OFFERS[0].items[5], icon: 'hand-coins', body: 'Books, grant tracking and donation receipts in ERPNext.', who: 'Finance' },
+];
+
+const GANTT: Record<string, [number, number]> = {
+	listen: [0, 0.16],
+	map: [0.1, 0.3],
+	build: [0.24, 0.76],
+	train: [0.56, 0.9],
+	handover: [0.84, 1],
+};
+
+const maxYear = Math.max(...CONTRIBUTIONS.byYear.map((row) => row.count));
+const maxRepo = CONTRIBUTIONS.byRepo[0].count;
+const maxLearners = COURSES[0].learners;
+const checked = new Date(CHECKED_ON).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+
+const panel = 'rounded-5 border border-outline-gray-1 bg-surface-base';
+const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b border-outline-gray-1 px-4';
+---
+
+<LandingLayout
+	title="Impact MIS"
+	description="BWH builds systems for nonprofits: MIS, dashboards, case management, and training for your team."
+	variant="mis"
+>
+	<div class="mis lg:grid lg:grid-cols-[14rem_minmax(0,1fr)]">
+		<!-- Sidebar: the page's navigation, drawn as the MIS workspace. -->
+		<aside
+			data-print-hide
+			class="sticky top-0 hidden h-screen flex-col border-r border-outline-gray-1 bg-surface-sidebar lg:flex"
+		>
+			<div class="flex h-12 items-center gap-2.5 px-3">
+				<Logo size={26} />
+				<div class="flex min-w-0 flex-col">
+					<span class="text-base-semibold leading-tight text-ink-gray-9">BWH</span>
+					<span class="text-xs leading-tight text-ink-gray-5">Impact MIS</span>
+				</div>
+			</div>
+			<nav aria-label="Sections" class="flex flex-1 flex-col gap-0.5 px-2 pt-2">
+				{
+					NAV.map((item) => (
+						<a
+							href={`#${item.id}`}
+							data-nav={item.id}
+							class="flex h-8 items-center gap-2 rounded-4 px-2 text-base text-ink-gray-7 no-underline transition-colors hover:bg-surface-gray-2 hover:text-ink-gray-9 aria-[current=true]:bg-surface-base aria-[current=true]:text-ink-gray-9 aria-[current=true]:shadow-sm"
+						>
+							<Icon name={item.icon} size={16} class="text-ink-gray-6" />
+							{item.label}
+						</a>
+					))
+				}
+			</nav>
+			<div class="flex flex-col gap-2 border-t border-outline-gray-1 p-3">
+				<Button href="#tell-us" variant="primary" class="w-full">
+					<Icon name="message-square-plus" size={15} />
+					{CTA.primary}
+				</Button>
+				<Button href={CTA.meetHref} variant="ghost" class="w-full">{CTA.secondary}</Button>
+				<p class="flex items-center gap-2 px-1 pt-1 text-xs text-ink-gray-5">
+					<span class="live-dot" aria-hidden="true"></span>
+					Data checked {checked}
+				</p>
+			</div>
+		</aside>
+
+		<div class="min-w-0">
+			<!-- Top bar: breadcrumb, reporting period, export, the primary action. -->
+			<header
+				class="sticky top-0 z-30 border-b border-outline-gray-1 bg-surface-base"
+			>
+				<div class="flex h-12 items-center gap-3 px-3 sm:px-5">
+					<a href="/lab/mis" class="flex items-center gap-2 no-underline lg:hidden" aria-label="BWH">
+						<Logo size={24} />
+						<span class="text-base-semibold text-ink-gray-9">BWH</span>
+					</a>
+					<nav aria-label="Breadcrumb" class="hidden items-center gap-1.5 text-base sm:flex">
+						<span class="text-ink-gray-5 max-lg:hidden">BWH</span>
+						<Icon name="chevron-right" size={14} class="text-ink-gray-4 max-lg:hidden" />
+						<span class="text-ink-gray-9">Impact report</span>
+					</nav>
+					<span class="hidden text-sm text-ink-gray-5 md:inline">
+						Reporting period <span class="font-data text-ink-gray-7">2021 – {new Date(CHECKED_ON).getFullYear()}</span>
+					</span>
+					<div class="ml-auto flex items-center gap-2" data-print-hide>
+						<Button data-print variant="ghost" class="max-sm:hidden">
+							<Icon name="printer" size={15} />
+							Export
+						</Button>
+						<Button href="#tell-us" variant="primary">{CTA.primary}</Button>
+					</div>
+				</div>
+				<!-- Section tabs replace the sidebar on small screens. -->
+				<nav
+					aria-label="Sections"
+					data-print-hide
+					class="flex gap-1 overflow-x-auto border-t border-outline-gray-1 px-3 py-1.5 [scrollbar-width:none] lg:hidden"
+				>
+					{
+						NAV.map((item) => (
+							<a
+								href={`#${item.id}`}
+								data-nav={item.id}
+								class="flex h-7 shrink-0 items-center rounded-4 px-2 text-sm text-ink-gray-6 no-underline aria-[current=true]:bg-surface-gray-2 aria-[current=true]:text-ink-gray-9"
+							>
+								{item.label}
+							</a>
+						))
+					}
+				</nav>
+			</header>
+
+			<main id="main-content" class="mx-auto flex max-w-[1120px] flex-col gap-14 px-3 pb-28 pt-8 sm:px-5 sm:pt-10">
+				<!-- Overview -->
+				<section id="overview" data-section aria-labelledby="overview-title" class="flex scroll-mt-28 flex-col gap-8">
+					<div class="flex flex-col gap-4">
+						<h1
+							id="overview-title"
+							class="max-w-[16ch] text-[38px] font-semibold leading-[1.05] tracking-[-0.035em] text-ink-gray-9 [text-wrap:balance] sm:text-[56px]"
+						>
+							{HEADLINE.title}
+						</h1>
+						<p class="max-w-[60ch] text-p-lg text-ink-gray-6 sm:text-[17px] sm:leading-[1.6]">{HEADLINE.lede}</p>
+						<div class="flex flex-wrap items-center gap-2 pt-1">
+							<Button href="#tell-us" variant="primary" size="lg">
+								{CTA.primary}
+								<Icon name="arrow-right" size={16} />
+							</Button>
+							<Button href={CTA.meetHref} variant="outline" size="lg">{CTA.secondary}</Button>
+						</div>
+					</div>
+
+					<dl
+						class:list={[panel, 'grid grid-cols-2 divide-outline-gray-1 overflow-hidden max-md:[&>*:nth-child(-n+2)]:border-b max-md:[&>*:nth-child(odd)]:border-r md:grid-cols-4 md:divide-x']}
+					>
+						{
+							kpis.map((kpi) => (
+								<div class="flex flex-col gap-1.5 border-outline-gray-1 p-4 sm:p-5">
+									<dt class="text-sm text-ink-gray-5">{kpi.label}</dt>
+									<dd
+										class="font-data text-[28px] font-medium leading-none tracking-[-0.02em] text-ink-gray-9 sm:text-[34px]"
+										data-count={kpi.value}
+										data-decimals={kpi.decimals}
+										data-suffix={kpi.suffix}
+									>
+										{kpi.display}
+									</dd>
+									<dd class="text-xs text-ink-gray-5">{kpi.meta}</dd>
+								</div>
+							))
+						}
+					</dl>
+
+					<div class="grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
+						<div class:list={[panel, 'flex flex-col']}>
+							<div class={panelHead}>
+								<h2 class="text-base-semibold text-ink-gray-9">Where our work runs</h2>
+								<div class="flex items-center gap-3 text-xs text-ink-gray-5">
+									<span class="flex items-center gap-1.5"
+										><span class="size-2 rounded-full bg-surface-blue-8"></span>Partner</span
+									>
+									<span class="flex items-center gap-1.5"
+										><span class="size-2 rounded-full bg-surface-violet-8"></span>Home</span
+									>
+								</div>
+							</div>
+							<div class="relative flex flex-1 items-center justify-center p-3 sm:p-5">
+								<svg
+									data-map
+									viewBox={indiaMap.viewBox}
+									class="h-auto w-full max-w-[440px]"
+									role="img"
+									aria-label={`Map of India showing partner locations: ${pins.map((pin) => CITY[pin.key]).join(', ')}, and our home in Jagdalpur.`}
+								>
+									<defs>
+										<pattern id="mis-dots" width="7" height="7" patternUnits="userSpaceOnUse">
+											<circle cx="3.5" cy="3.5" r="1.25" style="fill: var(--outline-gray-3)"></circle>
+										</pattern>
+									</defs>
+									<path data-map-land d={indiaMap.d} fill="url(#mis-dots)"></path>
+									<path
+										d={indiaMap.d}
+										fill="none"
+										style="stroke: var(--outline-gray-3)"
+										stroke-width="1"
+										vector-effect="non-scaling-stroke"></path>
+									{
+										arcs.map((arc) => (
+											<path
+												data-arc={arc.key}
+												d={arc.d}
+												pathLength="1"
+												fill="none"
+												stroke-width="1.5"
+												stroke-linecap="round"
+												class="mis-arc"
+											/>
+										))
+									}
+									{
+										pins.map((pin) => (
+											<g data-pin={pin.key} data-rows={pin.rows.join(' ')} class="mis-pin" transform={`translate(${pin.x} ${pin.y})`}>
+												<circle r="5" class="mis-pin-ripple" />
+												<circle r="5.5" class="mis-pin-dot" />
+												<text
+													x={LABEL_SIDE[pin.key] === 'left' ? -10 : 10}
+													y="4"
+													text-anchor={LABEL_SIDE[pin.key] === 'left' ? 'end' : 'start'}
+													class="mis-label"
+												>
+													{CITY[pin.key]}
+												</text>
+											</g>
+										))
+									}
+									<g transform={`translate(${home[0]} ${home[1]})`} data-pin="jagdalpur" data-rows="cs17">
+										<g class="mis-home">
+											<circle r="6" class="mis-pin-ripple mis-home-ripple" />
+											<circle r="7" class="mis-home-dot" />
+											<text x="12" y="4" class="mis-label mis-label-home">Jagdalpur, home</text>
+										</g>
+									</g>
+								</svg>
+							</div>
+						</div>
+
+						<div class="flex flex-col gap-4">
+						<div class:list={[panel, 'flex flex-col']}>
+							<div class={panelHead}>
+								<h2 class="text-base-semibold text-ink-gray-9">Activity</h2>
+								<span class="font-data text-xs text-ink-gray-5">checked {checked}</span>
+							</div>
+							<ol class="flex flex-col px-4 py-2">
+								{
+									activity.map((item) => (
+										<li class="relative flex gap-3 py-3 [&:not(:last-child)]:after:absolute [&:not(:last-child)]:after:bottom-[-4px] [&:not(:last-child)]:after:left-[13px] [&:not(:last-child)]:after:top-[38px] [&:not(:last-child)]:after:w-px [&:not(:last-child)]:after:bg-surface-gray-3">
+											<span class="flex size-7 shrink-0 items-center justify-center rounded-full border border-outline-gray-2 bg-surface-base text-ink-gray-6">
+												<Icon name={item.icon} size={14} />
+											</span>
+											<div class="flex min-w-0 flex-col gap-0.5 pt-0.5">
+												<p class="text-p-sm text-ink-gray-8">{item.text}</p>
+												<p class="font-data text-xs text-ink-gray-5">{item.when}</p>
+											</div>
+										</li>
+									))
+								}
+							</ol>
+						</div>
+						<div class:list={[panel, 'flex flex-1 flex-col']}>
+							<div class={panelHead}>
+								<h2 class="text-base-semibold text-ink-gray-9">Data sources</h2>
+								<span class="font-data text-xs text-ink-gray-5">checked {checked}</span>
+							</div>
+							<ul class="divide-y divide-outline-gray-1">
+								{
+									SOURCES.map((source) => (
+										<li>
+											<a href={source.href} class="flex items-center gap-3 px-4 py-2.5 no-underline transition-colors hover:bg-surface-gray-1">
+												<span class="min-w-0 flex-1 truncate text-sm text-ink-gray-8">{source.name}</span>
+												<span class="shrink-0 text-xs text-ink-gray-5">{source.backs}</span>
+												<Icon name="arrow-up-right" size={13} class="shrink-0 text-ink-gray-4" />
+											</a>
+										</li>
+									))
+								}
+							</ul>
+						</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- Systems in the field: the partner table. -->
+				<section id="field" data-section aria-labelledby="field-title" class="flex scroll-mt-28 flex-col gap-4">
+					<div class="flex flex-col gap-1">
+						<h2 id="field-title" class="text-2xl font-semibold tracking-[-0.01em] text-ink-gray-9">Systems in the field</h2>
+						<p class="max-w-[62ch] text-p-base text-ink-gray-6">
+							Organisations we have worked with, and the programme we run ourselves. Pick a row for the details.
+						</p>
+					</div>
+
+					<div class:list={[panel, 'overflow-hidden']}>
+						<div class="flex flex-wrap items-center gap-2 border-b border-outline-gray-1 px-3 py-2">
+							<div role="group" aria-label="Filter by sector" class="flex flex-wrap gap-1" data-filters>
+								<button type="button" data-filter="all" aria-pressed="true" class="mis-filter">All</button>
+								{sectors.map((sector) => (
+									<button type="button" data-filter={sector} aria-pressed="false" class="mis-filter">{sector}</button>
+								))}
+							</div>
+							<span class="ml-auto font-data text-xs text-ink-gray-5" data-row-count aria-live="polite">{rows.length} rows</span>
+						</div>
+
+						<div class="text-base">
+							<div aria-hidden="true" class="hidden border-b border-outline-gray-1 bg-surface-gray-1 md:block">
+								<div class="mis-cols h-9 items-center px-3 text-sm text-ink-gray-5">
+									<span>Organisation</span>
+									<span>Sector</span>
+									<span>Where</span>
+									<span>What we did</span>
+									<span class="text-right">Status</span>
+								</div>
+							</div>
+							<ul aria-label="Partner organisations" class="divide-y divide-outline-gray-1">
+								{
+									rows.map((row) => (
+										<li data-row-item={row.id}><button
+											type="button"
+											data-row={row.id}
+											data-sector={row.sector}
+											aria-haspopup="dialog"
+											class="mis-cols group w-full items-center px-3 py-2.5 text-left transition-colors hover:bg-surface-gray-1 focus-visible:bg-surface-gray-1 md:min-h-14 md:py-2.5"
+										>
+											<span class="flex min-w-0 flex-col">
+												<span class="text-base-medium text-ink-gray-9">
+													{isTBD(row.name) ? <Tbd note="partner name" /> : row.name}
+												</span>
+												{row.fullName && (
+													<span class="text-xs text-ink-gray-5">
+														{isTBD(row.fullName) ? <Tbd note="full name" /> : row.fullName}
+													</span>
+												)}
+											</span>
+											<span class="max-md:hidden">
+												{isTBD(row.sector) ? <Tbd /> : <span class="inline-flex h-6 items-center whitespace-nowrap rounded-4 bg-surface-gray-2 px-1.5 text-sm text-ink-gray-7">{row.sector}</span>}
+											</span>
+											<span class="text-sm text-ink-gray-6 max-md:hidden">{isTBD(row.place) ? <Tbd /> : row.place}</span>
+											<span class="min-w-0 text-sm text-ink-gray-7 max-md:col-span-2 max-md:mt-1">
+												{isTBD(row.work) ? <Tbd note="what we built" /> : <span class="line-clamp-2 md:line-clamp-1">{row.work}</span>}
+											</span>
+											<span class="flex items-center justify-end gap-2 max-md:row-start-1 max-md:col-start-2">
+												{isTBD(row.status) ? <Tbd /> : (
+													<span class:list={['inline-flex h-6 items-center gap-1.5 rounded-full px-2 text-xs font-medium', statusTone(row.status)]}>
+														{(row.status === 'Live' || row.status === 'In use') && <span class="size-1.5 rounded-full bg-surface-green-7" />}
+														{row.status}
+													</span>
+												)}
+												<Icon name="chevron-right" size={14} class="text-ink-gray-4 transition-transform group-hover:translate-x-0.5" />
+											</span>
+										</button></li>
+									))
+								}
+							</ul>
+						</div>
+					</div>
+				</section>
+
+				<!-- What we build -->
+				<section id="build" data-section aria-labelledby="build-title" class="grid scroll-mt-28 gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+					<div class="flex flex-col gap-3">
+						<h2 id="build-title" class="text-2xl font-semibold tracking-[-0.01em] text-ink-gray-9">{OFFERS[0].title}</h2>
+						<p class="max-w-[48ch] text-p-base text-ink-gray-6">{OFFERS[0].summary}</p>
+						<p class="max-w-[48ch] text-p-base text-ink-gray-6">
+							Most organisations need two or three of these to start. We build them as one system, so a
+							beneficiary, a visit and a payment are the same record everywhere.
+						</p>
+					</div>
+					<ul class:list={[panel, 'divide-y divide-outline-gray-1']}>
+						{
+							MODULES.map((module) => (
+								<li class="flex items-start gap-3 px-4 py-3.5">
+									<span class="flex size-8 shrink-0 items-center justify-center rounded-4 bg-surface-blue-2 text-ink-blue-7">
+										<Icon name={module.icon} size={16} />
+									</span>
+									<div class="flex min-w-0 flex-1 flex-col gap-0.5">
+										<p class="text-base-medium text-ink-gray-9">{module.name}</p>
+										<p class="text-p-sm text-ink-gray-6">{module.body}</p>
+									</div>
+									<span class="hidden w-28 shrink-0 pt-0.5 text-right text-xs text-ink-gray-5 sm:block">{module.who}</span>
+								</li>
+							))
+						}
+					</ul>
+				</section>
+
+				<!-- How we work: an engagement as a Gantt chart. -->
+				<section id="process" data-section aria-labelledby="process-title" class="flex scroll-mt-28 flex-col gap-4">
+					<div class="flex flex-col gap-1">
+						<h2 id="process-title" class="text-2xl font-semibold tracking-[-0.01em] text-ink-gray-9">How we work</h2>
+						<p class="max-w-[62ch] text-p-base text-ink-gray-6">
+							Tell us the problem; we work out the solution with you. That does not mean we stop listening.
+						</p>
+					</div>
+					<div class:list={[panel, 'overflow-hidden']} data-gantt>
+						<div class="grid grid-cols-[9rem_minmax(0,1fr)] border-b border-outline-gray-1 bg-surface-gray-1 text-xs text-ink-gray-5 max-sm:grid-cols-1">
+							<span class="px-4 py-2 max-sm:hidden">Stage</span>
+							<div class="flex justify-between px-4 py-2">
+								<span>First conversation</span>
+								<span>Your team runs it</span>
+							</div>
+						</div>
+						<ul class="divide-y divide-outline-gray-1">
+							{
+								PROCESS.map((step) => {
+									const [start, end] = GANTT[step.id];
+									return (
+										<li class="grid grid-cols-[9rem_minmax(0,1fr)] items-center max-sm:grid-cols-1">
+											<span class="px-4 pt-3 text-base-medium text-ink-gray-9 sm:py-4">{step.title}</span>
+											<div class="flex flex-col gap-2 px-4 pb-3 pt-2 sm:py-3">
+												<div class="relative h-6 rounded-4 bg-[repeating-linear-gradient(90deg,var(--surface-gray-2)_0_1px,transparent_1px_10%)]">
+													<span
+														data-gantt-bar
+														class:list={[
+															'absolute inset-y-0 origin-left rounded-4',
+															step.id === 'train' ? 'bg-surface-violet-3' : step.id === 'handover' ? 'bg-surface-blue-5' : 'bg-surface-blue-3',
+														]}
+														style={`left: ${start * 100}%; width: ${(end - start) * 100}%`}
+													/>
+												</div>
+												<p class="text-p-sm text-ink-gray-6">{step.body}</p>
+											</div>
+										</li>
+									);
+								})
+							}
+						</ul>
+					</div>
+				</section>
+
+				<!-- Open source -->
+				<section id="open-source" data-section aria-labelledby="oss-title" class="flex scroll-mt-28 flex-col gap-4">
+					<div class="flex flex-col gap-1">
+						<h2 id="oss-title" class="text-2xl font-semibold tracking-[-0.01em] text-ink-gray-9">Built on an open-source stack we help build</h2>
+						<p class="max-w-[64ch] text-p-base text-ink-gray-6">
+							We build on Frappe Framework and ERPNext, and our team contributes to them every week. You get no
+							per-seat licences, and code you can take anywhere.
+						</p>
+					</div>
+					<div class="grid gap-4 lg:grid-cols-2">
+						<figure class:list={[panel, 'flex flex-col']}>
+							<figcaption class={panelHead}>
+								<span class="text-base-semibold text-ink-gray-9">Pull requests merged, by year</span>
+								<span class="font-data text-xs text-ink-gray-5">Σ {CONTRIBUTIONS.total.toLocaleString('en-IN')}</span>
+							</figcaption>
+							<div class="flex h-56 items-end gap-3 px-5 pb-4 pt-6" data-bars>
+								{
+									CONTRIBUTIONS.byYear.map((row) => (
+										<div class="flex h-full flex-1 flex-col items-center justify-end gap-2">
+											<span class="font-data text-xs text-ink-gray-7">{row.count}</span>
+											<span
+												data-bar
+												class:list={['w-full origin-bottom rounded-t-[3px]', row.year === '2026' ? 'bg-surface-blue-8' : 'bg-surface-blue-4']}
+												style={`height: ${(row.count / maxYear) * 100}%`}
+											/>
+											<span class="font-data text-xs text-ink-gray-5">{row.year}</span>
+										</div>
+									))
+								}
+							</div>
+						</figure>
+						<figure class:list={[panel, 'flex flex-col']}>
+							<figcaption class={panelHead}>
+								<span class="text-base-semibold text-ink-gray-9">By repository</span>
+								<a href="https://github.com/frappe" class="text-xs text-ink-gray-5 underline hover:text-ink-gray-8">github.com/frappe</a>
+							</figcaption>
+							<ul class="flex flex-col gap-2.5 px-4 py-4" data-bars>
+								{
+									CONTRIBUTIONS.byRepo.map((row) => (
+										<li class="grid grid-cols-[8.5rem_minmax(0,1fr)_3rem] items-center gap-3 text-sm">
+											<span class="truncate text-ink-gray-7">{row.repo}</span>
+											<span class="h-2 rounded-full bg-surface-gray-2">
+												<span data-bar-x class="block h-full origin-left rounded-full bg-surface-blue-7" style={`width: ${(row.count / maxRepo) * 100}%`} />
+											</span>
+											<span class="text-right font-data text-ink-gray-8">{row.count}</span>
+										</li>
+									))
+								}
+							</ul>
+						</figure>
+					</div>
+					<div class:list={[panel, 'flex flex-wrap items-center gap-x-6 gap-y-3 px-4 py-3']}>
+						<span class="text-sm text-ink-gray-5">The stack</span>
+						{STACK.map((item) => (
+							<span class="flex items-center gap-2 text-sm text-ink-gray-8"><img src={item.src} alt="" width="20" height="20" class="size-5" />{item.label}</span>
+						))}
+						<a href={OPEN_SOURCE.href} class="ml-auto flex items-center gap-1 text-sm text-ink-gray-6 underline hover:text-ink-gray-9">
+							{OPEN_SOURCE.repos} of our own open-source repos
+							<Icon name="arrow-up-right" size={13} />
+						</a>
+					</div>
+					<p class="text-xs text-ink-gray-5">Source: {CONTRIBUTIONS.source}, checked {checked}.</p>
+				</section>
+
+				<!-- Training -->
+				<section id="training" data-section aria-labelledby="training-title" class="grid scroll-mt-28 gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+					<div class="flex flex-col gap-3">
+						<h2 id="training-title" class="text-2xl font-semibold tracking-[-0.01em] text-ink-gray-9">{OFFERS[1].title}</h2>
+						<p class="max-w-[48ch] text-p-base text-ink-gray-6">{OFFERS[1].summary}</p>
+						<ul class="flex flex-wrap gap-1.5">
+							{OFFERS[1].items.map((item) => (
+								<li class="inline-flex h-6 items-center rounded-4 bg-surface-violet-2 px-2 text-sm text-ink-violet-8">{item}</li>
+							))}
+						</ul>
+						<a href="/train-your-team" class="flex items-center gap-1 pt-1 text-base text-ink-gray-8 underline hover:text-ink-gray-9">
+							Training programmes for teams <Icon name="arrow-right" size={14} />
+						</a>
+					</div>
+					<figure class:list={[panel, 'flex flex-col']}>
+						<figcaption class={panelHead}>
+							<span class="text-base-semibold text-ink-gray-9">Our courses on Frappe School</span>
+							<span class="text-xs text-ink-gray-5">Enrolments</span>
+						</figcaption>
+						<ul class="divide-y divide-outline-gray-1" data-bars>
+							{COURSES.map((course) => (
+								<li class="flex flex-col gap-2 px-4 py-3">
+									<div class="flex items-baseline justify-between gap-4">
+										<span class="text-p-sm text-ink-gray-8">{course.title}</span>
+										<span class="font-data text-sm text-ink-gray-9">{course.learners.toLocaleString('en-IN')}</span>
+									</div>
+									<span class="h-1.5 rounded-full bg-surface-gray-2"><span data-bar-x class="block h-full origin-left rounded-full bg-surface-violet-7" style={`width: ${(course.learners / maxLearners) * 100}%`} /></span>
+								</li>
+							))}
+						</ul>
+					</figure>
+				</section>
+
+				<!-- CS17 and AI for education -->
+				<section id="cs17" data-section aria-labelledby="cs17-title" class="flex scroll-mt-28 flex-col gap-4">
+					<div class="flex flex-col gap-1">
+						<h2 id="cs17-title" class="text-2xl font-semibold tracking-[-0.01em] text-ink-gray-9">CS17, our own programme</h2>
+						<p class="max-w-[64ch] text-p-base text-ink-gray-6">
+							We run a software development programme for young women in Jagdalpur. It is where we test how we
+							teach, and where we try AI in the classroom first.
+						</p>
+					</div>
+					<div class="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+						<figure class:list={[panel, 'overflow-hidden']}>
+							<Image src={studentsPhoto} alt="CS17 students working together on laptops" widths={[640, 960, 1280]} sizes="(min-width: 1024px) 600px, 100vw" class="aspect-[16/9] w-full object-cover" />
+							<figcaption class="flex flex-col gap-2 p-4">
+								<ul class="grid gap-x-6 gap-y-1.5 text-p-sm text-ink-gray-7 sm:grid-cols-2">
+									{CS17.facts.map((fact) => (
+										<li class="flex gap-2"><Icon name="check" size={14} class="mt-[3px] text-ink-gray-5" />{fact}</li>
+									))}
+								</ul>
+								<p class="text-xs text-ink-gray-5">{CS17.partners}. <a href={CS17.href} class="underline hover:text-ink-gray-8">cs17.org</a></p>
+							</figcaption>
+						</figure>
+						<figure class:list={[panel, 'flex flex-col overflow-hidden']}>
+							<Image src={aiPhoto} alt="Two CS17 students present a game, with a slide that says they used AI tools to make its graphics" widths={[480, 720, 960]} sizes="(min-width: 1024px) 480px, 100vw" class="photo-mono aspect-[4/3] w-full object-cover" />
+							<figcaption class="flex flex-1 flex-col gap-2 p-4">
+								<p class="text-base-semibold text-ink-gray-9">{OFFERS[2].title}</p>
+								<p class="text-p-sm text-ink-gray-6">{OFFERS[2].summary}</p>
+								<ul class="flex flex-col gap-1 text-p-sm text-ink-gray-7">
+									{OFFERS[2].items.map((item) => (
+										<li class="flex gap-2"><Icon name="sparkles" size={14} class="mt-[3px] text-ink-violet-6" />{item}</li>
+									))}
+								</ul>
+							</figcaption>
+						</figure>
+					</div>
+				</section>
+
+				<FunderStrip />
+
+				<div class:list={[panel, 'p-5 sm:p-8']}>
+					<IntakeCompact />
+				</div>
+			</main>
+
+			<!-- Footer: the report's colophon. -->
+			<footer class="border-t border-outline-gray-1">
+				<div class="mx-auto flex max-w-[1120px] flex-col gap-4 px-3 py-6 text-sm text-ink-gray-5 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+					<p>
+						Report generated by <span class="text-ink-gray-8">{LEGAL_NAME}</span>, {HOME_TOWN}. Data checked{' '}
+						<span class="font-data">{checked}</span>.
+					</p>
+					<nav aria-label="Elsewhere" class="flex flex-wrap gap-4">
+						<a href="/blog" class="underline hover:text-ink-gray-9">Blog</a>
+						<a href={YOUTUBE.href} class="underline hover:text-ink-gray-9">YouTube</a>
+						<a href={OPEN_SOURCE.href} class="underline hover:text-ink-gray-9">GitHub</a>
+						<a href={CTA.meetHref} class="underline hover:text-ink-gray-9">Book a call</a>
+					</nav>
+				</div>
+			</footer>
+		</div>
+	</div>
+
+	<!-- Case studies, cloned into the drawer when a row is picked. -->
+	{
+		rows.map((row) => (
+			<template data-case={row.id}>
+				<div class="flex flex-col gap-5">
+					<div class="flex flex-col gap-1">
+						<h2 class="text-2xl font-semibold tracking-[-0.01em] text-ink-gray-9">
+							{isTBD(row.name) ? <Tbd note="partner name" /> : row.name}
+						</h2>
+						{row.fullName && <p class="text-base text-ink-gray-6">{isTBD(row.fullName) ? <Tbd note="full name" /> : row.fullName}</p>}
+					</div>
+					<dl class="grid grid-cols-[6rem_minmax(0,1fr)] gap-x-4 gap-y-2.5 text-base">
+						<dt class="text-ink-gray-5">Sector</dt>
+						<dd class="text-ink-gray-8">{isTBD(row.sector) ? <Tbd /> : row.sector}</dd>
+						<dt class="text-ink-gray-5">Where</dt>
+						<dd class="text-ink-gray-8" data-place>{isTBD(row.place) ? <Tbd /> : row.place}</dd>
+						<dt class="text-ink-gray-5">Status</dt>
+						<dd class="text-ink-gray-8">{isTBD(row.status) ? <Tbd /> : row.status}</dd>
+					</dl>
+					<div class="flex flex-col gap-1.5">
+						<h3 class="text-sm text-ink-gray-5">What we did</h3>
+						<p class="text-p-base text-ink-gray-8">{isTBD(row.work) ? <Tbd note="what we built" /> : row.work}</p>
+					</div>
+					{row.modules && (
+						<div class="flex flex-col gap-2">
+							<h3 class="text-sm text-ink-gray-5">Inside the system</h3>
+							<ul class="flex flex-wrap gap-1.5">
+								{row.modules.map((module) => (
+									<li class="inline-flex h-6 items-center rounded-4 bg-surface-blue-2 px-2 text-sm text-ink-blue-8">{module}</li>
+								))}
+							</ul>
+						</div>
+					)}
+					<div class="flex flex-col gap-1.5">
+						<h3 class="text-sm text-ink-gray-5">What changed</h3>
+						<p class="text-p-base text-ink-gray-8">{isTBD(row.outcome) ? <Tbd note="outcome" /> : row.outcome}</p>
+					</div>
+					<figure class="flex flex-col gap-2 rounded-5 bg-surface-gray-1 p-4">
+						<blockquote class="text-p-base text-ink-gray-8">{isTBD(row.quote) ? <Tbd note="testimonial" /> : row.quote}</blockquote>
+						<figcaption class="text-xs text-ink-gray-5"><Tbd note="name, role" /></figcaption>
+					</figure>
+					{row.link && (
+						<a href={row.link.href} class="flex items-center gap-1.5 text-sm text-ink-gray-7 underline hover:text-ink-gray-9">
+							<Icon name="git-pull-request" size={14} />
+							{row.link.label}
+						</a>
+					)}
+					{row.id === 'cs17' ? (
+						<Image src={studentsPhoto} alt="CS17 students working together on laptops" width={720} class="aspect-[16/9] w-full rounded-5 object-cover" />
+					) : (
+						<div class="photo-tbd aspect-[16/9] w-full rounded-5">Photo · TBD</div>
+					)}
+				</div>
+			</template>
+		))
+	}
+
+	<dialog
+		data-drawer
+		aria-labelledby="drawer-title"
+		class="mis-drawer m-0 ml-auto h-full max-h-none w-full max-w-[440px] border-l border-outline-gray-2 bg-surface-elevation-2 p-0 text-ink-gray-9 shadow-xl"
+	>
+		<div class="flex h-12 items-center justify-between border-b border-outline-gray-1 px-4">
+			<p id="drawer-title" class="text-sm text-ink-gray-5">Case study</p>
+			<Button data-drawer-close variant="ghost" size="sm" aria-label="Close">
+				<Icon name="x" size={16} />
+			</Button>
+		</div>
+		<div class="border-b border-outline-gray-1 bg-surface-gray-1 px-5 py-4">
+			<svg data-drawer-map viewBox={indiaMap.viewBox} class="mx-auto h-44 w-auto" role="img" aria-labelledby="drawer-place">
+				<path d={indiaMap.d} fill="url(#mis-dots)"></path>
+				<path d={indiaMap.d} fill="none" style="stroke: var(--outline-gray-3)" stroke-width="1" vector-effect="non-scaling-stroke"></path>
+				{arcs.map((arc) => <path data-drawer-arc={arc.key} d={arc.d} pathLength="1" fill="none" stroke-width="2.5" stroke-linecap="round" class="drawer-arc" />)}
+				{pins.map((pin) => <circle data-drawer-pin={pin.key} cx={pin.x} cy={pin.y} r="9" class="drawer-pin" />)}
+				<circle cx={home[0]} cy={home[1]} r="10" class="mis-home-dot" data-drawer-pin="jagdalpur" />
+			</svg>
+			<p id="drawer-place" data-drawer-place class="pt-2 text-center text-xs text-ink-gray-5"></p>
+		</div>
+		<div data-drawer-body class="overflow-y-auto p-5"></div>
+	</dialog>
+</LandingLayout>
+
+<style>
+	.mis-cols {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		column-gap: 1rem;
+	}
+	@media (min-width: 768px) {
+		.mis-cols {
+			grid-template-columns: minmax(0, 1.25fr) 9.5rem 10rem minmax(0, 2fr) 6.5rem;
+		}
+	}
+
+	.mis-filter {
+		display: inline-flex;
+		height: 1.75rem;
+		align-items: center;
+		border-radius: 999px;
+		padding: 0 0.625rem;
+		font-size: 13px;
+		color: var(--ink-gray-6);
+		transition:
+			background-color 150ms,
+			color 150ms;
+	}
+	.mis-filter:hover {
+		background: var(--surface-gray-2);
+		color: var(--ink-gray-9);
+	}
+	.mis-filter[aria-pressed='true'] {
+		background: var(--surface-gray-10);
+		color: var(--ink-base);
+	}
+
+	.mis-arc {
+		stroke: var(--outline-blue-4);
+		stroke-dasharray: 1;
+		stroke-dashoffset: 0;
+	}
+	.mis-pin-dot {
+		fill: var(--surface-blue-8);
+		stroke: var(--surface-base);
+		stroke-width: 2;
+		transition: transform 200ms var(--lab-ease);
+	}
+	.mis-home-dot {
+		fill: var(--surface-violet-8);
+		stroke: var(--surface-base);
+		stroke-width: 2.5;
+	}
+	.mis-pin-ripple {
+		fill: none;
+		stroke: var(--outline-blue-5);
+		stroke-width: 1.5;
+		transform-box: fill-box;
+		transform-origin: center;
+		animation: mis-ripple 2.6s var(--lab-ease) 1.6s 3 both;
+	}
+	.mis-home-ripple {
+		stroke: var(--outline-violet-5);
+	}
+	@keyframes mis-ripple {
+		from {
+			transform: scale(1);
+			opacity: 0.9;
+		}
+		to {
+			transform: scale(3.6);
+			opacity: 0;
+		}
+	}
+	.mis-label {
+		font-size: 13px;
+		font-family: GeistMono, ui-monospace, monospace;
+		fill: var(--ink-gray-7);
+		stroke: var(--surface-base);
+		stroke-width: 4px;
+		paint-order: stroke;
+		stroke-linejoin: round;
+	}
+	.mis-label-home {
+		fill: var(--ink-violet-8);
+	}
+	.mis-pin[data-active] .mis-pin-dot {
+		transform: scale(1.5);
+		fill: var(--surface-blue-10);
+	}
+	.mis-pin[data-active] .mis-label {
+		fill: var(--ink-gray-9);
+	}
+
+	html[data-motion='on'] .mis-arc {
+		stroke-dashoffset: 1;
+	}
+	/* Pins and home are always visible; only the arcs wait to draw. */
+
+	.drawer-pin {
+		fill: var(--outline-gray-4);
+		stroke: var(--surface-gray-1);
+		stroke-width: 3;
+	}
+	.drawer-pin[data-active] {
+		fill: var(--surface-blue-8);
+	}
+	.drawer-arc {
+		stroke: var(--outline-blue-5);
+		stroke-dasharray: 1;
+		stroke-dashoffset: 1;
+		opacity: 0;
+	}
+	.drawer-arc[data-active] {
+		opacity: 1;
+	}
+	.mis-drawer::backdrop {
+		background: color-mix(in oklch, var(--surface-gray-10) 18%, transparent);
+	}
+	.mis-drawer[open] {
+		display: flex;
+		flex-direction: column;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.mis-pin-ripple {
+			animation: none;
+			opacity: 0;
+		}
+	}
+
+	@media print {
+		.mis {
+			display: block;
+		}
+		header {
+			position: static;
+		}
+	}
+</style>
+
+<script>
+	import { animate, stagger } from 'motion';
+	import { boot, countUp, EASE_OUT, motionAllowed, once } from '../../../scripts/landing/motion';
+
+	boot();
+
+	// The focal moment: arcs draw out from Jagdalpur to the field. It waits for
+	// the southernmost pin, a small target, so every arc draws on screen at
+	// any viewport height.
+	const map = document.querySelector<SVGSVGElement>('[data-map]');
+	const homeMarker = map?.querySelector('.mis-home');
+	const southern = map?.querySelector('[data-pin="ernakulam"]');
+	if (map && homeMarker && southern && motionAllowed()) {
+		once(
+			southern,
+			() => {
+				animate(homeMarker, { transform: ['scale(0.6)', 'scale(1)'] }, { duration: 0.45, ease: EASE_OUT });
+				animate(map.querySelectorAll('.mis-arc'), { strokeDashoffset: [1, 0] }, { duration: 0.9, ease: EASE_OUT, delay: stagger(0.12, { startDelay: 0.25 }) });
+			},
+			1,
+		);
+	}
+
+	document.querySelectorAll<HTMLElement>('[data-count]').forEach(countUp);
+
+	// Bars grow from their baseline the first time each chart is in view.
+	document.querySelectorAll<HTMLElement>('[data-bars]').forEach((chart) => {
+		if (!motionAllowed()) return;
+		// Motion throws on an empty selection, so charts without columns skip.
+		const vertical = chart.querySelectorAll('[data-bar]');
+		if (!vertical.length) return;
+		vertical.forEach((bar) => ((bar as HTMLElement).style.transform = 'scaleY(0)'));
+		once(chart, () => animate(vertical, { transform: ['scaleY(0)', 'scaleY(1)'] }, { duration: 0.7, ease: EASE_OUT, delay: stagger(0.06) }));
+	});
+
+	const gantt = document.querySelector('[data-gantt]');
+	if (gantt && motionAllowed()) {
+		const bars = gantt.querySelectorAll<HTMLElement>('[data-gantt-bar]');
+		bars.forEach((bar) => (bar.style.transform = 'scaleX(0)'));
+		once(gantt, () =>
+			animate(bars, { transform: ['scaleX(0)', 'scaleX(1)'] }, { duration: 0.8, ease: EASE_OUT, delay: stagger(0.14) }),
+		);
+	}
+
+	// Sidebar and section tabs follow the section in view.
+	const links = document.querySelectorAll<HTMLAnchorElement>('[data-nav]');
+	const sections = document.querySelectorAll<HTMLElement>('[data-section], #funders');
+	const observer = new IntersectionObserver(
+		(entries) => {
+			for (const entry of entries) {
+				if (!entry.isIntersecting) continue;
+				const id = entry.target.id;
+				links.forEach((link) => link.setAttribute('aria-current', String(link.dataset.nav === id)));
+				document
+					.querySelector<HTMLElement>(`nav.overflow-x-auto [data-nav="${id}"]`)
+					?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+			}
+		},
+		{ rootMargin: '-30% 0px -60% 0px' },
+	);
+	sections.forEach((section) => observer.observe(section));
+
+	// Sector filters.
+	const rows = document.querySelectorAll<HTMLElement>('[data-row]');
+	const count = document.querySelector('[data-row-count]');
+	const filters = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+	filters.forEach((button) =>
+		button.addEventListener('click', () => {
+			const sector = button.dataset.filter;
+			filters.forEach((other) => other.setAttribute('aria-pressed', String(other === button)));
+			let shown = 0;
+			rows.forEach((row) => {
+				const match = sector === 'all' || row.dataset.sector === sector;
+				row.parentElement!.hidden = !match;
+				if (match) {
+					shown += 1;
+					if (motionAllowed()) animate(row, { opacity: [0, 1] }, { duration: 0.25 });
+				}
+			});
+			if (count) count.textContent = `${shown} ${shown === 1 ? 'row' : 'rows'}`;
+		}),
+	);
+
+	// Pointing at a row lights up its pins on the map.
+	const pinFor = (id: string) => document.querySelectorAll(`[data-pin][data-rows~="${id}"]`);
+	rows.forEach((row) => {
+		const on = () => pinFor(row.dataset.row!).forEach((pin) => pin.setAttribute('data-active', ''));
+		const off = () => pinFor(row.dataset.row!).forEach((pin) => pin.removeAttribute('data-active'));
+		row.addEventListener('pointerenter', on);
+		row.addEventListener('pointerleave', off);
+		row.addEventListener('focus', on);
+		row.addEventListener('blur', off);
+	});
+
+	// The drawer's map: this partner's pins, and the arcs out from Jagdalpur.
+	const drawerMap = document.querySelector<SVGSVGElement>('[data-drawer-map]');
+	const drawerPlace = document.querySelector('[data-drawer-place]');
+	function showPlace(id: string) {
+		if (!drawerMap) return;
+		const keys = [...document.querySelectorAll<SVGGElement>(`[data-map] [data-pin][data-rows~="${id}"]`)].map((pin) => pin.dataset.pin!);
+		drawerMap.querySelectorAll<SVGElement>('[data-drawer-pin]').forEach((pin) => pin.toggleAttribute('data-active', keys.includes(pin.dataset.drawerPin!)));
+		const arcs = [...drawerMap.querySelectorAll<SVGPathElement>('[data-drawer-arc]')];
+		arcs.forEach((arc) => {
+			const on = keys.includes(arc.dataset.drawerArc!);
+			arc.toggleAttribute('data-active', on);
+			arc.style.strokeDashoffset = on && !motionAllowed() ? '0' : '1';
+		});
+		const lit = arcs.filter((arc) => arc.hasAttribute('data-active'));
+		if (lit.length && motionAllowed()) animate(lit, { strokeDashoffset: [1, 0] }, { duration: 0.7, ease: EASE_OUT, delay: 0.15 });
+		const place = document.querySelector(`template[data-case="${id}"]`)?.content.querySelector('[data-place]')?.textContent?.trim();
+		if (drawerPlace) drawerPlace.textContent = keys.length ? (place ?? '') : 'No single location on the map';
+	}
+
+	// Case-study drawer.
+	const drawer = document.querySelector<HTMLDialogElement>('[data-drawer]');
+	const drawerBody = drawer?.querySelector('[data-drawer-body]');
+	let opener: HTMLElement | null = null;
+	rows.forEach((row) =>
+		row.addEventListener('click', () => {
+			const template = document.querySelector<HTMLTemplateElement>(`template[data-case="${row.dataset.row}"]`);
+			if (!drawer || !drawerBody || !template) return;
+			opener = row;
+			drawerBody.replaceChildren(template.content.cloneNode(true));
+			showPlace(row.dataset.row!);
+			drawer.showModal();
+			if (motionAllowed()) animate(drawer, { transform: ['translateX(24px)', 'translateX(0)'], opacity: [0, 1] }, { duration: 0.32, ease: EASE_OUT });
+		}),
+	);
+	drawer?.querySelector('[data-drawer-close]')?.addEventListener('click', () => drawer.close());
+	drawer?.addEventListener('click', (event) => {
+		if (event.target === drawer) drawer.close();
+	});
+	drawer?.addEventListener('close', () => opener?.focus());
+
+	document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
+</script>

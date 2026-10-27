@@ -1,0 +1,63 @@
+---
+/** A labelled text input or textarea in frappe-ui's subtle style. */
+interface Props {
+	label: string;
+	name: string;
+	type?: 'text' | 'email' | 'tel' | 'textarea';
+	placeholder?: string;
+	required?: boolean;
+	autocomplete?: string;
+	form?: string;
+	rows?: number;
+	class?: string;
+	description?: string;
+}
+
+const {
+	label,
+	name,
+	type = 'text',
+	placeholder,
+	required,
+	autocomplete,
+	form,
+	rows = 3,
+	class: className,
+	description,
+} = Astro.props;
+const id = `${form ?? 'field'}-${name}`;
+const control =
+	'w-full rounded-4 border border-transparent bg-surface-gray-2 px-2.5 text-base text-ink-gray-8 transition-colors placeholder:text-ink-gray-5 hover:bg-surface-gray-3 focus:border-outline-gray-4 focus:bg-surface-base focus:shadow-sm focus:outline-none focus:ring-0';
+---
+
+<div class:list={['flex flex-col gap-1.5', className]}>
+	<label for={id} class="text-xs text-ink-gray-5">
+		{label}
+		{required && <span class="text-ink-red-5" aria-hidden="true"> *</span>}
+	</label>
+	{
+		type === 'textarea' ? (
+			<textarea
+				id={id}
+				name={name}
+				rows={rows}
+				placeholder={placeholder}
+				required={required}
+				form={form}
+				class:list={[control, 'py-2 text-p-base resize-y']}
+			/>
+		) : (
+			<input
+				id={id}
+				name={name}
+				type={type}
+				placeholder={placeholder}
+				required={required}
+				autocomplete={autocomplete}
+				form={form}
+				class:list={[control, 'h-8']}
+			/>
+		)
+	}
+	{description && <p class="text-p-xs text-ink-gray-5">{description}</p>}
+</div>

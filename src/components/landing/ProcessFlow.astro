@@ -1,0 +1,398 @@
+---
+/**
+ * The tools a team juggles are retired and replaced by one system, which is
+ * the single source of truth everything else reads from.
+ *
+ * Two drawings of the same diagram: wide (from 768px) and tall (phones).
+ * The finished state is the default; the script animates it in only when the
+ * motion flag is on. Pulses keep running out of the system while it is on
+ * screen.
+ */
+import Icon from './Icon.astro';
+
+const TOOLS = [
+	{ icon: 'clipboard-list', name: 'Google Forms' },
+	{ icon: 'file-spreadsheet', name: 'Excel sheets' },
+	{ icon: 'message-circle', name: 'WhatsApp groups' },
+	{ icon: 'square-terminal', name: 'Vibe-coded script' },
+	{ icon: 'mail', name: 'Email threads' },
+];
+const OUTPUTS = [
+	{ icon: 'smartphone', name: 'Field app' },
+	{ icon: 'chart-column', name: 'Dashboards' },
+	{ icon: 'file-text', name: 'Donor reports' },
+	{ icon: 'bell-ring', name: 'Follow-ups' },
+	{ icon: 'shield-check', name: 'Audit trail' },
+];
+
+function layout(kind: 'wide' | 'tall') {
+	if (kind === 'wide') {
+		const ys = [70, 135, 200, 265, 330];
+		const hub = { x: 552, y: 148, s: 104 };
+		const c = [hub.x + hub.s / 2, hub.y + hub.s / 2];
+		return {
+			kind,
+			W: 1200,
+			H: 400,
+			tools: ys.map((y) => ({ x: 24, y })),
+			bracket: 'M232,54 Q244,54 244,70 L244,330 Q244,346 232,346',
+			arrow: { d: `M256,200 L${hub.x - 14},200`, head: `M${hub.x - 22},193 L${hub.x - 14},200 L${hub.x - 22},207` },
+			replaced: { x: (256 + hub.x - 14) / 2, y: 176 },
+			hub,
+			label: { x: c[0], y: hub.y + hub.s + 14 },
+			outs: ys.map((y) => ({ d: `M${hub.x + hub.s},${c[1]} C${hub.x + hub.s + 150},${c[1]} ${hub.x + hub.s + 140},${y} 930,${y}`, x: 944, y })),
+		};
+	}
+	const ys = [24, 74, 124, 174, 224];
+	const hub = { x: 148, y: 318, s: 64 };
+	const c = [hub.x + hub.s / 2, hub.y + hub.s / 2];
+	const outYs = [480, 530, 580, 630, 680];
+	return {
+		kind,
+		W: 360,
+		H: 700,
+		tools: ys.map((y) => ({ x: 0, y })),
+		bracket: 'M12,256 Q12,266 28,266 L332,266 Q348,266 348,256',
+		arrow: { d: `M${c[0]},274 L${c[0]},${hub.y - 10}`, head: `M${c[0] - 7},${hub.y - 17} L${c[0]},${hub.y - 10} L${c[0] + 7},${hub.y - 17}` },
+		replaced: { x: c[0] + 12, y: 284 },
+		hub,
+		label: { x: c[0], y: hub.y + hub.s + 10 },
+		outs: outYs.map((y) => ({ d: `M${c[0]},${hub.y + hub.s + 48} L${c[0]},${y - 14} Q${c[0]},${y} ${c[0] + 14},${y} L196,${y}`, x: 200, y })),
+	};
+}
+const LAYOUTS = [layout('wide'), layout('tall')];
+const pct = (v: number, of: number) => `${(v / of) * 100}%`;
+---
+
+<div class="flow" data-flow>
+	{LAYOUTS.map((L) => (
+		<div class:list={['canvas', `canvas-${L.kind}`]} style={`aspect-ratio:${L.W}/${L.H}`} data-canvas>
+			<svg class="art" viewBox={`0 0 ${L.W} ${L.H}`} aria-hidden="true">
+				<path d={L.bracket} class="quiet" pathLength="1" data-bracket />
+				<path d={L.arrow.d} class="quiet" pathLength="1" data-arrow />
+				<path d={L.arrow.head} class="quiet" data-arrow-head />
+				{L.outs.map((out) => <path d={out.d} class="out" pathLength="1" data-out />)}
+			</svg>
+
+			{TOOLS.map((tool, i) => (
+				<span class="item retired" style={`left:${pct(L.tools[i].x, L.W)};top:${pct(L.tools[i].y, L.H)}`} data-tool>
+					<span class="tile"><Icon name={tool.icon} size={L.kind === 'wide' ? 18 : 16} /></span>
+					<span class="name">{tool.name}<span class="strike" data-strike /></span>
+				</span>
+			))}
+			<span class:list={['replaced', `replaced-${L.kind}`]} style={`left:${pct(L.replaced.x, L.W)};top:${pct(L.replaced.y, L.H)}`} data-replaced>
+				replaced by
+			</span>
+			<span class="hub" style={`left:${pct(L.hub.x, L.W)};top:${pct(L.hub.y, L.H)};width:${pct(L.hub.s, L.W)}`} data-hub>
+				<Icon name="database" size={L.kind === 'wide' ? 28 : 22} />
+			</span>
+			<span class="hub-label" style={`left:${pct(L.label.x, L.W)};top:${pct(L.label.y, L.H)}`} data-hub-label>
+				<b>One system</b>
+				<span>Single source of truth</span>
+			</span>
+			{OUTPUTS.map((out, i) => (
+				<span class="item output" style={`left:${pct(L.outs[i].x, L.W)};top:${pct(L.outs[i].y, L.H)}`} data-output>
+					<span class="tile"><Icon name={out.icon} size={L.kind === 'wide' ? 18 : 16} /></span>
+					<span class="name">{out.name}</span>
+				</span>
+			))}
+		</div>
+	))}
+	<p class="sr-only">
+		Google Forms, Excel sheets, WhatsApp groups, a vibe-coded script and email threads are replaced by one system. It is the single source
+		of truth for the field app, dashboards, donor reports, follow-ups and the audit trail.
+	</p>
+</div>
+
+<style>
+	.flow {
+		position: relative;
+		--flow-ink: var(--ink-gray-9);
+		--flow-pulse: var(--surface-green-7);
+	}
+	.canvas {
+		position: relative;
+		width: 100%;
+	}
+	.canvas-tall {
+		display: none;
+		max-width: 400px;
+	}
+	@media (max-width: 767px) {
+		.canvas-wide {
+			display: none;
+		}
+		.canvas-tall {
+			display: block;
+		}
+	}
+	.art {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+	}
+	.quiet {
+		fill: none;
+		stroke: var(--outline-gray-3);
+		stroke-width: 1.5;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+	.out {
+		fill: none;
+		stroke: var(--outline-gray-4);
+		stroke-width: 1.5;
+		stroke-linecap: round;
+	}
+	.flow :global(.comet) {
+		fill: none;
+		stroke: var(--flow-pulse);
+		stroke-width: 3.5;
+		stroke-linecap: round;
+	}
+
+	.item {
+		position: absolute;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		translate: 0 -50%;
+		font-size: 13px;
+		white-space: nowrap;
+	}
+	.canvas-tall .item {
+		gap: 8px;
+	}
+	.tile {
+		display: flex;
+		width: 40px;
+		height: 40px;
+		flex-shrink: 0;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid var(--outline-gray-2);
+		border-radius: 10px;
+		background: var(--surface-base);
+		color: var(--ink-gray-5);
+		transition:
+			border-color 500ms cubic-bezier(0.16, 1, 0.3, 1),
+			color 500ms cubic-bezier(0.16, 1, 0.3, 1),
+			opacity 500ms cubic-bezier(0.16, 1, 0.3, 1);
+	}
+	.canvas-tall .tile {
+		width: 34px;
+		height: 34px;
+		border-radius: 9px;
+	}
+	.name {
+		position: relative;
+		transition: color 500ms cubic-bezier(0.16, 1, 0.3, 1);
+	}
+	.item {
+		transition: color 500ms cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	/* The old tools: faded, dashed, struck through. */
+	.retired {
+		color: var(--ink-gray-5);
+	}
+	.retired .tile {
+		border-style: dashed;
+		opacity: 0.75;
+	}
+	.strike {
+		position: absolute;
+		left: -2px;
+		right: -2px;
+		top: 52%;
+		height: 1.5px;
+		border-radius: 1px;
+		background: var(--ink-gray-5);
+		transform-origin: left center;
+	}
+	.flow :global([data-tool][data-fresh]) {
+		color: var(--ink-gray-8);
+	}
+	.flow :global([data-tool][data-fresh] .tile) {
+		border-style: solid;
+		opacity: 1;
+		color: var(--ink-gray-6);
+	}
+
+	/* What the system serves: ink, and awake once the first pulse arrives. */
+	.output {
+		font-weight: 500;
+		color: var(--flow-ink);
+	}
+	.output .tile {
+		border-color: var(--flow-ink);
+		color: var(--flow-ink);
+	}
+	.flow :global([data-output][data-asleep]) {
+		color: var(--ink-gray-5);
+	}
+	.flow :global([data-output][data-asleep] .tile) {
+		border-color: var(--outline-gray-2);
+		color: var(--ink-gray-4);
+	}
+
+	.replaced {
+		position: absolute;
+		font-size: 12px;
+		color: var(--ink-gray-6);
+		white-space: nowrap;
+	}
+	.replaced-wide {
+		translate: -50% 0;
+	}
+	.hub {
+		position: absolute;
+		display: flex;
+		aspect-ratio: 1;
+		align-items: center;
+		justify-content: center;
+		border-radius: 26%;
+		background: var(--flow-ink);
+		color: var(--surface-base);
+		box-shadow: 0 1px 2px rgb(0 0 0 / 0.08), 0 12px 28px -10px rgb(0 0 0 / 0.35);
+	}
+	.hub-label {
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		translate: -50% 0;
+		white-space: nowrap;
+	}
+	.hub-label b {
+		font-size: 14px;
+		font-weight: 600;
+		color: var(--ink-gray-9);
+	}
+	.hub-label span {
+		font-size: 12px;
+		color: var(--ink-gray-6);
+	}
+</style>
+
+<script>
+	import { animate, inView } from 'motion';
+	import { motionAllowed, once } from '../../scripts/landing/motion';
+
+	type Anim = { stop(): void; play(): void; pause(): void };
+	const EXPO: [number, number, number, number] = [0.16, 1, 0.3, 1];
+	const TAIL = 0.09;
+
+	document.querySelectorAll<HTMLElement>('[data-flow]').forEach((flow) => {
+		if (!motionAllowed()) return;
+		const canvases = [...flow.querySelectorAll<HTMLElement>('[data-canvas]')];
+		// Only the endless comets pause and resume. Calling play() on a finished
+		// entrance would restart it from its first frame.
+		const loops: Anim[] = [];
+		const run = (anim: Anim) => anim;
+
+		function parts(canvas: HTMLElement) {
+			const q = <T extends Element>(s: string) => [...canvas.querySelectorAll<T>(s)];
+			return {
+				svg: canvas.querySelector('svg')!,
+				tools: q<HTMLElement>('[data-tool]'),
+				strikes: q<HTMLElement>('[data-strike]'),
+				bracket: canvas.querySelector<SVGPathElement>('[data-bracket]')!,
+				arrow: canvas.querySelector<SVGPathElement>('[data-arrow]')!,
+				head: canvas.querySelector<SVGPathElement>('[data-arrow-head]')!,
+				replaced: canvas.querySelector<HTMLElement>('[data-replaced]')!,
+				hub: canvas.querySelector<HTMLElement>('[data-hub]')!,
+				label: canvas.querySelector<HTMLElement>('[data-hub-label]')!,
+				outs: q<SVGPathElement>('[data-out]'),
+				outputs: q<HTMLElement>('[data-output]'),
+			};
+		}
+
+		// The starting state: the tools in use, and no system yet.
+		function reset(canvas: HTMLElement) {
+			const p = parts(canvas);
+			p.tools.forEach((tool) => tool.setAttribute('data-fresh', ''));
+			p.strikes.forEach((strike) => (strike.style.transform = 'scaleX(0)'));
+			[p.bracket, p.arrow, ...p.outs].forEach((path) => {
+				path.style.strokeDasharray = '1 1';
+				path.style.strokeDashoffset = '1';
+			});
+			[p.head, p.replaced, p.label].forEach((el) => (el.style.opacity = '0'));
+			p.hub.style.opacity = '0';
+			p.hub.style.transform = 'scale(0.92)';
+			p.hub.style.filter = 'blur(6px)';
+			p.outputs.forEach((out) => (out.setAttribute('data-asleep', ''), (out.style.opacity = '0')));
+		}
+
+		// A short green streak that glides along a thread, again and again.
+		function comet(svg: SVGSVGElement, path: SVGPathElement, opts: { delay: number; gap: number; onArrive?: () => void }) {
+			const streak = path.cloneNode() as SVGPathElement;
+			streak.removeAttribute('data-out');
+			streak.setAttribute('class', 'comet');
+			streak.style.strokeDasharray = `${TAIL} 2`;
+			streak.style.strokeDashoffset = String(TAIL);
+			svg.appendChild(streak);
+			let arrived = false;
+			loops.push(
+				animate(TAIL, -1, {
+					delay: opts.delay,
+					duration: 1.6,
+					repeat: Infinity,
+					repeatDelay: opts.gap,
+					ease: [0.45, 0, 0.25, 1],
+					onUpdate: (offset) => {
+						streak.style.strokeDashoffset = String(offset);
+						if (!arrived && offset < -0.85) {
+							arrived = true;
+							opts.onArrive?.();
+						}
+					},
+				}),
+			);
+		}
+
+		function play(canvas: HTMLElement) {
+			const p = parts(canvas);
+			const drawn = { strokeDashoffset: [1, 0] };
+
+			// 1. One wave of strike-throughs runs down the tools.
+			p.tools.forEach((tool, i) => {
+				const at = 0.15 + i * 0.09;
+				run(animate(p.strikes[i], { transform: ['scaleX(0)', 'scaleX(1)'] }, { delay: at, duration: 0.5, ease: EXPO }));
+				window.setTimeout(() => tool.removeAttribute('data-fresh'), (at + 0.2) * 1000);
+			});
+
+			// 2. The bracket gathers them; the arrow carries them to one system.
+			run(animate(p.bracket, drawn, { delay: 0.55, duration: 0.6, ease: EXPO }));
+			run(animate(p.arrow, drawn, { delay: 0.75, duration: 0.7, ease: EXPO }));
+			run(animate(p.head, { opacity: [0, 1] }, { delay: 1.1, duration: 0.2 }));
+			run(animate(p.replaced, { opacity: [0, 1], transform: ['translateY(3px)', 'translateY(0)'] }, { delay: 0.85, duration: 0.5, ease: EXPO }));
+			run(animate(p.hub, { opacity: [0, 1], filter: ['blur(6px)', 'blur(0px)'] }, { delay: 1.15, duration: 0.45, ease: EXPO }));
+			run(animate(p.hub, { transform: ['scale(0.92)', 'scale(1)'] }, { delay: 1.15, type: 'spring', bounce: 0, duration: 0.5 }));
+			run(animate(p.label, { opacity: [0, 1], transform: ['translateY(4px)', 'translateY(0)'] }, { delay: 1.3, duration: 0.5, ease: EXPO }));
+
+			// 3. Threads grow out of the system, the middle one first.
+			const middle = (p.outs.length - 1) / 2;
+			p.outs.forEach((out, i) => {
+				const at = 1.45 + Math.abs(i - middle) * 0.07;
+				run(animate(out, drawn, { delay: at, duration: 0.8, ease: EXPO }));
+				run(animate(p.outputs[i], { opacity: [0, 1], transform: ['translateX(-6px)', 'translateX(0)'] }, { delay: at + 0.35, duration: 0.5, ease: EXPO }));
+				comet(p.svg, out, {
+					delay: at + 0.6 + i * 0.32,
+					gap: 0.9 + (i % 3) * 0.45,
+					onArrive: () => p.outputs[i].removeAttribute('data-asleep'),
+				});
+			});
+		}
+
+		canvases.forEach(reset);
+		once(flow, () => canvases.forEach(play), 0.45);
+		// The pulses never stop, so they rest while the section is off screen.
+		inView(flow, () => {
+			loops.forEach((anim) => anim.play());
+			return () => loops.forEach((anim) => anim.pause());
+		});
+	});
+</script>

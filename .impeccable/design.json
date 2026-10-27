@@ -1,0 +1,812 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-26T15:48:21+00:00",
+  "title": "Design System: BWH Lab",
+  "scope": "Landing page experiments under /lab only. The blog pages are out of scope.",
+  "extensions": {
+    "colorMeta": {
+      "desk-blue": {
+        "role": "primary",
+        "displayName": "Desk Blue",
+        "canonical": "oklch(0.477 0.149 253.403)",
+        "cssVar": "--surface-blue-9",
+        "darkCanonical": "oklch(0.777 0.112 244.656)",
+        "tonalRamp": [
+          "oklch(0.309 0.104 256.771)",
+          "oklch(0.396 0.113 250.204)",
+          "oklch(0.477 0.149 253.403)",
+          "oklch(0.561 0.168 252.355)",
+          "oklch(0.587 0.174 252.167)",
+          "oklch(0.73 0.121 245.297)",
+          "oklch(0.925 0.039 243.489)",
+          "oklch(0.976 0.011 243.65)"
+        ],
+        "note": "Dark theme resolves to a light blue with dark ink-base text; the intake field overrides to surface-blue-2 in dark."
+      },
+      "desk-blue-deep": {
+        "role": "primary",
+        "displayName": "Desk Blue Deep",
+        "canonical": "oklch(0.396 0.113 250.204)",
+        "cssVar": "--surface-blue-10",
+        "darkCanonical": "oklch(0.849 0.063 247.116)",
+        "tonalRamp": [
+          "oklch(0.309 0.104 256.771)",
+          "oklch(0.396 0.113 250.204)",
+          "oklch(0.477 0.149 253.403)",
+          "oklch(0.561 0.168 252.355)",
+          "oklch(0.587 0.174 252.167)",
+          "oklch(0.73 0.121 245.297)",
+          "oklch(0.925 0.039 243.489)",
+          "oklch(0.976 0.011 243.65)"
+        ]
+      },
+      "blue-wash": {
+        "role": "primary",
+        "displayName": "Blue Wash",
+        "canonical": "oklch(0.96 0.021 241.348)",
+        "cssVar": "--surface-blue-2",
+        "darkCanonical": "oklch(0.305 0.092 256.675)",
+        "tonalRamp": [
+          "oklch(0.309 0.104 256.771)",
+          "oklch(0.396 0.113 250.204)",
+          "oklch(0.477 0.149 253.403)",
+          "oklch(0.561 0.168 252.355)",
+          "oklch(0.587 0.174 252.167)",
+          "oklch(0.73 0.121 245.297)",
+          "oklch(0.925 0.039 243.489)",
+          "oklch(0.976 0.011 243.65)"
+        ]
+      },
+      "blue-ink": {
+        "role": "primary",
+        "displayName": "Blue Ink",
+        "canonical": "oklch(0.477 0.149 253.403)",
+        "cssVar": "--ink-blue-8",
+        "darkCanonical": "oklch(0.849 0.063 247.116)",
+        "tonalRamp": [
+          "oklch(0.309 0.104 256.771)",
+          "oklch(0.396 0.113 250.204)",
+          "oklch(0.477 0.149 253.403)",
+          "oklch(0.561 0.168 252.355)",
+          "oklch(0.587 0.174 252.167)",
+          "oklch(0.73 0.121 245.297)",
+          "oklch(0.925 0.039 243.489)",
+          "oklch(0.976 0.011 243.65)"
+        ]
+      },
+      "focus-blue": {
+        "role": "primary",
+        "displayName": "Focus Blue",
+        "canonical": "oklch(0.73 0.121 245.297)",
+        "cssVar": "--outline-blue-4",
+        "darkCanonical": "oklch(0.463 0.136 253.075)",
+        "tonalRamp": [
+          "oklch(0.309 0.104 256.771)",
+          "oklch(0.396 0.113 250.204)",
+          "oklch(0.477 0.149 253.403)",
+          "oklch(0.561 0.168 252.355)",
+          "oklch(0.587 0.174 252.167)",
+          "oklch(0.73 0.121 245.297)",
+          "oklch(0.925 0.039 243.489)",
+          "oklch(0.976 0.011 243.65)"
+        ]
+      },
+      "violet-solid": {
+        "role": "secondary",
+        "displayName": "Violet Solid",
+        "canonical": "oklch(0.356 0.139 285.299)",
+        "cssVar": "--surface-violet-9",
+        "darkCanonical": "oklch(0.775 0.11 294.435)",
+        "tonalRamp": [
+          "oklch(0.226 0.128 277.835)",
+          "oklch(0.273 0.109 285.208)",
+          "oklch(0.356 0.139 285.299)",
+          "oklch(0.438 0.155 286.38)",
+          "oklch(0.545 0.18 287.523)",
+          "oklch(0.761 0.129 293.171)",
+          "oklch(0.891 0.058 291.738)",
+          "oklch(0.976 0.011 291.956)"
+        ]
+      },
+      "violet-wash": {
+        "role": "secondary",
+        "displayName": "Violet Wash",
+        "canonical": "oklch(0.943 0.031 297.722)",
+        "cssVar": "--surface-violet-2",
+        "darkCanonical": "oklch(0.318 0.121 284.702)",
+        "tonalRamp": [
+          "oklch(0.226 0.128 277.835)",
+          "oklch(0.273 0.109 285.208)",
+          "oklch(0.356 0.139 285.299)",
+          "oklch(0.438 0.155 286.38)",
+          "oklch(0.545 0.18 287.523)",
+          "oklch(0.761 0.129 293.171)",
+          "oklch(0.891 0.058 291.738)",
+          "oklch(0.976 0.011 291.956)"
+        ]
+      },
+      "violet-ink": {
+        "role": "secondary",
+        "displayName": "Violet Ink",
+        "canonical": "oklch(0.356 0.139 285.299)",
+        "cssVar": "--ink-violet-8",
+        "darkCanonical": "oklch(0.8 0.107 294.723)",
+        "tonalRamp": [
+          "oklch(0.226 0.128 277.835)",
+          "oklch(0.273 0.109 285.208)",
+          "oklch(0.356 0.139 285.299)",
+          "oklch(0.438 0.155 286.38)",
+          "oklch(0.545 0.18 287.523)",
+          "oklch(0.761 0.129 293.171)",
+          "oklch(0.891 0.058 291.738)",
+          "oklch(0.976 0.011 291.956)"
+        ]
+      },
+      "live-green": {
+        "role": "tertiary",
+        "displayName": "Live Green",
+        "canonical": "oklch(0.57 0.119 158.092)",
+        "cssVar": "--surface-green-7",
+        "darkCanonical": "oklch(0.536 0.121 157.571)",
+        "tonalRamp": [
+          "oklch(0.277 0.052 161.616)",
+          "oklch(0.321 0.05 163.839)",
+          "oklch(0.425 0.101 155.32)",
+          "oklch(0.53 0.122 156.15)",
+          "oklch(0.57 0.119 158.092)",
+          "oklch(0.816 0.12 155.416)",
+          "oklch(0.908 0.07 154.3)",
+          "oklch(0.976 0.014 155.594)"
+        ]
+      },
+      "green-wash": {
+        "role": "tertiary",
+        "displayName": "Green Wash",
+        "canonical": "oklch(0.965 0.03 155.987)",
+        "cssVar": "--surface-green-2",
+        "darkCanonical": "oklch(0.295 0.057 157.43)",
+        "tonalRamp": [
+          "oklch(0.277 0.052 161.616)",
+          "oklch(0.321 0.05 163.839)",
+          "oklch(0.425 0.101 155.32)",
+          "oklch(0.53 0.122 156.15)",
+          "oklch(0.57 0.119 158.092)",
+          "oklch(0.816 0.12 155.416)",
+          "oklch(0.908 0.07 154.3)",
+          "oklch(0.976 0.014 155.594)"
+        ]
+      },
+      "green-ink": {
+        "role": "tertiary",
+        "displayName": "Green Ink",
+        "canonical": "oklch(0.425 0.101 155.32)",
+        "cssVar": "--ink-green-8",
+        "darkCanonical": "oklch(0.866 0.091 162.299)",
+        "tonalRamp": [
+          "oklch(0.277 0.052 161.616)",
+          "oklch(0.321 0.05 163.839)",
+          "oklch(0.425 0.101 155.32)",
+          "oklch(0.53 0.122 156.15)",
+          "oklch(0.57 0.119 158.092)",
+          "oklch(0.816 0.12 155.416)",
+          "oklch(0.908 0.07 154.3)",
+          "oklch(0.976 0.014 155.594)"
+        ]
+      },
+      "amber-wash": {
+        "role": "tertiary",
+        "displayName": "Amber Wash",
+        "canonical": "oklch(0.967 0.045 91.733)",
+        "cssVar": "--surface-amber-2",
+        "darkCanonical": "oklch(0.303 0.062 60.12)",
+        "tonalRamp": [
+          "oklch(0.31 0.075 46.734)",
+          "oklch(0.416 0.099 47.734)",
+          "oklch(0.472 0.124 46.689)",
+          "oklch(0.612 0.136 63.758)",
+          "oklch(0.659 0.142 67.548)",
+          "oklch(0.865 0.105 83.468)",
+          "oklch(0.936 0.056 93.962)",
+          "oklch(0.98 0.015 86.424)"
+        ]
+      },
+      "amber-ink": {
+        "role": "tertiary",
+        "displayName": "Amber Ink",
+        "canonical": "oklch(0.472 0.124 46.689)",
+        "cssVar": "--ink-amber-8",
+        "darkCanonical": "oklch(0.84 0.13 82.404)",
+        "tonalRamp": [
+          "oklch(0.31 0.075 46.734)",
+          "oklch(0.416 0.099 47.734)",
+          "oklch(0.472 0.124 46.689)",
+          "oklch(0.612 0.136 63.758)",
+          "oklch(0.659 0.142 67.548)",
+          "oklch(0.865 0.105 83.468)",
+          "oklch(0.936 0.056 93.962)",
+          "oklch(0.98 0.015 86.424)"
+        ]
+      },
+      "error-red": {
+        "role": "tertiary",
+        "displayName": "Error Red",
+        "canonical": "oklch(0.595 0.208 26.283)",
+        "cssVar": "--ink-red-5",
+        "darkCanonical": "oklch(0.547 0.175 25.075)",
+        "tonalRamp": [
+          "oklch(0.276 0.093 25.823)",
+          "oklch(0.348 0.12 26.042)",
+          "oklch(0.438 0.153 26.273)",
+          "oklch(0.497 0.185 27.335)",
+          "oklch(0.556 0.198 26.552)",
+          "oklch(0.772 0.118 19.495)",
+          "oklch(0.915 0.044 17.978)",
+          "oklch(0.978 0.011 17.34)"
+        ]
+      },
+      "cyan-wash": {
+        "role": "tertiary",
+        "displayName": "Cyan Wash (stage)",
+        "canonical": "oklch(0.96 0.029 218.179)",
+        "cssVar": "--surface-cyan-2",
+        "darkCanonical": "oklch(0.263 0.039 221.051)",
+        "tonalRamp": [
+          "oklch(0.313 0.051 209.137)",
+          "oklch(0.374 0.06 226.327)",
+          "oklch(0.443 0.077 224.37)",
+          "oklch(0.556 0.096 223.946)",
+          "oklch(0.597 0.104 223.923)",
+          "oklch(0.824 0.102 219.972)",
+          "oklch(0.899 0.058 217.001)",
+          "oklch(0.982 0.01 212.521)"
+        ]
+      },
+      "cyan-ink": {
+        "role": "tertiary",
+        "displayName": "Cyan Ink (stage)",
+        "canonical": "oklch(0.443 0.077 224.37)",
+        "cssVar": "--ink-cyan-8",
+        "darkCanonical": "oklch(0.872 0.081 214.804)",
+        "tonalRamp": [
+          "oklch(0.313 0.051 209.137)",
+          "oklch(0.374 0.06 226.327)",
+          "oklch(0.443 0.077 224.37)",
+          "oklch(0.556 0.096 223.946)",
+          "oklch(0.597 0.104 223.923)",
+          "oklch(0.824 0.102 219.972)",
+          "oklch(0.899 0.058 217.001)",
+          "oklch(0.982 0.01 212.521)"
+        ]
+      },
+      "pink-wash": {
+        "role": "tertiary",
+        "displayName": "Pink Wash (stage)",
+        "canonical": "oklch(0.952 0.028 340.005)",
+        "cssVar": "--surface-pink-2",
+        "darkCanonical": "oklch(0.274 0.081 346.993)",
+        "tonalRamp": [
+          "oklch(0.254 0.096 346.105)",
+          "oklch(0.316 0.115 345.791)",
+          "oklch(0.408 0.155 348.063)",
+          "oklch(0.481 0.17 346.479)",
+          "oklch(0.597 0.205 347.195)",
+          "oklch(0.748 0.172 344.997)",
+          "oklch(0.916 0.058 339.586)",
+          "oklch(0.984 0.011 339.329)"
+        ]
+      },
+      "pink-ink": {
+        "role": "tertiary",
+        "displayName": "Pink Ink (stage)",
+        "canonical": "oklch(0.408 0.155 348.063)",
+        "cssVar": "--ink-pink-8",
+        "darkCanonical": "oklch(0.796 0.128 343.745)",
+        "tonalRamp": [
+          "oklch(0.254 0.096 346.105)",
+          "oklch(0.316 0.115 345.791)",
+          "oklch(0.408 0.155 348.063)",
+          "oklch(0.481 0.17 346.479)",
+          "oklch(0.597 0.205 347.195)",
+          "oklch(0.748 0.172 344.997)",
+          "oklch(0.916 0.058 339.586)",
+          "oklch(0.984 0.011 339.329)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "oklch(1 0 0)",
+        "cssVar": "--surface-base",
+        "darkCanonical": "oklch(0.205 0 0)",
+        "tonalRamp": [
+          "oklch(0.168 0 0)",
+          "oklch(0.205 0 0)",
+          "oklch(0.341 0 0)",
+          "oklch(0.439 0 0)",
+          "oklch(0.586 0 0)",
+          "oklch(0.83 0 0)",
+          "oklch(0.946 0 0)",
+          "oklch(0.979 0 0)"
+        ]
+      },
+      "desk-grey": {
+        "role": "neutral",
+        "displayName": "Desk Grey",
+        "canonical": "oklch(0.979 0 0)",
+        "cssVar": "--surface-gray-1",
+        "darkCanonical": "oklch(0.239 0 0)",
+        "tonalRamp": [
+          "oklch(0.168 0 0)",
+          "oklch(0.205 0 0)",
+          "oklch(0.341 0 0)",
+          "oklch(0.439 0 0)",
+          "oklch(0.586 0 0)",
+          "oklch(0.83 0 0)",
+          "oklch(0.946 0 0)",
+          "oklch(0.979 0 0)"
+        ]
+      },
+      "control-grey": {
+        "role": "neutral",
+        "displayName": "Control Grey",
+        "canonical": "oklch(0.964 0 0)",
+        "cssVar": "--surface-gray-2",
+        "darkCanonical": "oklch(0.281 0 0)",
+        "tonalRamp": [
+          "oklch(0.168 0 0)",
+          "oklch(0.205 0 0)",
+          "oklch(0.341 0 0)",
+          "oklch(0.439 0 0)",
+          "oklch(0.586 0 0)",
+          "oklch(0.83 0 0)",
+          "oklch(0.946 0 0)",
+          "oklch(0.979 0 0)"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "oklch(0.946 0 0)",
+        "cssVar": "--outline-gray-1",
+        "darkCanonical": "oklch(0.26 0 0)",
+        "tonalRamp": [
+          "oklch(0.168 0 0)",
+          "oklch(0.205 0 0)",
+          "oklch(0.341 0 0)",
+          "oklch(0.439 0 0)",
+          "oklch(0.586 0 0)",
+          "oklch(0.83 0 0)",
+          "oklch(0.946 0 0)",
+          "oklch(0.979 0 0)"
+        ]
+      },
+      "rule-grey": {
+        "role": "neutral",
+        "displayName": "Rule Grey",
+        "canonical": "oklch(0.913 0 0)",
+        "cssVar": "--outline-gray-2",
+        "darkCanonical": "oklch(0.341 0 0)",
+        "tonalRamp": [
+          "oklch(0.168 0 0)",
+          "oklch(0.205 0 0)",
+          "oklch(0.341 0 0)",
+          "oklch(0.439 0 0)",
+          "oklch(0.586 0 0)",
+          "oklch(0.83 0 0)",
+          "oklch(0.946 0 0)",
+          "oklch(0.979 0 0)"
+        ]
+      },
+      "dash-grey": {
+        "role": "neutral",
+        "displayName": "Dash Grey",
+        "canonical": "oklch(0.83 0 0)",
+        "cssVar": "--outline-gray-3",
+        "darkCanonical": "oklch(0.379 0 0)",
+        "tonalRamp": [
+          "oklch(0.168 0 0)",
+          "oklch(0.205 0 0)",
+          "oklch(0.341 0 0)",
+          "oklch(0.439 0 0)",
+          "oklch(0.586 0 0)",
+          "oklch(0.83 0 0)",
+          "oklch(0.946 0 0)",
+          "oklch(0.979 0 0)"
+        ]
+      },
+      "ink-heading": {
+        "role": "neutral",
+        "displayName": "Ink Heading",
+        "canonical": "oklch(0.168 0 0)",
+        "cssVar": "--ink-gray-9",
+        "darkCanonical": "oklch(0.979 0 0)",
+        "tonalRamp": [
+          "oklch(0.168 0 0)",
+          "oklch(0.205 0 0)",
+          "oklch(0.341 0 0)",
+          "oklch(0.439 0 0)",
+          "oklch(0.586 0 0)",
+          "oklch(0.83 0 0)",
+          "oklch(0.946 0 0)",
+          "oklch(0.979 0 0)"
+        ]
+      },
+      "graphite": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "canonical": "oklch(0.205 0 0)",
+        "cssVar": "--ink-gray-8",
+        "darkCanonical": "oklch(0.885 0 0)",
+        "tonalRamp": [
+          "oklch(0.168 0 0)",
+          "oklch(0.205 0 0)",
+          "oklch(0.341 0 0)",
+          "oklch(0.439 0 0)",
+          "oklch(0.586 0 0)",
+          "oklch(0.83 0 0)",
+          "oklch(0.946 0 0)",
+          "oklch(0.979 0 0)"
+        ]
+      },
+      "ink-secondary": {
+        "role": "neutral",
+        "displayName": "Ink Secondary",
+        "canonical": "oklch(0.341 0 0)",
+        "cssVar": "--ink-gray-7",
+        "darkCanonical": "oklch(0.754 0 0)",
+        "tonalRamp": [
+          "oklch(0.168 0 0)",
+          "oklch(0.205 0 0)",
+          "oklch(0.341 0 0)",
+          "oklch(0.439 0 0)",
+          "oklch(0.586 0 0)",
+          "oklch(0.83 0 0)",
+          "oklch(0.946 0 0)",
+          "oklch(0.979 0 0)"
+        ]
+      },
+      "ink-lede": {
+        "role": "neutral",
+        "displayName": "Ink Lede",
+        "canonical": "oklch(0.439 0 0)",
+        "cssVar": "--ink-gray-6",
+        "darkCanonical": "oklch(0.683 0 0)",
+        "tonalRamp": [
+          "oklch(0.168 0 0)",
+          "oklch(0.205 0 0)",
+          "oklch(0.341 0 0)",
+          "oklch(0.439 0 0)",
+          "oklch(0.586 0 0)",
+          "oklch(0.83 0 0)",
+          "oklch(0.946 0 0)",
+          "oklch(0.979 0 0)"
+        ]
+      },
+      "ink-meta": {
+        "role": "neutral",
+        "displayName": "Ink Meta (lifted)",
+        "canonical": "oklch(0.52 0 0)",
+        "cssVar": "--ink-gray-5",
+        "darkCanonical": "oklch(0.63 0 0)",
+        "tonalRamp": [
+          "oklch(0.168 0 0)",
+          "oklch(0.205 0 0)",
+          "oklch(0.341 0 0)",
+          "oklch(0.439 0 0)",
+          "oklch(0.586 0 0)",
+          "oklch(0.83 0 0)",
+          "oklch(0.946 0 0)",
+          "oklch(0.979 0 0)"
+        ],
+        "note": "lab.css lifts frappe-ui ink-gray-5 inside .lab and .lab-chrome for WCAG AA (4.5:1)."
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The single H1 per variant; 36–40px on phones rising to 52–68px; balance-wrapped, 15–18ch."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Closing intake heading and theory-of-change stage panels; 28px rising to 34px."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section titles inside the MIS report."
+      },
+      "title-sm": {
+        "displayName": "Title Small",
+        "purpose": "Panel-header titles, row names, the BWH wordmark."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "First-viewport ledes and section intros, 48–64ch; 17–18px at 1.6 from sm on MIS and theory of change."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Paragraphs inside panels and the funder strip."
+      },
+      "body-sm": {
+        "displayName": "Body Small",
+        "purpose": "Chips, list rows, stage cards."
+      },
+      "control": {
+        "displayName": "Control",
+        "purpose": "Button labels; 16px for large buttons."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Field labels, KPI labels, legends, breadcrumbs and meta, in Ink Meta. Sentence case."
+      },
+      "data-kpi": {
+        "displayName": "Data KPI",
+        "purpose": "KPI numerals that count up; 28px on phones, 34px from sm."
+      },
+      "data": {
+        "displayName": "Data",
+        "purpose": "Numbers, IDs, dates, cell references and formulas only; 11–13px."
+      }
+    },
+    "shadows": [
+      {
+        "name": "raised-item",
+        "value": "var(--elevation-sm)",
+        "purpose": "Current sidebar item, focused text field, mobile View tray."
+      },
+      {
+        "name": "lifted-node",
+        "value": "var(--elevation-md)",
+        "purpose": "Theory-of-change chain node on hover, with a -2px lift."
+      },
+      {
+        "name": "floating-chrome",
+        "value": "var(--elevation-lg) / var(--elevation-xl)",
+        "purpose": "Lab switcher and its menu; the chip ghost that flies into the intake window."
+      },
+      {
+        "name": "stage-panel",
+        "value": "0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px rgb(0 0 0 / 0.05)",
+        "purpose": "Theory-of-change walk panels over the tinted stage."
+      },
+      {
+        "name": "app-window",
+        "value": "0 1px 2px rgb(0 0 0 / 0.1), 0 24px 48px -12px rgb(0 0 0 / 0.35)",
+        "purpose": "The Your system window on the intake blue field."
+      }
+    ],
+    "motion": [
+      {
+        "name": "lab-ease",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The one curve for every entrance, scrub and state change (--lab-ease in CSS, EASE_OUT in motion.ts)."
+      },
+      {
+        "name": "state-transition",
+        "value": "150ms",
+        "purpose": "Colour, border and transform changes on buttons, chips, links."
+      },
+      {
+        "name": "reveal",
+        "value": "600ms, translateY(10px) to 0, 60ms stagger",
+        "purpose": "Entrance of revealed elements, only under html[data-motion=on]."
+      },
+      {
+        "name": "preview-swap",
+        "value": "300ms, translateY(6px) to 0",
+        "purpose": "Intake app window switching between module previews."
+      },
+      {
+        "name": "count-up",
+        "value": "1100ms, starts at 60% in view",
+        "purpose": "KPI numerals; restores the exact server text on completion."
+      },
+      {
+        "name": "stage-tint",
+        "value": "500ms",
+        "purpose": "Theory-of-change walk backdrop changing to the stage colour."
+      },
+      {
+        "name": "live-breath",
+        "value": "2.4s x 3",
+        "purpose": "Live dot halo; three breaths then still."
+      },
+      {
+        "name": "map-ripple",
+        "value": "2.6s x 3, 1.6s delay",
+        "purpose": "MIS map pin ripples; three then still."
+      },
+      {
+        "name": "motion-gate",
+        "value": "html[data-motion=on], stamped before paint, removed after 2500ms if the script never boots",
+        "purpose": "The only condition under which content may start hidden. Reduced motion never sets it."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "floor",
+        "value": "390px"
+      },
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one main action per region: Tell us the problem, Send request. Large size in first viewports and form submits.",
+      "html": "<button class=\"ds-btn-primary\">Tell us the problem <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border: 0; border-radius: 10px; background: var(--surface-blue-9, oklch(0.477 0.149 253.403)); color: var(--ink-base, oklch(1 0 0)); font: 500 16px/1.15 InterVar, Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.02em; cursor: pointer; transition: background-color 150ms; } .ds-btn-primary:hover { background: var(--surface-blue-10, oklch(0.396 0.113 250.204)); } .ds-btn-primary:active { opacity: 0.9; } .ds-btn-primary:focus-visible { outline: 2px solid #c9c9c9e5; outline-offset: 0; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary action beside a primary: Book a call, Talk about a portfolio.",
+      "html": "<button class=\"ds-btn-outline\">Book a call</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border: 1px solid var(--outline-gray-2, oklch(0.913 0 0)); border-radius: 8px; background: var(--surface-base, oklch(1 0 0)); color: var(--ink-gray-8, oklch(0.205 0 0)); font: 500 14px/1.15 InterVar, Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.02em; cursor: pointer; transition: background-color 150ms, border-color 150ms; } .ds-btn-outline:hover { border-color: var(--outline-gray-3, oklch(0.83 0 0)); background: var(--surface-gray-1, oklch(0.979 0 0)); } .ds-btn-outline:focus-visible { outline: 2px solid #c9c9c9e5; outline-offset: 0; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Tertiary chrome actions: Export, Start over.",
+      "html": "<button class=\"ds-btn-ghost\">Export</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; color: var(--ink-gray-7, oklch(0.341 0 0)); font: 500 14px/1.15 InterVar, Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.02em; cursor: pointer; transition: background-color 150ms, color 150ms; } .ds-btn-ghost:hover { background: var(--surface-gray-2, oklch(0.964 0 0)); color: var(--ink-gray-9, oklch(0.168 0 0)); } .ds-btn-ghost:focus-visible { outline: 2px solid #c9c9c9e5; outline-offset: 0; }"
+    },
+    {
+      "name": "Problem Chip",
+      "kind": "chip",
+      "refersTo": "chip-problem",
+      "description": "A checkbox drawn as a toggle pill for \"What's breaking?\"; the plus turns into a check and the pill goes blue when picked.",
+      "html": "<label class=\"ds-chip\"><input type=\"checkbox\" class=\"ds-chip-input\"><span class=\"ds-chip-face\"><span class=\"ds-chip-icon\"><svg class=\"ds-chip-plus\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"M12 5v14\"/></svg><span class=\"ds-chip-check\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"/></svg></span></span>Reports take days</span></label>",
+      "css": ".ds-chip { display: inline-flex; cursor: pointer; user-select: none; } .ds-chip-input { position: absolute; opacity: 0; width: 1px; height: 1px; } .ds-chip-face { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 6px 12px; border: 1px solid var(--outline-gray-2, oklch(0.913 0 0)); border-radius: 999px; background: var(--surface-base, oklch(1 0 0)); color: var(--ink-gray-7, oklch(0.341 0 0)); font: 420 13px/1.5 InterVar, Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.015em; transition: background-color 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out, transform 150ms ease-out; } .ds-chip:hover .ds-chip-face { border-color: var(--outline-gray-3, oklch(0.83 0 0)); color: var(--ink-gray-9, oklch(0.168 0 0)); } .ds-chip:active .ds-chip-face { transform: scale(0.98); } .ds-chip-input:checked + .ds-chip-face { border-color: var(--outline-blue-3, oklch(0.88 0.061 242.553)); background: var(--surface-blue-2, oklch(0.96 0.021 241.348)); color: var(--ink-blue-8, oklch(0.477 0.149 253.403)); } .ds-chip-input:focus-visible + .ds-chip-face { box-shadow: 0 0 0 1px var(--surface-base, oklch(1 0 0)), 0 0 0 3px var(--outline-blue-4, oklch(0.73 0.121 245.297)); } .ds-chip-icon { position: relative; width: 14px; height: 14px; } .ds-chip-icon svg { position: absolute; inset: 0; transition: opacity 150ms, transform 150ms; } .ds-chip-check svg { opacity: 0; transform: scale(0.5); } .ds-chip-input:checked + .ds-chip-face .ds-chip-plus { opacity: 0; transform: rotate(90deg); } .ds-chip-input:checked + .ds-chip-face .ds-chip-check svg { opacity: 1; transform: scale(1); }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "frappe-ui's subtle field with a small grey label above; turns white with a soft shadow on focus.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-field-label\" for=\"ds-org\">Organisation</label><input id=\"ds-org\" class=\"ds-input\" placeholder=\"Kutch Mahila Vikas Sangathan\"></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; width: 260px; } .ds-field-label { font: 420 12px/1.15 InterVar, Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.02em; color: var(--ink-gray-5, oklch(0.52 0 0)); } .ds-input { height: 32px; padding: 0 10px; border: 1px solid transparent; border-radius: 8px; background: var(--surface-gray-2, oklch(0.964 0 0)); color: var(--ink-gray-8, oklch(0.205 0 0)); font: 420 14px/1.15 InterVar, Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.02em; caret-color: var(--ink-blue-6, oklch(0.587 0.174 252.167)); transition: background-color 150ms, border-color 150ms; } .ds-input::placeholder { color: var(--ink-gray-5, oklch(0.52 0 0)); } .ds-input:hover { background: var(--surface-gray-3, oklch(0.946 0 0)); } .ds-input:focus { outline: none; border-color: var(--outline-gray-4, oklch(0.683 0 0)); background: var(--surface-base, oklch(1 0 0)); box-shadow: var(--elevation-sm, 0px 0px 1px 0px #00000033, 0px 1px 3px 0px #00000024); }"
+    },
+    {
+      "name": "Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "The MIS report panel: flat, hairline-bordered, with a 44px header holding a semibold title and a legend.",
+      "html": "<section class=\"ds-panel\"><header class=\"ds-panel-head\"><h3 class=\"ds-panel-title\">Where our work runs</h3><span class=\"ds-panel-meta\">checked 26 Oct 2026</span></header><div class=\"ds-panel-body\"><span class=\"ds-kpi\">1,043</span><span class=\"ds-panel-meta\">PRs merged in frappe/*</span></div></section>",
+      "css": ".ds-panel { width: 320px; border: 1px solid var(--outline-gray-1, oklch(0.946 0 0)); border-radius: 10px; background: var(--surface-base, oklch(1 0 0)); overflow: hidden; } .ds-panel-head { display: flex; min-height: 44px; align-items: center; justify-content: space-between; gap: 12px; padding: 0 16px; border-bottom: 1px solid var(--outline-gray-1, oklch(0.946 0 0)); } .ds-panel-title { margin: 0; font: 600 14px/1.15 InterVar, Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.02em; color: var(--ink-gray-9, oklch(0.168 0 0)); } .ds-panel-meta { font: 400 12px/1.15 GeistMono, ui-monospace, SFMono-Regular, monospace; color: var(--ink-gray-5, oklch(0.52 0 0)); } .ds-panel-body { display: flex; flex-direction: column; gap: 6px; padding: 20px; } .ds-kpi { font: 500 34px/1 GeistMono, ui-monospace, SFMono-Regular, monospace; font-variant-numeric: tabular-nums; color: var(--ink-gray-9, oklch(0.168 0 0)); }"
+    },
+    {
+      "name": "Lab Switcher",
+      "kind": "nav",
+      "refersTo": "switcher-link-current",
+      "description": "Floating pill that switches between the four landing variants; the current one is solid graphite.",
+      "html": "<nav class=\"ds-switcher\" aria-label=\"Landing page variants\"><a class=\"ds-switcher-home\" href=\"#\">Lab</a><a class=\"ds-switcher-link\" href=\"#\" aria-current=\"page\">Impact MIS</a><a class=\"ds-switcher-link\" href=\"#\">Sheet</a><a class=\"ds-switcher-link\" href=\"#\">Theory of change</a><a class=\"ds-switcher-link\" href=\"#\">Intake desk</a></nav>",
+      "css": ".ds-switcher { display: inline-flex; align-items: center; gap: 2px; padding: 4px; border: 1px solid var(--outline-gray-2, oklch(0.913 0 0)); border-radius: 999px; background: var(--surface-elevation-2, oklch(1 0 0)); box-shadow: var(--elevation-lg, 0px 0px 1.5px 0px #0000002e, 0px 0px 6px 3px #00000008, 0px 18px 22px -6px #0000001a); } .ds-switcher-home { display: flex; height: 28px; align-items: center; padding: 0 8px; font: 420 12px/1.15 InterVar, Inter, ui-sans-serif, system-ui, sans-serif; color: var(--ink-gray-5, oklch(0.52 0 0)); text-decoration: none; } .ds-switcher-link { display: flex; height: 28px; align-items: center; padding: 0 10px; border-radius: 999px; font: 420 13px/1.15 InterVar, Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.02em; color: var(--ink-gray-7, oklch(0.341 0 0)); text-decoration: none; transition: background-color 150ms, color 150ms; } .ds-switcher-link:hover { background: var(--surface-gray-2, oklch(0.964 0 0)); color: var(--ink-gray-9, oklch(0.168 0 0)); } .ds-switcher-link[aria-current='page'] { background: var(--surface-gray-10, oklch(0.205 0 0)); color: var(--ink-base, oklch(1 0 0)); } .ds-switcher-link:focus-visible { outline: 2px solid #c9c9c9e5; }"
+    },
+    {
+      "name": "TBD Chip",
+      "kind": "chip",
+      "refersTo": "tbd-chip",
+      "description": "Signature: marks copy or photos only a partner can supply. Visible on purpose; says what is missing.",
+      "html": "<p class=\"ds-tbd-line\">Outcome for CMID: <span class=\"ds-tbd\" title=\"To be written: outcome\">TBD <span>· outcome</span></span></p>",
+      "css": ".ds-tbd-line { font: 420 14px/1.5 InterVar, Inter, ui-sans-serif, system-ui, sans-serif; color: var(--ink-gray-6, oklch(0.439 0 0)); } .ds-tbd { display: inline-flex; align-items: center; gap: 4px; padding: 1px 6px; border: 1px dashed var(--outline-gray-3, oklch(0.83 0 0)); border-radius: 4px; background: var(--surface-gray-1, oklch(0.979 0 0)); color: var(--ink-gray-6, oklch(0.439 0 0)); font: 400 11px/16px GeistMono, ui-monospace, SFMono-Regular, monospace; white-space: nowrap; vertical-align: middle; }"
+    },
+    {
+      "name": "Live Badge",
+      "kind": "custom",
+      "refersTo": "badge-live",
+      "description": "Signature: the only green in the system. A status pill for Live / In use, and the live dot that breathes three times then rests.",
+      "html": "<span class=\"ds-live-row\"><span class=\"ds-badge-live\"><span class=\"ds-badge-dot\"></span>Live</span><span class=\"ds-live-meta\"><span class=\"ds-live-dot\"></span>Data checked 26 Oct 2026</span></span>",
+      "css": ".ds-live-row { display: inline-flex; align-items: center; gap: 16px; } .ds-badge-live { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 8px; border-radius: 999px; background: var(--surface-green-2, oklch(0.965 0.03 155.987)); color: var(--ink-green-8, oklch(0.425 0.101 155.32)); font: 500 12px/1.15 InterVar, Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.02em; } .ds-badge-dot { width: 6px; height: 6px; border-radius: 999px; background: var(--surface-green-7, oklch(0.57 0.119 158.092)); } .ds-live-meta { display: inline-flex; align-items: center; gap: 8px; font: 420 12px/1.15 InterVar, Inter, ui-sans-serif, system-ui, sans-serif; color: var(--ink-gray-5, oklch(0.52 0 0)); } .ds-live-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--surface-green-7, oklch(0.57 0.119 158.092)); animation: ds-live 2.4s cubic-bezier(0.16, 1, 0.3, 1) 3; } @keyframes ds-live { 0% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--surface-green-7, oklch(0.57 0.119 158.092)) 45%, transparent); } 70%, 100% { box-shadow: 0 0 0 6px color-mix(in oklch, var(--surface-green-7, oklch(0.57 0.119 158.092)) 0%, transparent); } } @media (prefers-reduced-motion: reduce) { .ds-live-dot { animation: none; } }"
+    },
+    {
+      "name": "Request Status Pill",
+      "kind": "chip",
+      "refersTo": "status-pill",
+      "description": "The intake ticket header pill: Draft, N problems, Ready to send, Sent. Neutral until the request is sent.",
+      "html": "<span class=\"ds-status\"><span class=\"ds-status-dot\"></span>Draft</span>",
+      "css": ".ds-status { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 8px; border-radius: 999px; background: var(--surface-gray-2, oklch(0.964 0 0)); color: var(--ink-gray-7, oklch(0.341 0 0)); font: 500 12px/1.15 InterVar, Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.02em; } .ds-status-dot { width: 6px; height: 6px; border-radius: 999px; background: currentColor; opacity: 0.7; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Programme Office",
+    "overview": "Each page is a working instrument from a nonprofit's own office: the programme dashboard (MIS), the beneficiary spreadsheet, the theory of change and logframe, the helpdesk request form. The visitor reads our work in a format they already fill in every week. Every instrument is drawn in Frappe's desk language: grey work surfaces, hairline-bordered panels, small-type chrome, deep-blue actions, and numbers in a monospace face. The tool's own chrome (top bar, sidebar, formula bar, sheet tabs, ticket header) is the page's navigation. It is not decoration.\n\nThe density is a working tool's density, not a brochure's: 12 to 14px chrome, 44 to 48px bars, 8 to 16px gaps inside panels. The display headline is the one loud thing in each first viewport. Colour is semantic. Blue means act or \"your system\", violet means training and our home, and green means live. Missing facts stay visible as dashed TBD chips, never as invented filler.\n\nMotion explains the transformation the page argues for. Arcs draw out from Jagdalpur, the sheet resolves into a list, the results chain draws itself, and the system assembles as problems are picked. Content is visible by default. Motion only runs when a flag says it may.",
+    "keyCharacteristics": [
+      "Frappe desk chrome as page structure: bars, sidebars, tabs and panels at their real-tool dimensions.",
+      "Flat panels on 1px hairlines; shadow only on things that float.",
+      "Two accents with fixed meanings (blue action, violet training), plus green for live state only.",
+      "Inter for words, Geist Mono for numbers, IDs, dates and formulas.",
+      "Visible TBD chips where partner-supplied content is missing.",
+      "Exponential ease-out motion gated by a pre-paint flag, with a reduced-motion path for every scene."
+    ],
+    "rules": [
+      {
+        "name": "The Green Means Live Rule",
+        "body": "Green appears only for live, in-use, visited or sent state. It never decorates, and it is never a stage colour: the theory of change draws Impact in pink so green keeps its single meaning.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Accents Rule",
+        "body": "Blue is action and the visitor's system; violet is training, learning, AI and our home in Jagdalpur. Amber, red, cyan and pink are status or stage signals, never a third brand accent.",
+        "section": "colors"
+      },
+      {
+        "name": "The Lifted Meta Rule",
+        "body": "On lab pages `ink-gray-5` is lifted to `oklch(0.52 0 0)` in light and `oklch(0.63 0 0)` in dark, past 4.5:1, by `.lab` and `.lab-chrome` in `lab.css`. It is the lightest ink for readable text; `ink-gray-4` and `ink-gray-3` are for icons and separators only.",
+        "section": "colors"
+      },
+      {
+        "name": "The Stage Palette Rule",
+        "body": "A results chain uses six stages in a fixed order: amber Problem, grey Inputs, blue Activities, cyan Outputs, violet Outcomes, pink Impact. Each stage uses its `-2` band, `-1` tint, `-7` dot and `-8` ink, and these colours stay inside the theory-of-change world.",
+        "section": "colors"
+      },
+      {
+        "name": "The Data Face Rule",
+        "body": "Geist Mono is for numbers, IDs, dates, cell references and formulas only, always with tabular figures. Words, including metadata values that are prose, stay in Inter.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Loud Line Rule",
+        "body": "Each first viewport has one display-size line. Everything else in the chrome stays at product sizes (12–14px) so the page still reads as a tool.",
+        "section": "typography"
+      },
+      {
+        "name": "The Real Chrome Rule",
+        "body": "Bars, sidebars, tabs and rows keep the dimensions of the tool they imitate (48px top bar, 14rem sidebar, 44px panel head, 30px sheet row, 36px tab bar). They are navigation that works, not ornament.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat Desk Rule",
+        "body": "Panels are flat at rest and separated by hairlines. A shadow means the element floats above the page (switcher, app window, flying chip ghost) or answers a pointer or focus state.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Visible By Default Rule",
+        "body": "Content renders visible. A hidden starting state exists only under `html[data-motion='on']`, and every scene must read completely without its script.",
+        "section": "components"
+      },
+      {
+        "name": "The Three Breaths Rule",
+        "body": "Ambient loops (live dot, map ripples) run three times and stop. A loop that never ends is noise.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "**Do** use frappe-ui semantic tokens (`surface-*`, `ink-*`, `outline-*`) for every colour, so the light and dark themes flip together.",
+      "**Do** put primary actions in Desk Blue (`surface-blue-9`) with `ink-base` text, 32px or 40px high, with 8px or 10px corners.",
+      "**Do** separate panels with 1px Hairline borders and 44px panel headers instead of shadows.",
+      "**Do** set numbers, IDs, dates and formulas in `font-data` (Geist Mono, tabular figures).",
+      "**Do** mark missing partner content with the dashed TBD chip, saying what is missing.",
+      "**Do** draw icons with Lucide through the `Icon` component at 1.75 stroke, 14–16px.",
+      "**Do** gate entrance motion on `data-motion`, use the `cubic-bezier(0.16, 1, 0.3, 1)` ease, and give every scene a reduced-motion path.",
+      "**Do** check every scene at 390px wide."
+    ],
+    "donts": [
+      "**Don't** use green for anything except live, in-use, visited or sent state.",
+      "**Don't** set words or prose in Geist Mono.",
+      "**Don't** use stock `ink-gray-5` outside `.lab`, or `ink-gray-4` and lighter, for readable text.",
+      "**Don't** add a third accent; amber, red, cyan and pink are status or stage signals only.",
+      "**Don't** put a small label above a heading as an eyebrow, use gradient text, add coloured side-stripe borders to cards, or use Unicode glyphs as icons.",
+      "**Don't** hide content in CSS unless the motion flag is on, and don't run ambient loops forever.",
+      "**Don't** add shadows to panels at rest."
+    ]
+  }
+}
