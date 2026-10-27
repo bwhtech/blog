@@ -1,0 +1,280 @@
+---
+/**
+ * The latest posts from the blog: the newest one large on the left, the next
+ * four as compact rows beside it. Pulled from the blog collection at
+ * build time, so it stays current with every new post.
+ */
+import { Image } from 'astro:assets';
+
+import FormattedDate from '../FormattedDate.astro';
+import { getCategoryLabel, getPostAuthors, getPostHref, getPublishedPosts } from '../../utils/posts';
+
+const posts = await Promise.all(
+	(await getPublishedPosts()).slice(0, 5).map(async (post) => ({
+		post,
+		authors: await getPostAuthors(post.data.authors),
+		category: getCategoryLabel(post),
+	})),
+);
+---
+
+<ul class="posts" data-posts>
+	{posts.map(({ post, authors, category }, index) => (
+		<li class:list={['post', index === 0 && 'lead']} data-post>
+			<a href={getPostHref(post)} class="card">
+				<span class="thumb">
+					{post.data.image && (
+						<Image
+							src={post.data.image}
+							alt=""
+							widths={index === 0 ? [640, 960, 1280] : [400, 640]}
+							sizes={index === 0 ? '(min-width: 1024px) 560px, 100vw' : '(min-width: 1024px) 270px, (min-width: 640px) 50vw, 100vw'}
+							class="img"
+							loading="lazy"
+						/>
+					)}
+				</span>
+				<span class="body">
+					<span class="meta">
+						<span class="tag">{category}</span>
+						<FormattedDate date={post.data.pubDate} />
+					</span>
+					<span class="title">{post.data.title}</span>
+					{index === 0 && <span class="desc">{post.data.description}</span>}
+					{index === 0 && <span class="read">Read the post<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg></span>}
+					<span class="byline">
+						<span class="faces" aria-hidden="true">
+							{authors.slice(0, 3).map((author) => (
+								<Image src={author.data.avatar} alt="" width={40} height={40} class="face" />
+							))}
+						</span>
+						{authors.map((author) => author.data.name).join(', ')}
+					</span>
+				</span>
+			</a>
+		</li>
+	))}
+</ul>
+
+<style>
+	.posts {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		grid-template-rows: repeat(4, minmax(0, 1fr));
+		gap: 12px 16px;
+	}
+	.lead {
+		grid-row: 1 / span 4;
+	}
+	@media (max-width: 1023px) {
+		.posts {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.posts {
+			grid-template-rows: none;
+		}
+		.lead {
+			grid-row: auto;
+		}
+	}
+	/* The four after the lead: thumbnail on the left, words on the right. */
+	.post:not(.lead) .card {
+		flex-direction: row;
+		align-items: stretch;
+	}
+	/* The image fills the thumbnail without setting the row's height; the words do. */
+	.post:not(.lead) .thumb {
+		position: relative;
+		/* About the covers' own 1200 × 630 shape at the row's height. */
+		width: 236px;
+		flex-shrink: 0;
+		aspect-ratio: auto;
+		border-right: 1px solid var(--outline-gray-1);
+		border-bottom: 0;
+	}
+	.post:not(.lead) .thumb :global(.img) {
+		position: absolute;
+		inset: 0;
+	}
+	.post:not(.lead) .body {
+		min-height: 124px;
+		justify-content: center;
+		padding: 12px 16px;
+	}
+	@media (max-width: 639px) {
+		.post:not(.lead) .thumb {
+			width: 40%;
+			align-self: center;
+			aspect-ratio: 1200 / 630;
+			border-right: 0;
+		}
+		.post:not(.lead) .body {
+			padding: 10px 12px;
+		}
+		.post:not(.lead) .tag {
+			display: none;
+		}
+	}
+	.post {
+		display: flex;
+	}
+	.card {
+		display: flex;
+		width: 100%;
+		flex-direction: column;
+		overflow: hidden;
+		border: 1px solid var(--outline-gray-2);
+		border-radius: 14px;
+		background: var(--surface-base);
+		color: inherit;
+		text-decoration: none;
+		transition:
+			border-color 300ms var(--lab-ease),
+			box-shadow 300ms var(--lab-ease),
+			transform 400ms var(--lab-ease);
+	}
+	.card:hover,
+	.card:focus-visible {
+		border-color: var(--outline-gray-3);
+		box-shadow: 0 14px 34px -18px rgb(0 0 0 / 0.28);
+		transform: translateY(-2px);
+	}
+	.thumb {
+		display: block;
+		overflow: hidden;
+		aspect-ratio: 16 / 9;
+		border-bottom: 1px solid var(--outline-gray-1);
+		background: var(--surface-gray-2);
+	}
+	/* Covers are drawn as 1200 × 630 social cards, so the lead keeps that shape uncropped. */
+	.lead .thumb {
+		aspect-ratio: 1200 / 630;
+	}
+	.thumb :global(.img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 700ms var(--lab-ease);
+	}
+	.card:hover :global(.img),
+	.card:focus-visible :global(.img) {
+		transform: scale(1.04);
+	}
+	.body {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		gap: 8px;
+		padding: 14px 16px 16px;
+	}
+	.lead .body {
+		gap: 10px;
+		padding: 20px 22px 22px;
+	}
+	.meta {
+		display: flex;
+		white-space: nowrap;
+		align-items: center;
+		gap: 8px;
+		font-size: 12px;
+		color: var(--ink-gray-5);
+		font-variant-numeric: tabular-nums;
+	}
+	.tag {
+		padding: 2px 8px;
+		border-radius: 999px;
+		background: var(--surface-gray-2);
+		font-weight: 500;
+		color: var(--ink-gray-7);
+	}
+	.title {
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		font-size: 15px;
+		font-weight: 600;
+		line-height: 1.35;
+		letter-spacing: -0.01em;
+		color: var(--ink-gray-9);
+		text-wrap: pretty;
+	}
+	.lead .title {
+		-webkit-line-clamp: 3;
+		font-size: 22px;
+		line-height: 1.25;
+		letter-spacing: -0.02em;
+	}
+	.desc {
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		font-size: 14px;
+		line-height: 1.55;
+		color: var(--ink-gray-6);
+	}
+	.read {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 14px;
+		font-weight: 500;
+		color: var(--ink-gray-9);
+	}
+	.read svg {
+		transition: transform 300ms var(--lab-ease);
+	}
+	.card:hover .read svg {
+		transform: translateX(3px);
+	}
+	.lead .byline {
+		margin-top: auto;
+		padding-top: 6px;
+	}
+	.byline {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding-top: 2px;
+		overflow: hidden;
+		font-size: 12px;
+		color: var(--ink-gray-6);
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+	.faces {
+		display: flex;
+		flex-shrink: 0;
+	}
+	.faces :global(.face) {
+		width: 20px;
+		height: 20px;
+		border: 2px solid var(--surface-base);
+		border-radius: 999px;
+		object-fit: cover;
+	}
+	.faces :global(.face + .face) {
+		margin-left: -7px;
+	}
+	html[data-motion='on'] .posts [data-post] {
+		opacity: 0;
+	}
+</style>
+
+<script>
+	import { animate, stagger } from 'motion';
+	import { motionAllowed, once } from '../../scripts/landing/motion';
+
+	document.querySelectorAll<HTMLElement>('[data-posts]').forEach((list) => {
+		if (!motionAllowed()) return;
+		const items = list.querySelectorAll<HTMLElement>('[data-post]');
+		once(list, () =>
+			animate(
+				items,
+				{ opacity: [0, 1], transform: ['translateY(14px)', 'translateY(0)'] },
+				{ type: 'spring', bounce: 0, duration: 0.7, delay: stagger(0.07) },
+			),
+		);
+	});
+</script>

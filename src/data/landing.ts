@@ -21,7 +21,7 @@ import { TBD } from './training';
 export const CHECKED_ON = '2026-10-26';
 
 export const HEADLINE = {
-	title: 'Problem solvers, for the problem solvers.',
+	title: 'Problem Solving, for Problem Solvers.',
 	lede: "You're changing lives. We turn the Excel sheets, Google Forms and duct-taped scripts slowing you down into one system your team owns.",
 };
 

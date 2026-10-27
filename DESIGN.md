@@ -218,7 +218,7 @@ Each page is a working instrument from a nonprofit's own office: the programme d
 
 The density is a working tool's density, not a brochure's: 12 to 14px chrome, 44 to 48px bars, 8 to 16px gaps inside panels. The display headline is the one loud thing in each first viewport. Colour is semantic. Blue means act or "your system", violet means training and our home, and green means live. Missing facts stay visible as dashed TBD chips, never as invented filler.
 
-Motion explains the transformation the page argues for. Arcs draw out from Jagdalpur, the sheet resolves into a list, the results chain draws itself, and the system assembles as problems are picked. Content is visible by default. Motion only runs when a flag says it may.
+Motion explains the transformation the page argues for. Arcs draw out from Jagdalpur, the sheet turns into a live dashboard, the results chain draws itself, and the system assembles as problems are picked. Content is visible by default. Motion only runs when a flag says it may.
 
 **Key Characteristics:**
 - Frappe desk chrome as page structure: bars, sidebars, tabs and panels at their real-tool dimensions.
@@ -246,7 +246,8 @@ A neutral grey desk with two semantic accents and a reserved status green, all r
 Status and stage colours. They are not accents, and each has one job.
 - **Live Green** (`surface-green-7`): the breathing live dot and status dots for "Live" and "In use" rows. **Green Wash** with **Green Ink** (`surface-green-2`, `ink-green-8`) draws the "Live", "In use" and "Visited" badges and the sent-request check.
 - **Amber Wash** with **Amber Ink** (`surface-amber-2`, `ink-amber-8`): "Due" status, the spreadsheet's header fill (`surface-amber-1` for highlighted cells), "Risk" labels, and the Problem stage.
-- **Error Red** (`ink-red-5`): `#VALUE!` cells, "Not linked" notes, and the required-field asterisk.
+- **Error Red** (`ink-red-5`): "Not linked" notes and the required-field asterisk. The small `#VALUE!` cell uses `ink-red-6` to stay past 4.5:1 at 12px.
+- **Chart colours** (/lab/sheet dashboard only): frappe-ui's chart ramp ("Jewel", `--chart-categorical-*`), copied into `--viz-*` on the page so it renders without the charts stylesheet. Visits and village bars are `#2283c3`; unselected village bars when one is filtered are `#b8def2`. Status marks: Visited `#289e60`, Follow up `#2283c3`, Due `#c98c28`, the same families as the status badges. Dark steps: `#137ab9`, `#189557`, `#bf8319`. Checked with the dataviz validator: CVD separation passes; amber is under 3:1 on white, so the donut always carries a legend with counts.
 - **Cyan Wash / Cyan Ink** and **Pink Wash / Pink Ink**: theory-of-change stages only (Outputs and Impact).
 
 ### Neutral
@@ -356,6 +357,14 @@ Quiet, compact, product-grade.
 ### Navigation
 - **Tool chrome as navigation:** the MIS sidebar items are 32px rows with 16px Lucide icons; the current item turns Paper with `shadow-sm`. On phones they become a 28px tab row. Sheet tabs are 36px cells with hairline separators; the current tab turns Paper with a 2px `ink-blue-6` inset top line. The theory-of-change mini chain lights the dot of the stage in view.
 - **Lab switcher:** a floating pill (Paper elevation surface, Rule Grey border, `shadow-lg`) at the bottom right with 28px round links; the current one is Graphite with `ink-base` text. Below 640px it folds into one "current variant" button and docks at the page end.
+
+### Dashboard (the /lab/sheet scene's end state)
+- **Frame:** Desk Grey stage, content up to 1320px wide. Paper cards with 1px Hairline borders and 10px corners; card heads are a 13px semibold title with 12px Ink Meta on the right, no rule.
+- **Filters:** one row above everything they scope: date range (4, 12 or 26 weeks), village, case. 28px outline buttons with a leading Lucide icon and a chevron; a set filter turns Blue Wash with `outline-blue-3` and Blue Ink. Menus are one radio list each, with a check on the selected row and arrow-key, Home/End and Escape handling. "Clear" appears only when a filter is set.
+- **KPI strip:** four cells divided by hairlines: label, Geist Mono 28px value, and a 12px note that changes with the filters ("+33% vs previous 12 weeks").
+- **Charts:** a visits area chart (2px line, a 20% to 2% wash, hairline grid, a crosshair with a Paper tooltip on hover and on arrow keys); a status donut (14px ring, 2px surface gaps, the visited share in the centre, legend with counts and shares); visits by village as 10px bars with 4px ends and values at the tip. A village bar is a toggle that filters everything else, and the bars ignore their own filter so the others stay visible in a lighter blue.
+- **List:** the beneficiary table shows as many 32px rows as fit, never a cut row, with "n of total" in the card head. Screens under 800px tall, and most phones, drop the list for the charts.
+- **Live gate:** the layer is `inert` until the scene reaches its end, and goes inert again when scrolled back.
 
 ### TBD Chip (signature)
 Marks copy or photos that only a partner can supply. An inline 4px-radius chip with a 1px dashed Dash Grey border, Desk Grey fill, Geist Mono 11px in Ink Lede, reading "TBD · what is missing". Photo frames use the same dashed treatment as a full block. It is visible on purpose, and the hover title says what is owed.
