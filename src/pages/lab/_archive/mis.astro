@@ -5,14 +5,14 @@
  * partner table opens each case study in a drawer.
  */
 import { Image } from 'astro:assets';
-import aiPhoto from '../../assets/landing/cs17-ai-presentation.jpg';
-import studentsPhoto from '../../assets/landing/cs17-students.jpg';
-import Button from '../../components/landing/Button.astro';
-import FunderStrip from '../../components/landing/FunderStrip.astro';
-import Icon from '../../components/landing/Icon.astro';
-import IntakeCompact from '../../components/landing/IntakeCompact.astro';
-import Logo from '../../components/landing/Logo.astro';
-import Tbd from '../../components/landing/Tbd.astro';
+import aiPhoto from '../../../assets/landing/cs17-ai-presentation.jpg';
+import studentsPhoto from '../../../assets/landing/cs17-students.jpg';
+import Button from '../../../components/landing/Button.astro';
+import FunderStrip from '../../../components/landing/FunderStrip.astro';
+import Icon from '../../../components/landing/Icon.astro';
+import IntakeCompact from '../../../components/landing/IntakeCompact.astro';
+import Logo from '../../../components/landing/Logo.astro';
+import Tbd from '../../../components/landing/Tbd.astro';
 import {
 	CHECKED_ON,
 	CONTRIBUTIONS,
@@ -32,9 +32,9 @@ import {
 	YOUTUBE,
 	isTBD,
 	type PinKey,
-} from '../../data/landing';
-import indiaMap from '../../data/india-map.json';
-import LabLayout from '../../layouts/LabLayout.astro';
+} from '../../../data/landing';
+import indiaMap from '../../../data/india-map.json';
+import LabLayout from '../../../layouts/LabLayout.astro';
 
 const NAV = [
 	{ id: 'overview', label: 'Overview', icon: 'layout-dashboard' },
@@ -943,7 +943,7 @@ const panelHead = 'flex min-h-11 items-center justify-between gap-3 border-b bor
 
 <script>
 	import { animate, stagger } from 'motion';
-	import { boot, countUp, EASE_OUT, motionAllowed, once } from '../../scripts/landing/motion';
+	import { boot, countUp, EASE_OUT, motionAllowed, once } from '../../../scripts/landing/motion';
 
 	boot();
 

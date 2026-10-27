@@ -1,0 +1,241 @@
+---
+/**
+ * Third round for the many-tools-to-one-process section: round 2's clean
+ * shapes, with round 1's meaning back (tool names, breaks, step notes).
+ */
+import Icon from '../../../components/landing/Icon.astro';
+import LabLayout from '../../../layouts/LabLayout.astro';
+
+const TITLE = 'We engineer processes that make your life easier.';
+const LEDE = 'Most teams juggle Google Forms, sheets, WhatsApp groups and a script someone vibe-coded once. We turn them into one process.';
+const TOOLS = [
+	{ icon: 'clipboard-list', name: 'Google Forms' },
+	{ icon: 'file-spreadsheet', name: 'Excel sheets' },
+	{ icon: 'message-circle', name: 'WhatsApp groups' },
+	{ icon: 'square-terminal', name: 'Vibe-coded script' },
+	{ icon: 'mail', name: 'Email threads' },
+];
+const STEPS = [
+	{ name: 'Collect', note: 'In the field' },
+	{ name: 'Check', note: 'One record each' },
+	{ name: 'Act', note: 'Follow-ups' },
+	{ name: 'Report', note: 'Live for funders', live: true },
+];
+const Y = [70, 135, 200, 265, 330];
+// Where a thread breaks, and what happens there. Two of five are enough.
+const BREAKS: Record<number, { x: number; text: string; red?: boolean }> = {
+	1: { x: 330, text: 'copied by hand' },
+	3: { x: 318, text: 'fails', red: true },
+};
+const STEP_X = [740, 860, 980, 1100];
+const thread = (y: number) => `M220,${y} C420,${y} 420,200 560,200`;
+---
+
+<LabLayout title="Flow concepts, round 3" description="In-between concepts for the fragmented-tools section.">
+	<main class="mx-auto flex max-w-[1280px] flex-col gap-16 px-10 py-12">
+		{['g', 'h'].map((variant) => (
+			<section class="concept" data-concept={variant}>
+				<p class="concept-name">{variant === 'g' ? 'G · Converge, labelled' : 'H · Converge, on two desks'}</p>
+				<div class="frame">
+					<h2 class="frame-title">{TITLE}</h2>
+					<p class="frame-lede">{LEDE}</p>
+					<div class:list={['canvas', variant === 'h' && 'canvas-split']}>
+						{variant === 'h' && <span class="desk" aria-hidden="true" />}
+						<svg class="art" viewBox="0 0 1200 400" aria-hidden="true">
+							{Y.map((y, i) =>
+								BREAKS[i] ? (
+									<>
+										<path d={thread(y)} class="thread" pathLength="100" style="stroke-dasharray: 26 6 200" />
+										<g transform={`translate(${BREAKS[i].x} ${y + (i === 1 ? 4 : -4)})`} class={BREAKS[i].red ? 'cross' : 'gap'}>
+											{BREAKS[i].red ? <path d="M-4,-4 L4,4 M4,-4 L-4,4" /> : <circle r="3" />}
+										</g>
+									</>
+								) : (
+									<path d={thread(y)} class="thread" />
+								),
+							)}
+							<line x1="608" y1="200" x2="1110" y2="200" class="line" />
+							{STEP_X.map((x) => <circle cx={x} cy="200" r="7" class="stop" />)}
+						</svg>
+						{TOOLS.map((tool, i) => (
+							<span class="tool" style={`top:${Y[i] - 20}px`}>
+								<span class="tile"><Icon name={tool.icon} size={18} /></span>
+								{tool.name}
+							</span>
+						))}
+						{Object.entries(BREAKS).map(([i, b]) => (
+							<span class:list={['break', b.red && 'break-red']} style={`left:${b.x}px;top:${Y[Number(i)] - (Number(i) === 1 ? -10 : 26)}px`}>{b.text}</span>
+						))}
+						<span class="node" style="left:560px;top:152px"><Icon name="database" size={26} /></span>
+						<span class="node-label" style="left:528px;top:258px">One source</span>
+						{STEPS.map((step, i) => (
+							<span class="step" style={`left:${STEP_X[i] - 60}px;top:220px`}>
+								<b>{step.name}</b>
+								<span>{step.live && <i class="live" />}{step.note}</span>
+							</span>
+						))}
+					</div>
+				</div>
+			</section>
+		))}
+	</main>
+</LabLayout>
+
+<style>
+	.concept {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+	.concept-name {
+		font-size: 14px;
+		font-weight: 600;
+		color: var(--ink-gray-9);
+	}
+	.frame {
+		width: 1200px;
+		padding: 48px 0 40px;
+		background: var(--surface-base);
+	}
+	.frame-title {
+		max-width: 22ch;
+		font-size: 34px;
+		font-weight: 600;
+		line-height: 1.12;
+		letter-spacing: -0.025em;
+		color: var(--ink-gray-9);
+		text-wrap: balance;
+	}
+	.frame-lede {
+		max-width: 60ch;
+		margin-top: 12px;
+		font-size: 17px;
+		line-height: 1.6;
+		color: var(--ink-gray-6);
+		text-wrap: pretty;
+	}
+	.canvas {
+		position: relative;
+		width: 1200px;
+		height: 400px;
+		margin-top: 32px;
+	}
+	.canvas-split {
+		overflow: hidden;
+		border: 1px solid var(--outline-gray-1);
+		border-radius: 12px;
+	}
+	.desk {
+		position: absolute;
+		inset: 0 auto 0 0;
+		width: 608px;
+		background: var(--surface-gray-1);
+		border-right: 1px solid var(--outline-gray-1);
+	}
+	.art {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+	}
+	.tool {
+		position: absolute;
+		left: 32px;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		font-size: 13px;
+		color: var(--ink-gray-7);
+	}
+	.tile {
+		display: flex;
+		width: 40px;
+		height: 40px;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid var(--outline-gray-2);
+		border-radius: 10px;
+		background: var(--surface-base);
+		color: var(--ink-gray-5);
+	}
+	.thread {
+		fill: none;
+		stroke: var(--outline-gray-3);
+		stroke-width: 1.5;
+	}
+	.gap circle {
+		fill: var(--ink-gray-5);
+	}
+	.cross path {
+		fill: none;
+		stroke: var(--ink-red-5);
+		stroke-width: 2;
+		stroke-linecap: round;
+	}
+	.break {
+		position: absolute;
+		translate: -50% 0;
+		font-size: 11px;
+		color: var(--ink-gray-6);
+		white-space: nowrap;
+	}
+	.break-red {
+		color: var(--ink-red-6);
+	}
+	.line {
+		stroke: var(--surface-blue-8);
+		stroke-width: 3;
+		stroke-linecap: round;
+	}
+	.stop {
+		fill: var(--surface-base);
+		stroke: var(--surface-blue-8);
+		stroke-width: 3;
+	}
+	.node {
+		position: absolute;
+		display: flex;
+		width: 96px;
+		height: 96px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 24px;
+		background: var(--surface-blue-9);
+		color: var(--ink-base, #fff);
+	}
+	.node-label {
+		position: absolute;
+		width: 160px;
+		font-size: 13px;
+		font-weight: 600;
+		text-align: center;
+		color: var(--ink-gray-9);
+	}
+	.step {
+		position: absolute;
+		display: flex;
+		width: 120px;
+		flex-direction: column;
+		align-items: center;
+		gap: 2px;
+		text-align: center;
+	}
+	.step b {
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--ink-gray-9);
+	}
+	.step span {
+		font-size: 12px;
+		color: var(--ink-gray-6);
+	}
+	.live {
+		display: inline-block;
+		width: 6px;
+		height: 6px;
+		margin-right: 5px;
+		border-radius: 999px;
+		background: var(--surface-green-7);
+		vertical-align: 1px;
+	}
+</style>

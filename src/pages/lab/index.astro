@@ -1,45 +1,7 @@
 ---
-/** The /lab index: the landing page variants side by side. */
-import Icon from '../../components/landing/Icon.astro';
-import Logo from '../../components/landing/Logo.astro';
-import { HEADLINE, VARIANTS } from '../../data/landing';
-import LabLayout from '../../layouts/LabLayout.astro';
-
-const NOTES: Record<string, string> = {
-	mis: 'Sidebar navigation, real KPIs, an India map drawn out from Jagdalpur, a partner table with case-study drawers, a Gantt chart of how we work. Export prints it as a report.',
-	sheet: 'A merged-cell headline over a beneficiary sheet with four ways to write “yes”. Scrolling merges the forms, chats and script into one source, and the total that said 3 says 4.',
-	'theory-of-change': 'A results chain that draws itself, a pinned walk through each stage that tints the page, and a logframe whose means of verification link the real sources.',
-	intake: 'The hero is the request form. Each problem you pick adds a part to a live preview of your system, and a board shows where the request goes next.',
-};
+/**
+ * The lab settled on Sheet → System, so /lab goes straight to it. The other
+ * variants are in `_archive/`, which Astro does not route.
+ */
+return Astro.redirect('/lab/sheet');
 ---
-
-<LabLayout title="Landing page lab" description="Landing page variants for BWH.">
-	<main id="main-content" class="mx-auto flex max-w-[820px] flex-col gap-10 px-4 pb-24 pt-14 sm:px-6 sm:pt-20">
-		<div class="flex flex-col gap-4">
-			<Logo size={32} />
-			<h1 class="text-[34px] font-semibold leading-[1.1] tracking-[-0.03em] text-ink-gray-9">Landing page lab</h1>
-			<p class="max-w-[60ch] text-p-lg text-ink-gray-6">
-				Four directions for the new bwh.tech homepage. They share the headline, “{HEADLINE.title}”, the content and
-				the palette, so you compare the layout and the motion. Use the switcher at the bottom right to move between them.
-			</p>
-		</div>
-		<ol class="flex flex-col divide-y divide-outline-gray-1 border-y border-outline-gray-1">
-			{VARIANTS.map((variant) => (
-				<li>
-					<a href={`/lab/${variant.slug}`} class="group grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 py-5 no-underline">
-						<span class="flex flex-col gap-1.5">
-							<span class="text-xl font-semibold text-ink-gray-9">{variant.label}</span>
-							<span class="text-p-base text-ink-gray-6">{NOTES[variant.slug]}</span>
-							<span class="font-data text-xs text-ink-gray-5">/lab/{variant.slug}</span>
-						</span>
-						<Icon name="arrow-right" size={18} class="text-ink-gray-5 transition-transform group-hover:translate-x-1" />
-					</a>
-				</li>
-			))}
-		</ol>
-		<p class="text-p-sm text-ink-gray-5">
-			These pages are not indexed and send no analytics. Anything marked <span class="tbd">TBD</span> is copy only a partner
-			can give us.
-		</p>
-	</main>
-</LabLayout>

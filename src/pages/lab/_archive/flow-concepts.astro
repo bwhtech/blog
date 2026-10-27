@@ -1,0 +1,635 @@
+---
+/**
+ * Static concepts for the section after the /lab/sheet scene: many tools on
+ * the left, one process on the right. Three metaphors to choose from before
+ * one becomes the animated diagram on the page.
+ */
+import Icon from '../../../components/landing/Icon.astro';
+import LabLayout from '../../../layouts/LabLayout.astro';
+
+const TITLE = 'We engineer processes that make your life easier.';
+const LEDE =
+	'Most teams juggle Google Forms, spreadsheets, WhatsApp groups and a script someone vibe-coded once. We turn them into one process that runs from a single source.';
+
+const TOOLS = [
+	{ icon: 'clipboard-list', name: 'Google Forms', meta: 'Field visit form (Copy 3)' },
+	{ icon: 'file-spreadsheet', name: 'Excel sheets', meta: 'FINAL_v3 (2).xlsx' },
+	{ icon: 'message-circle', name: 'WhatsApp groups', meta: 'Field team · 38 unread' },
+	{ icon: 'square-terminal', name: 'A vibe-coded script', meta: 'merge.py · failed last run' },
+	{ icon: 'mail', name: 'Email threads', meta: 'Re: Re: final numbers' },
+	{ icon: 'notebook-pen', name: 'Paper registers', meta: 'Attendance, February' },
+];
+
+const STEPS = [
+	{ icon: 'smartphone', name: 'Collect', note: 'On the phone, in the field' },
+	{ icon: 'git-merge', name: 'Check', note: 'One record per person' },
+	{ icon: 'bell-ring', name: 'Act', note: 'Follow-ups assigned' },
+	{ icon: 'chart-column', name: 'Report', note: 'Live for funders', live: true },
+];
+
+// A: scattered cards (left, top, rotation) and the hand-offs between them.
+const SCATTER = [
+	[28, 36, -4],
+	[262, 24, 3],
+	[64, 150, 2.5],
+	[300, 142, -2],
+	[24, 276, -2.5],
+	[262, 290, 3.5],
+];
+const HANDOFFS = [
+	'M204,62 C250,72 220,12 262,44',
+	'M196,150 C210,108 300,124 322,80',
+	'M402,80 C432,112 342,118 372,142',
+	'M312,198 C282,252 244,244 200,300',
+	'M424,290 C474,240 474,120 432,80',
+	'M60,276 C28,222 40,140 72,92',
+];
+const BROKEN = 'M424,198 C436,240 384,262 372,290';
+const INTO_SOURCE = [
+	'M438,52 C500,52 512,190 560,194',
+	'M476,170 C512,170 522,204 560,202',
+	'M438,318 C500,318 512,224 560,222',
+	'M240,184 C330,244 470,236 560,212',
+	'M200,306 C330,372 482,252 560,230',
+	'M204,72 C300,112 470,132 560,186',
+];
+const TAGS = [
+	{ text: 'export', x: 214, y: 22 },
+	{ text: 're-typed', x: 250, y: 106 },
+	{ text: 'copied', x: 404, y: 104 },
+	{ text: 'forwarded', x: 222, y: 238 },
+	{ text: 'entered by hand', x: 452, y: 224 },
+];
+
+// B: six lines, each broken somewhere, that bend into one.
+const LANE_Y = [52, 108, 164, 220, 276, 332];
+const BREAKS = [
+	{ at: 340, kind: 'tag', text: 'export' },
+	{ at: 404, kind: 'x', text: 'breaks' },
+	{ at: 318, kind: 'clock', text: 'waits a week' },
+	{ at: 362, kind: 'x', text: 'fails' },
+	{ at: 330, kind: 'tag', text: 'forwarded' },
+	{ at: 432, kind: 'clock', text: 'typed in on Friday' },
+];
+const LINE_X = [772, 898, 1018, 1128];
+
+// C: grey streams of different widths cross on the way into one source.
+const WIDTHS = [22, 30, 16, 8, 12, 14];
+const STACK = [1, 2, 0, 5, 3, 4];
+const BAR = { x: 600, top: 159 };
+let cursor = BAR.top;
+const slot: number[] = [];
+STACK.forEach((tool) => {
+	slot[tool] = cursor;
+	cursor += WIDTHS[tool];
+});
+const CONTROL = [380, 430, 350, 460, 400, 420];
+const streams = LANE_Y.map((y, i) => {
+	const t = WIDTHS[i];
+	const s = slot[i];
+	const c = CONTROL[i];
+	return `M190,${y - t / 2} C${c},${y - t / 2} ${c},${s} ${BAR.x},${s} L${BAR.x},${s + t} C${c},${s + t} ${c},${y + t / 2} 190,${y + t / 2} Z`;
+});
+// A point on the bottom edge of a stream, for the drips of lost data.
+function edge(i: number, t: number) {
+	const y0 = LANE_Y[i] + WIDTHS[i] / 2;
+	const y1 = slot[i] + WIDTHS[i];
+	const c = CONTROL[i];
+	const u = 1 - t;
+	const x = u * u * u * 190 + 3 * u * u * t * c + 3 * u * t * t * c + t * t * t * BAR.x;
+	const y = u * u * u * y0 + 3 * u * u * t * y0 + 3 * u * t * t * y1 + t * t * t * y1;
+	return { x, y };
+}
+const DRIPS = [
+	{ ...edge(5, 0.35), text: 'duplicates' },
+	{ ...edge(4, 0.62), text: 'typos' },
+	{ ...edge(3, 0.8), text: 'missed visits' },
+];
+const STEP_X = [740, 870, 1000, 1124];
+---
+
+<LabLayout title="Flow concepts" description="Three static concepts for the fragmented-tools section.">
+	<main class="mx-auto flex max-w-[1280px] flex-col gap-16 px-10 py-12">
+		<header class="flex flex-col gap-2">
+			<h1 class="text-[28px] font-semibold tracking-[-0.02em] text-ink-gray-9">Three concepts for the section after the dashboard</h1>
+			<p class="max-w-[70ch] text-p-base text-ink-gray-6">
+				Static frames. The chosen one becomes the animated diagram on /lab/sheet; on phones it turns to run top to bottom.
+			</p>
+		</header>
+
+		<!-- A: the tangle pulls into one line. -->
+		<section class="concept" data-concept="a">
+			<p class="concept-name">A · The tangle, pulled straight</p>
+			<div class="frame">
+				<h2 class="frame-title">{TITLE}</h2>
+				<p class="frame-lede">{LEDE}</p>
+				<div class="canvas">
+					<span class="zone-today" aria-hidden="true"></span>
+					<svg class="art" viewBox="0 0 1200 420" aria-hidden="true">
+						<defs>
+							<marker id="a-head" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+								<path d="M0,0 L8,4 L0,8 Z" class="head" />
+							</marker>
+						</defs>
+						{INTO_SOURCE.map((d) => <path d={d} class="wire wire-soft" />)}
+						{HANDOFFS.map((d) => <path d={d} class="wire" marker-end="url(#a-head)" />)}
+						<path d={BROKEN} class="wire wire-broken" />
+						<g transform="translate(398 244)" class="cross"><path d="M-5,-5 L5,5 M5,-5 L-5,5" /></g>
+						<line x1="656" y1="210" x2="1176" y2="210" class="lane" />
+						{[690, 714, 800, 824, 930, 954, 1060, 1084].map((x) => <circle cx={x} cy="210" r="3" class="packet" />)}
+					</svg>
+					{TOOLS.map((tool, i) => (
+						<div class="tool" style={`left:${SCATTER[i][0]}px;top:${SCATTER[i][1]}px;rotate:${SCATTER[i][2]}deg`}>
+							<span class="tool-icon"><Icon name={tool.icon} size={16} /></span>
+							<span class="tool-text"><span class="tool-name">{tool.name}</span><span class="tool-meta">{tool.meta}</span></span>
+						</div>
+					))}
+					{TAGS.map((tag) => <span class="tag" style={`left:${tag.x}px;top:${tag.y}px`}>{tag.text}</span>)}
+					<span class="tag tag-red" style="left:410px;top:238px">fails</span>
+					<div class="source" style="left:560px;top:162px">
+						<Icon name="database" size={28} />
+					</div>
+					<div class="source-label" style="left:528px;top:268px"><b>One source</b><span>Every tool's data, once</span></div>
+					{STEPS.map((step, i) => (
+						<div class="step" style={`left:${STEP_X[i] - 70}px;top:188px`}>
+							<span class="step-dot"><Icon name={step.icon} size={18} /></span>
+							<b>{step.name}</b>
+							<span class="step-note">{step.live && <span class="live-dot" />}{step.note}</span>
+						</div>
+					))}
+					<p class="foot foot-left"><Icon name="circle-alert" size={14} class="text-ink-red-5" />Six tools, six hand-offs, all by hand</p>
+					<p class="foot foot-right"><Icon name="check" size={14} class="text-ink-green-7" />One source, every step in one place</p>
+				</div>
+			</div>
+			<p class="concept-motion">
+				Moves like this: dots crawl along the hand-off wires and snag at the broken one. Then every wire pulls taut into the source, the cards
+				fade back, and dots run along the one line from Collect to Report.
+			</p>
+		</section>
+
+		<!-- B: six broken lines bend into one. -->
+		<section class="concept" data-concept="b">
+			<p class="concept-name">B · Six broken lines, one line</p>
+			<div class="frame">
+				<h2 class="frame-title">{TITLE}</h2>
+				<p class="frame-lede">{LEDE}</p>
+				<div class="canvas">
+					<span class="zone-today" aria-hidden="true"></span>
+					<svg class="art" viewBox="0 0 1200 420" aria-hidden="true">
+						{LANE_Y.map((y, i) => {
+							const gap = BREAKS[i].at;
+							return (
+								<g>
+									<path d={`M200,${y} L${gap - 10},${y}`} class="track" />
+									<path d={`M${gap + 10},${y} L470,${y} C560,${y} 560,210 640,210`} class="track" />
+									{[24, 15, 6].map((back) => <circle cx={gap - 10 - back} cy={y} r="3.5" class="jam" />)}
+									{BREAKS[i].kind === 'x' && <g transform={`translate(${gap} ${y})`} class="cross"><path d="M-4,-4 L4,4 M4,-4 L-4,4" /></g>}
+								</g>
+							);
+						})}
+						<line x1="640" y1="210" x2="1176" y2="210" class="trunk" />
+						{[668, 690, 790, 812, 930, 952, 1070, 1092].map((x) => <circle cx={x} cy="210" r="2.5" class="trunk-packet" />)}
+						<circle cx="640" cy="210" r="15" class="interchange" />
+						{LINE_X.map((x) => <circle cx={x} cy="210" r="9" class="station" />)}
+					</svg>
+					{TOOLS.map((tool, i) => (
+						<div class="lane-label" style={`top:${LANE_Y[i] - 15}px`}>
+							<Icon name={tool.icon} size={14} />{tool.name}
+						</div>
+					))}
+					{BREAKS.map((b, i) => (
+						<span class:list={['break-note', b.kind === 'x' && 'break-red']} style={`left:${b.at}px;top:${LANE_Y[i] - 24}px`}>
+							{b.kind === 'clock' && <Icon name="clock" size={11} />}
+							{b.text}
+						</span>
+					))}
+					<div class="source-label source-narrow" style="left:580px;top:236px"><b>One source</b><span>Every line ends here</span></div>
+					{STEPS.map((step, i) => (
+						<>
+							<b class="station-name" style={`left:${LINE_X[i] - 60}px;top:174px`}>{step.name}</b>
+							<span class="station-note" style={`left:${LINE_X[i] - 60}px;top:232px`}>{step.live && <span class="live-dot" />}{step.note}</span>
+						</>
+					))}
+					<p class="foot foot-left"><Icon name="circle-alert" size={14} class="text-ink-red-5" />Six lines that stop at every hand-off</p>
+					<p class="foot foot-right"><Icon name="check" size={14} class="text-ink-green-7" />One line, start to finish</p>
+				</div>
+			</div>
+			<p class="concept-motion">
+				Moves like this: grey dots crawl along each line and pile up at its break. The lines bend into the source, and blue-lit dots run along
+				the one line without stopping. A counter could tick “hand-offs: 6 → 0”.
+			</p>
+		</section>
+
+		<!-- C: grey streams pour into one source and leave as one pipe. -->
+		<section class="concept" data-concept="c">
+			<p class="concept-name">C · Leaky streams, one pipe</p>
+			<div class="frame">
+				<h2 class="frame-title">{TITLE}</h2>
+				<p class="frame-lede">{LEDE}</p>
+				<div class="canvas">
+					<span class="zone-today" aria-hidden="true"></span>
+					<svg class="art" viewBox="0 0 1200 420" aria-hidden="true">
+						{streams.map((d) => <path d={d} class="stream" />)}
+						{DRIPS.map((drip) => (
+							<g>
+								<line x1={drip.x} y1={drip.y + 2} x2={drip.x} y2={drip.y + 26} class="drip" />
+								<circle cx={drip.x} cy={drip.y + 31} r="3.5" class="drop" />
+							</g>
+						))}
+						<path d="M628,159 C670,159 668,170 712,170 L1170,170 L1192,210 L1170,250 L712,250 C668,250 670,261 628,261 Z" class="pipe" />
+						{[805, 935, 1062].map((x) => <line x1={x} y1="178" x2={x} y2="242" class="pipe-rule" />)}
+						<rect x={BAR.x} y="150" width="28" height="120" rx="6" class="bar" />
+					</svg>
+					{TOOLS.map((tool, i) => (
+						<div class="stream-label" style={`top:${LANE_Y[i] - 10}px`}>
+							<Icon name={tool.icon} size={14} />{tool.name}
+						</div>
+					))}
+					{DRIPS.map((drip) => <span class="drip-note" style={`left:${drip.x + 8}px;top:${drip.y + 24}px`}>{drip.text}</span>)}
+					<div class="source-label" style="left:534px;top:104px"><b>One source</b><span>One record per person</span></div>
+					{STEPS.map((step, i) => (
+						<>
+							<span class="pipe-step" style={`left:${STEP_X[i] - 60}px;top:192px`}><Icon name={step.icon} size={16} />{step.name}</span>
+							<span class="station-note station-wide" style={`left:${STEP_X[i] - 70}px;top:262px`}>{step.live && <span class="live-dot" />}{step.note}</span>
+						</>
+					))}
+					<p class="foot foot-left"><Icon name="circle-alert" size={14} class="text-ink-red-5" />Data leaks out at every copy</p>
+					<p class="foot foot-right"><Icon name="check" size={14} class="text-ink-green-7" />Everything flows through one process</p>
+				</div>
+			</div>
+			<p class="concept-motion">
+				Moves like this: the grey streams wobble and drip data on the way in. They pour into the source and leave as one steady blue stream,
+				with light passing through the four steps.
+			</p>
+		</section>
+	</main>
+</LabLayout>
+
+<style>
+	.concept {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+	.concept-name {
+		font-size: 14px;
+		font-weight: 600;
+		color: var(--ink-gray-9);
+	}
+	.concept-motion {
+		max-width: 80ch;
+		font-size: 13px;
+		color: var(--ink-gray-6);
+	}
+	.frame {
+		width: 1200px;
+		padding: 48px 0 40px;
+		background: var(--surface-base);
+	}
+	.frame-title {
+		max-width: 22ch;
+		font-size: 34px;
+		font-weight: 600;
+		line-height: 1.12;
+		letter-spacing: -0.025em;
+		color: var(--ink-gray-9);
+		text-wrap: balance;
+	}
+	.frame-lede {
+		max-width: 62ch;
+		margin-top: 12px;
+		font-size: 17px;
+		line-height: 1.6;
+		color: var(--ink-gray-6);
+		text-wrap: pretty;
+	}
+	.canvas {
+		position: relative;
+		width: 1200px;
+		height: 420px;
+		margin-top: 32px;
+		overflow: hidden;
+		border: 1px solid var(--outline-gray-1);
+		border-radius: 12px;
+		background: var(--surface-base);
+	}
+	/* The left half is the desk the tools are scattered on. */
+	.zone-today {
+		position: absolute;
+		inset: 0 auto 0 0;
+		width: 608px;
+		background: var(--surface-gray-1);
+		border-right: 1px solid var(--outline-gray-1);
+	}
+	.art {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+	}
+	.foot {
+		position: absolute;
+		bottom: 16px;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 12px;
+		color: var(--ink-gray-6);
+	}
+	.foot-left {
+		left: 24px;
+	}
+	.foot-right {
+		left: 632px;
+	}
+	.live-dot {
+		display: inline-block;
+		width: 6px;
+		height: 6px;
+		margin-right: 5px;
+		border-radius: 999px;
+		background: var(--surface-green-7);
+		vertical-align: 1px;
+	}
+	.source-label {
+		position: absolute;
+		display: flex;
+		width: 160px;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+	}
+	.source-label b {
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--ink-gray-9);
+	}
+	.source-label span {
+		font-size: 12px;
+		color: var(--ink-gray-6);
+	}
+
+	/* A */
+	.wire {
+		fill: none;
+		stroke: var(--ink-gray-4);
+		stroke-width: 1.25;
+	}
+	.wire-soft {
+		stroke: var(--outline-gray-3);
+		stroke-dasharray: 3 3;
+	}
+	.wire-broken {
+		stroke: var(--ink-red-4);
+		stroke-dasharray: 4 3;
+	}
+	.head {
+		fill: var(--ink-gray-4);
+	}
+	.cross path {
+		fill: none;
+		stroke: var(--ink-red-5);
+		stroke-width: 2;
+		stroke-linecap: round;
+	}
+	.lane {
+		stroke: var(--surface-blue-8);
+		stroke-width: 2;
+	}
+	.packet {
+		fill: var(--surface-blue-8);
+	}
+	.tool {
+		position: absolute;
+		display: flex;
+		width: max-content;
+		align-items: center;
+		gap: 10px;
+		padding: 8px 12px 8px 10px;
+		border: 1px solid var(--outline-gray-2);
+		border-radius: 10px;
+		background: var(--surface-base);
+		box-shadow: 0 1px 2px rgb(0 0 0 / 0.05), 0 4px 10px rgb(0 0 0 / 0.04);
+	}
+	.tool-icon {
+		display: flex;
+		width: 30px;
+		height: 30px;
+		flex-shrink: 0;
+		align-items: center;
+		justify-content: center;
+		border-radius: 8px;
+		background: var(--surface-gray-2);
+		color: var(--ink-gray-6);
+	}
+	.tool-text {
+		display: flex;
+		min-width: 0;
+		flex-direction: column;
+	}
+	.tool-name {
+		font-size: 13px;
+		font-weight: 500;
+		color: var(--ink-gray-8);
+	}
+	.tool-meta {
+		overflow: hidden;
+		font-size: 11px;
+		color: var(--ink-gray-5);
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.tool-name {
+		white-space: nowrap;
+	}
+	.tag {
+		position: absolute;
+		padding: 1px 6px;
+		border-radius: 4px;
+		background: var(--surface-base);
+		border: 1px solid var(--outline-gray-2);
+		font-size: 11px;
+		color: var(--ink-gray-6);
+		white-space: nowrap;
+	}
+	.tag-red {
+		border-color: var(--outline-red-2, var(--outline-gray-2));
+		color: var(--ink-red-6);
+	}
+	.source {
+		position: absolute;
+		display: flex;
+		width: 96px;
+		height: 96px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 16px;
+		background: var(--surface-blue-9);
+		color: var(--ink-base, #fff);
+		box-shadow: 0 1px 2px rgb(0 0 0 / 0.1), 0 10px 24px -8px rgb(0 0 0 / 0.3);
+	}
+	.step {
+		position: absolute;
+		display: flex;
+		width: 140px;
+		flex-direction: column;
+		align-items: center;
+		gap: 2px;
+		text-align: center;
+	}
+	.step-dot {
+		display: flex;
+		width: 44px;
+		height: 44px;
+		margin-bottom: 6px;
+		align-items: center;
+		justify-content: center;
+		border: 1.5px solid var(--outline-blue-3, var(--surface-blue-8));
+		border-radius: 999px;
+		background: var(--surface-base);
+		color: var(--ink-blue-6);
+	}
+	.step b {
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--ink-gray-9);
+	}
+	.step-note,
+	.station-note {
+		font-size: 12px;
+		color: var(--ink-gray-6);
+	}
+
+	/* B */
+	.track {
+		fill: none;
+		stroke: var(--ink-gray-4);
+		stroke-width: 3;
+		stroke-linecap: round;
+	}
+	.jam {
+		fill: var(--ink-gray-6);
+	}
+	.trunk {
+		stroke: var(--surface-blue-8);
+		stroke-width: 8;
+		stroke-linecap: round;
+	}
+	.trunk-packet {
+		fill: var(--surface-base);
+	}
+	.interchange {
+		fill: var(--surface-base);
+		stroke: var(--surface-blue-9);
+		stroke-width: 5;
+	}
+	.station {
+		fill: var(--surface-base);
+		stroke: var(--surface-blue-8);
+		stroke-width: 4;
+	}
+	.lane-label {
+		position: absolute;
+		left: 24px;
+		display: flex;
+		height: 30px;
+		align-items: center;
+		gap: 6px;
+		padding: 0 10px;
+		border: 1px solid var(--outline-gray-2);
+		border-radius: 8px;
+		background: var(--surface-base);
+		font-size: 13px;
+		color: var(--ink-gray-8);
+	}
+	.lane-label :global(svg) {
+		color: var(--ink-gray-5);
+	}
+	.break-note {
+		position: absolute;
+		display: flex;
+		align-items: center;
+		gap: 3px;
+		translate: -50% 0;
+		font-size: 11px;
+		color: var(--ink-gray-6);
+		white-space: nowrap;
+	}
+	.break-red {
+		color: var(--ink-red-6);
+	}
+	.station-name {
+		position: absolute;
+		width: 120px;
+		font-size: 13px;
+		font-weight: 600;
+		text-align: center;
+		color: var(--ink-gray-9);
+	}
+	.station-note {
+		position: absolute;
+		width: 120px;
+		text-align: center;
+	}
+	.station-wide {
+		width: 140px;
+	}
+	.source-narrow {
+		width: 120px;
+	}
+
+	/* C */
+	.stream {
+		fill: var(--ink-gray-4);
+		fill-opacity: 0.32;
+	}
+	.drip {
+		stroke: var(--ink-red-4);
+		stroke-width: 1.25;
+		stroke-dasharray: 2 3;
+	}
+	.drop {
+		fill: var(--ink-red-5);
+	}
+	.drip-note {
+		position: absolute;
+		font-size: 11px;
+		color: var(--ink-red-6);
+		white-space: nowrap;
+	}
+	.pipe {
+		fill: var(--surface-blue-8);
+	}
+	.pipe-rule {
+		stroke: var(--surface-base);
+		stroke-opacity: 0.35;
+	}
+	.bar {
+		fill: var(--surface-blue-9);
+	}
+	.stream-label {
+		position: absolute;
+		left: 24px;
+		display: flex;
+		height: 20px;
+		align-items: center;
+		gap: 6px;
+		font-size: 13px;
+		color: var(--ink-gray-7);
+	}
+	.stream-label :global(svg) {
+		color: var(--ink-gray-5);
+	}
+	.pipe-step {
+		position: absolute;
+		display: flex;
+		width: 120px;
+		height: 36px;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--ink-base, #fff);
+	}
+</style>
