@@ -18,10 +18,12 @@
 
 - id: vishwajeet-singh
   name: Vishwajeet Singh
+  role: Engineer
   avatar: ./author-avatars/vishwajeet-singh.jpg
 
 - id: shivam-ghosh
   name: Shivam Ghosh
+  role: Forward Deployed Engineer
   avatar: ./author-avatars/shivam-ghosh.jpg
 
 - id: hussain-nagaria
@@ -35,18 +37,25 @@
 
 - id: rahul-agrawal
   name: Rahul Agrawal
+  role: Product Engineer
   avatar: ./author-avatars/rahul-agrawal.jpg
   bio: Software engineer interested in understanding and solving programming problems.
 
 - id: kaushal-shriwas
   name: Kaushal Shriwas
+  role: Engineer
   avatar: ./author-avatars/kaushal-shriwas.jpg
 
 - id: gajendra-nishad
   name: Gajendra Nishad
-  role: Backend Engineer
+  role: Engineer
   avatar: ./author-avatars/gajendra-nishad.jpg
   bio: Backend engineer who has been hooked on computers since he first saw one on a CRT monitor.
   social:
     github: https://github.com/gajjug004
     linkedin: https://www.linkedin.com/in/gajju004/
+
+- id: harsh-tandya
+  name: Harsh Tandya
+  role: Engineer
+  avatar: ./author-avatars/harsh-tandya.jpg
