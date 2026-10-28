@@ -262,9 +262,3 @@
   to = "/blog/engineering/building-commera-plugin-system/"
   status = 301
   force = true
-
-[[redirects]]
-  from = "/blog/engineering/replacing-mermaid-with-pele-in-frappe-wiki/"
-  to = "/blog/engineering/rendering-mermaid-diagrams-10x-faster-in-frappe-wiki/"
-  status = 301
-  force = true
