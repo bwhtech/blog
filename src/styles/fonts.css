@@ -1,10 +1,16 @@
 /* Self-hosted Inter. frappe-ui ships its own copy via frappe-ui/style.css, but
    the blog serves these two variable files from src/assets so Astro can
-   fingerprint and preload them. */
+   fingerprint and preload them.
+
+   All three files are cut down to load fast: Latin, Latin Extended, Vietnamese
+   and the common punctuation, currency, arrow and maths symbols, and weights
+   400 to 700 only (the site uses nothing outside that). Emoji and other
+   scripts fall back to the system fonts. The full files are in the Inter and
+   Geist releases; recut with fontTools `pyftsubset` and `varLib.instancer`. */
 @font-face {
 	font-family: 'InterVar';
 	font-style: normal;
-	font-weight: 100 900;
+	font-weight: 400 700;
 	font-display: swap;
 	src:
 		url('../assets/fonts/Inter.var.woff2') format('woff2-variations'),
@@ -15,7 +21,7 @@
 @font-face {
 	font-family: 'InterVar';
 	font-style: italic;
-	font-weight: 100 900;
+	font-weight: 400 700;
 	font-display: swap;
 	src:
 		url('../assets/fonts/Inter-Italic.var.woff2') format('woff2-variations'),
@@ -26,7 +32,7 @@
 @font-face {
 	font-family: 'Inter';
 	font-style: normal;
-	font-weight: 100 900;
+	font-weight: 400 700;
 	font-display: swap;
 	src:
 		url('../assets/fonts/Inter.var.woff2') format('woff2-variations'),
@@ -37,7 +43,7 @@
 @font-face {
 	font-family: 'Inter';
 	font-style: italic;
-	font-weight: 100 900;
+	font-weight: 400 700;
 	font-display: swap;
 	src:
 		url('../assets/fonts/Inter-Italic.var.woff2') format('woff2-variations'),
@@ -50,7 +56,7 @@
 @font-face {
 	font-family: 'GeistMono';
 	font-style: normal;
-	font-weight: 100 900;
+	font-weight: 400 700;
 	font-display: swap;
 	src: url('../assets/fonts/GeistMono.var.woff2') format('woff2');
 }

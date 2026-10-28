@@ -135,3 +135,9 @@ html[data-motion='on'] [data-reveal] {
 		transform: translateX(-50%);
 	}
 }
+
+/* Empty <i> elements draw dots and markers on the landing page. Left italic,
+   the browser downloads the italic font just to measure them. */
+.lab i:empty {
+	font-style: normal;
+}
