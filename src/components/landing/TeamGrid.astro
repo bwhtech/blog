@@ -6,11 +6,14 @@
  */
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
+import Icon from './Icon.astro';
 import Tbd from './Tbd.astro';
 
-// Founder first, then everyone else by id (the collection's own order).
+// Hussain first, then everyone else in alphabetical order by name.
 const FIRST = 'hussain-nagaria';
-const people = (await getCollection('authors')).sort((a, b) => Number(b.id === FIRST) - Number(a.id === FIRST));
+const people = (await getCollection('authors')).sort(
+	(a, b) => Number(b.id === FIRST) - Number(a.id === FIRST) || a.data.name.localeCompare(b.data.name),
+);
 ---
 
 <ul class="team" data-team style={`--n:${Math.min(people.length, 8)}`}>
@@ -20,6 +23,7 @@ const people = (await getCollection('authors')).sort((a, b) => Number(b.id === F
 				<span class="photo">
 					<Image src={person.data.avatar} alt="" width={240} height={240} densities={[1, 2]} class="img mono" />
 					<Image src={person.data.avatar} alt="" width={240} height={240} densities={[1, 2]} class="img tint" />
+					<span class="bot" aria-hidden="true" style={`--i:${people.indexOf(person)}`}><Icon name="bot" size={14} /></span>
 					<span class="go" aria-hidden="true">
 						<svg viewBox="0 0 16 16" width="14" height="14"><path d="M5 11 11 5M6 5h5v5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
 					</span>
@@ -124,7 +128,38 @@ const people = (await getCollection('authors')).sort((a, b) => Number(b.id === F
 		opacity: 1;
 		transform: none;
 	}
+	/* Easter egg: the ":)" in the section line shows everyone's coding agent,
+	   and the photos turn to colour. */
+	.bot {
+		position: absolute;
+		bottom: 8px;
+		left: 8px;
+		display: flex;
+		width: 28px;
+		height: 28px;
+		align-items: center;
+		justify-content: center;
+		border: 2px solid #fff;
+		border-radius: 999px;
+		background: #111;
+		color: #3ecf8e;
+		box-shadow: 0 6px 14px -4px rgb(0 0 0 / 0.5);
+		opacity: 0;
+		transform: scale(0.3) rotate(-30deg);
+		transition:
+			opacity 200ms var(--lab-ease),
+			transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+	}
+	:global([data-agents]) .bot {
+		opacity: 1;
+		transform: none;
+		transition-delay: calc(var(--i) * 70ms);
+	}
+	:global([data-agents]) .photo :global(.tint) {
+		clip-path: inset(0 0 0 0);
+	}
 	@media (prefers-reduced-motion: reduce) {
+		.bot,
 		.photo :global(.img),
 		.go {
 			transition-duration: 1ms;
@@ -152,6 +187,18 @@ const people = (await getCollection('authors')).sort((a, b) => Number(b.id === F
 <script>
 	import { animate, stagger } from 'motion';
 	import { motionAllowed, once } from '../../scripts/landing/motion';
+
+	// The ":)" beside the section title toggles the agents on and off.
+	document.querySelectorAll<HTMLButtonElement>('[data-agents-toggle]').forEach((button) => {
+		const grid = document.querySelector<HTMLElement>('[data-team]');
+		button.addEventListener('click', () => {
+			if (!grid) return;
+			const on = !grid.hasAttribute('data-agents');
+			grid.toggleAttribute('data-agents', on);
+			button.setAttribute('aria-pressed', String(on));
+			button.textContent = on ? ':D' : ':)';
+		});
+	});
 
 	document.querySelectorAll<HTMLElement>('[data-team]').forEach((grid) => {
 		if (!motionAllowed()) return;
