@@ -6,7 +6,15 @@ tags: [Engineering, Frappe Wiki, Performance]
 pubDate: 2026-10-28
 ---
 
-We recently replaced Mermaid with [Pele](https://github.com/obsidianmd/pele) in Frappe Wiki.
+Boss sent me a link to [Pele](https://github.com/obsidianmd/pele), a new diagram renderer from the Obsidian team.
+
+<figure style="max-width:600px; margin:1.5em auto;">
+
+![Chat message with a link to obsidianmd/pele and the note "Benchmark if worth to replace in Wiki"](./boss-message.png)
+
+</figure>
+
+So I did. I ran both renderers on a real wiki page, checked every example in Mermaid's docs, and compared the numbers. It turned out to be worth it, and we recently replaced Mermaid with Pele in Frappe Wiki.
 
 ## Why replace Mermaid?
 
@@ -73,6 +81,8 @@ The gap grows on slower machines. With the CPU throttled 4x, the page load drops
 Pele rendered all 548 examples from Mermaid's own documentation that Mermaid itself renders, with zero regressions. We were also able to remove about 3,800 lines of glue code that we no longer needed.
 
 Sometimes the best optimization is removing the thing that was making everything harder.
+
+So, Boss: yes, it was worth it.
 
 Thanks to the Obsidian team for open-sourcing Pele ✌️
 
