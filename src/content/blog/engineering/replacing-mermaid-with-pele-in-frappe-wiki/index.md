@@ -4,6 +4,7 @@ description: "Mermaid was heavy and fought our theme. Pele renders the same synt
 authors: [gajendra-nishad]
 tags: [Engineering, Frappe Wiki, Performance]
 pubDate: 2026-10-28
+image: "./cover.jpg"
 ---
 
 Boss sent me a link to [Pele](https://github.com/obsidianmd/pele), a new diagram renderer from the Obsidian team.
