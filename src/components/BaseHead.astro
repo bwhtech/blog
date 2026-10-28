@@ -1,4 +1,5 @@
 ---
+import interUrl from '../assets/fonts/Inter.var.woff2?url';
 import { SITE_TITLE } from '../consts';
 
 /** Open Graph images are 1200x630, the size crawlers expect. */
@@ -39,6 +40,8 @@ const socialImage = socialCard && Astro.site ? new URL(socialCard.src, Astro.sit
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Every page sets its text in Inter, so start the download before the CSS asks for it. -->
+<link rel="preload" href={interUrl} as="font" type="font/woff2" crossorigin />
 <!--
   frappe-ui reads the active scheme off `[data-theme]` on <html>, not off a
   media query, so the attribute has to be stamped before first paint or every
