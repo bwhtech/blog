@@ -1,6 +1,6 @@
 ---
-title: "Faster mermaid diagrams with 4000 less lines of code"
-description: "Mermaid was heavy and fought our theme. Pele renders the same syntax at a quarter of the size, styles through CSS, and let us delete about 3,800 lines of glue code."
+title: "Rendering Mermaid diagrams 10x faster in Frappe Wiki"
+description: "Mermaid is heavy and was fighting against our theme. Pele renders the same syntax up to 10× faster, inherits its colors from CSS, and switches to dark mode without redrawing a single diagram."
 authors: [gajendra-nishad]
 tags: [Engineering, Frappe Wiki, Performance]
 pubDate: 2026-10-28
@@ -21,7 +21,7 @@ So I did. I ran both renderers on a real wiki page, checked every example in Mer
 
 Mermaid is powerful, but it is heavy. It ships around 904 KB gzipped and gets noticeably slower on pages with many diagrams.
 
-Matching it to our theme also took a fair amount of glue code. We converted colors from oklch to rgb, waited for fonts, and kept counters for render ids. Switching to dark mode meant redrawing every diagram on the page.
+Making it match our theme was also hard. We had to write extra code just to pass our colors and fonts to Mermaid. And every time you switched to dark mode, every diagram on the page had to be drawn again.
 
 ## Why Pele?
 
@@ -77,9 +77,9 @@ We measured a real wiki page with 12 diagrams in Chrome, taking the median of 5 
 | 100-node flowchart | 285 ms | 20 ms |
 | Memory (JS heap) | 13.5 MB | 5.9 MB |
 
-The gap grows on slower machines. With the CPU throttled 4x, the page load drops from 3,071 ms to 1,040 ms, and a theme switch drops from 1,435 ms to 40 ms.
+On a slow computer, the page load drops from 3,071 ms to 1,040 ms, and a theme switch drops from 1,435 ms to 40 ms.
 
-Pele rendered all 548 examples from Mermaid's own documentation that Mermaid itself renders, with zero regressions. We were also able to remove about 3,800 lines of glue code that we no longer needed.
+Pele rendered all 548 examples from Mermaid's own documentation that Mermaid itself renders, with zero regressions.
 
 Sometimes the best optimization is removing the thing that was making everything harder.
 
