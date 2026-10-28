@@ -1,5 +1,5 @@
 ---
-title: "We replaced Mermaid with Pele in Frappe Wiki"
+title: "Faster mermaid diagrams with 4000 less lines of code"
 description: "Mermaid was heavy and fought our theme. Pele renders the same syntax at a quarter of the size, styles through CSS, and let us delete about 3,800 lines of glue code."
 authors: [gajendra-nishad]
 tags: [Engineering, Frappe Wiki, Performance]
