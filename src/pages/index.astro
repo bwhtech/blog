@@ -147,7 +147,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 			<div class="hdr-row2 relative h-8 border-t border-outline-gray-1 text-sm">
 				<div data-hdr-a class="absolute inset-0 flex items-center">
 					<span data-name-box class="flex h-full w-14 shrink-0 items-center justify-center border-r border-outline-gray-1 font-data text-xs text-ink-gray-7 sm:w-16">A1</span>
-					<span class="flex h-full w-9 shrink-0 items-center justify-center border-r border-outline-gray-1 font-data text-xs italic text-ink-gray-5">fx</span>
+					<span class="flex h-full w-9 shrink-0 items-center justify-center border-r border-outline-gray-1 font-data text-xs text-ink-gray-5"><span class="inline-block -skew-x-12">fx</span></span>
 					<span data-formula class="truncate px-3 font-data text-xs text-ink-gray-8">="{HEADLINE.title}"</span>
 				</div>
 				<div data-hdr-b class="absolute inset-0 flex items-center gap-2 px-3 opacity-0 sm:px-4">
@@ -162,6 +162,8 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 			<!-- The scene. Tall on purpose: scrolling through it drives the change. -->
 			<section id="sheet" data-scene aria-labelledby="sheet-title" class="sheet-scene relative">
 				<div data-stage class="sheet-stage">
+					<!-- Where the easter eggs talk back. -->
+					<div class="egg-toast" data-egg-toast role="status" aria-live="polite"></div>
 					<!-- Before: the sheet. Its data stays quiet so the headline leads. -->
 					<div class="layer layer-sheet" data-sheet-layer>
 						<!-- Column letters -->
@@ -259,6 +261,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 													data-cell
 													data-ref={`${COLS[col]}${TABLE_FIRST_ROW + index + 1}`}
 													data-formula={cell}
+													data-egg={row.error === col ? 'value' : undefined}
 													class:list={[
 														'cell',
 														HIDE_ON_MOBILE.has(col) && 'c-hide',
@@ -484,7 +487,10 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 				</section>
 
 				<section id="team" aria-labelledby="team-title" class="flex scroll-mt-24 flex-col gap-8">
-					<h2 id="team-title" class:list={[sectionTitle, 'max-w-[24ch]']}>Who solves your problems?</h2>
+					<div class="flex flex-col gap-3">
+						<h2 id="team-title" class:list={[sectionTitle, 'max-w-[24ch]']}>Who solves your problems?</h2>
+						<p class="max-w-[60ch] text-p-lg text-ink-gray-6">A dedicated team of software engineers, along with their coding agents <button type="button" class="smile" data-agents-toggle aria-pressed="false" aria-label="Show the coding agents">:)</button></p>
+					</div>
 					<TeamGrid />
 				</section>
 
@@ -511,7 +517,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 				</section>
 
 				<section id="training" aria-labelledby="training-title" class="flex scroll-mt-24 flex-col gap-8">
-					<h2 id="training-title" class={sectionTitle}>Then we train your team to run it.</h2>
+					<h2 id="training-title" class={sectionTitle}>Then we empower your team to run it.</h2>
 					<TrainingPanels />
 				</section>
 
@@ -551,7 +557,7 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 						{tab.label}
 					</a>
 				))}
-				<span class="flex shrink-0 items-center px-3 italic text-ink-gray-5" aria-hidden="true">Copy of FINAL (3)</span>
+				<span class="flex shrink-0 items-center px-3 text-ink-gray-5" aria-hidden="true">Copy of FINAL (3)</span>
 			</div>
 			<p class="flex shrink-0 items-center gap-2 border-l border-outline-gray-2 px-2.5 font-data text-[11px] text-ink-gray-5 md:hidden">
 				<span>Count {NAMED_PARTNERS.length} · Sum {CONTRIBUTIONS.total.toLocaleString('en-IN')}</span>
@@ -783,6 +789,65 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 	}
 	.cell.hl {
 		background: color-mix(in oklch, var(--surface-amber-1) 55%, var(--surface-base));
+	}
+	/* Easter eggs: the toast they answer in, the ⌘Z glitch, the mended cell. */
+	.egg-toast {
+		position: absolute;
+		top: 16px;
+		left: 50%;
+		z-index: 30;
+		padding: 8px 14px;
+		border-radius: 999px;
+		background: var(--ink-gray-9);
+		font-size: 13px;
+		font-weight: 500;
+		color: var(--surface-base);
+		box-shadow: 0 12px 28px -10px rgb(0 0 0 / 0.4);
+		opacity: 0;
+		pointer-events: none;
+		transform: translate(-50%, -8px);
+		transition:
+			opacity 250ms var(--lab-ease),
+			transform 450ms var(--lab-ease);
+	}
+	.egg-toast.show {
+		opacity: 1;
+		transform: translate(-50%, 0);
+	}
+	.sheet-stage.glitch {
+		animation: glitch 420ms steps(2, end);
+	}
+	@keyframes glitch {
+		0% { transform: translate(0); filter: none; }
+		20% { transform: translate(-6px, 2px); filter: hue-rotate(60deg) saturate(1.6); }
+		40% { transform: translate(5px, -2px); filter: contrast(1.4); }
+		60% { transform: translate(-3px, 0); filter: hue-rotate(-40deg); }
+		80% { transform: translate(2px, 1px); filter: none; }
+		100% { transform: translate(0); filter: none; }
+	}
+	.cell[data-egg='value'] {
+		cursor: pointer;
+	}
+	/* Not `fixed`: Tailwind's utility of that name would pin the cell to the viewport. */
+	.cell.mended {
+		color: var(--ink-gray-6);
+		animation: mended 900ms var(--lab-ease);
+	}
+	@keyframes mended {
+		0% { background: color-mix(in oklch, var(--surface-green-3) 80%, transparent); }
+		100% { background: transparent; }
+	}
+	.smile {
+		display: inline;
+		padding: 0 2px;
+		border-radius: 4px;
+		font: inherit;
+		color: inherit;
+		cursor: pointer;
+		transition: background-color 150ms;
+	}
+	.smile:hover {
+		background: var(--surface-gray-2);
 	}
 	/* The same brick red as the failure in the process diagram. */
 	.cell.err {
@@ -1820,6 +1885,8 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 
 	let step = -1;
 	let live = false;
+	let undone = false;
+	let lastP = 0;
 	function render(p: number) {
 		sceneP = p;
 		updateChrome();
@@ -1862,6 +1929,13 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 		dashLayer.style.clipPath = w >= 1 ? 'none' : `inset(0 ${(1 - w) * 100}% 0 0)`;
 		wipe.style.left = `${w * 100}%`;
 		wipe.style.opacity = w > 0 && w < 1 ? '1' : '0';
+		// Easter egg: ⌘Z on the live dashboard brings the sheet back until it is pressed again.
+		lastP = p;
+		if (undone && p < LIVE_AT) undone = false;
+		if (undone) {
+			sheetLayer.style.clipPath = '';
+			dashLayer.style.clipPath = 'inset(0 100% 0 0)';
+		}
 		hdrA.forEach((el) => (el.style.opacity = String(1 - ease(seg(p, 0.5, 0.62)))));
 		hdrB.forEach((el) => (el.style.opacity = String(ease(seg(p, 0.56, 0.68)))));
 
@@ -1882,7 +1956,49 @@ const sectionTitle = 'text-[28px] font-semibold leading-[1.15] tracking-[-0.025e
 		}
 	}
 
+	// Easter eggs. Small rewards for the curious; none of them stand in the way.
+	console.log(
+		"%cYou're reading our source. You're our kind of person.%c\nOur code: https://github.com/bwhtech\nSay hello: https://bwh.tech/meet",
+		'font: 600 14px/1.6 system-ui, sans-serif',
+		'font: 13px/1.6 system-ui, sans-serif; color: #7c7c7c',
+	);
+	const toast = stage.querySelector<HTMLElement>('[data-egg-toast]')!;
+	let toastTimer = 0;
+	const say = (text: string) => {
+		toast.textContent = text;
+		toast.classList.add('show');
+		window.clearTimeout(toastTimer);
+		toastTimer = window.setTimeout(() => toast.classList.remove('show'), 2800);
+	};
+	// The #VALUE! cell can be fixed by clicking it.
+	const broken = stage.querySelector<HTMLElement>('[data-egg="value"]');
+	broken?.addEventListener('click', () => {
+		if (broken.classList.contains('mended')) return;
+		broken.classList.remove('err');
+		broken.classList.add('mended');
+		broken.textContent = 'Not visited';
+		broken.dataset.formula = 'Not visited';
+		formula.textContent = 'Not visited';
+		say('Fixed. Now imagine that for every sheet.');
+	});
+
 	if (motionAllowed()) {
+		// ⌘Z or Ctrl+Z while the dashboard is live: undo back to the sheet, then redo.
+		window.addEventListener('keydown', (event) => {
+			if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== 'z' || event.shiftKey) return;
+			if (!live || (event.target as HTMLElement).closest('input, textarea, [contenteditable]')) return;
+			const box = stage.getBoundingClientRect();
+			if (box.bottom < 0 || box.top > window.innerHeight) return;
+			event.preventDefault();
+			undone = !undone;
+			stage.classList.remove('glitch');
+			void stage.offsetWidth;
+			stage.classList.add('glitch');
+			render(lastP);
+			say(undone ? 'Back to the sheet? Really? Press it again.' : 'Phew. Back to one system.');
+		});
+		stage.addEventListener('animationend', () => stage.classList.remove('glitch'));
+
 		let frame = 0;
 		// Progress is how far the scene has scrolled under the header, over the
 		// distance the pinned stage can travel inside it.
