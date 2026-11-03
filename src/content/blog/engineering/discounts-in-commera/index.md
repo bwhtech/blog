@@ -78,7 +78,7 @@ So ERPNext still decides the price, and our discount always comes on top. Nothin
 
 We also moved the cart to the server. Before, it was mostly in the browser. Now the cart is a real record, so the discount the shopper sees in the cart is exactly what they get at checkout. Plugins can also create a cart or add extra details to its items.
 
-When an order is placed, Commera saves a row for each discount used on it. That's where the numbers on each discount come from: orders, discount given and sales.
+When an order is placed, Commera saves a row for each discount used on it.
 
 ![Orders, discount given and sales for a discount](./discount-results.png)
 
