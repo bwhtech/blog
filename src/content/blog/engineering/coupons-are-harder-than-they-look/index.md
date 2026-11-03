@@ -1,5 +1,5 @@
 ---
-title: "Discounts in Commera"
+title: "Coupons Are Harder Than They Look"
 description: "Codes, automatic deals and free shipping, on top of ERPNext."
 authors: [rahul-agrawal, hussain-nagaria]
 tags: ["Engineering", "Commera", "ERPNext"]
