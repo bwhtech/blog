@@ -4,7 +4,7 @@ description: "Codes, automatic deals and free shipping, on top of ERPNext."
 authors: [rahul-agrawal, hussain-nagaria]
 tags: ["Engineering", "Commera", "ERPNext"]
 pubDate: 2026-11-03
-image: "./diwali10-setup.png"
+image: "./og-commera-discounts.png"
 ---
 
 For quite a while I was delaying coupons. There are just too many cases: percentage or flat, one product or the whole order, two codes together, cash on delivery, cancelled orders, and so on. Then one day Hussain decided enough is enough and built a POC for coupons. We picked it up from there, and now Commera has proper Shopify-style discounts. Here is how it works.
