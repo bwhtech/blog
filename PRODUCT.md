@@ -20,7 +20,7 @@ Success for the landing page: a nonprofit leader understands within seconds that
 
 ## Positioning
 
-"Problem solvers, for the problem solvers." Tell us the problem; we work out the solution with you, and we listen first. The difference from other vendors:
+"Problem solving, for change makers." Tell us the problem; we work out the solution with you, and we listen first. The difference from other vendors:
 
 - The team are core contributors to the open-source stack they build on (Frappe Framework, ERPNext, Frappe HR). As of 2026-10-26 the team has 1,043 merged pull requests in `frappe/*` repositories.
 - Train the trainer: the client's own staff learn to run and extend the system. BWH is an official Frappe School partner (source: the BWH blog only; Frappe's partner directory does not list it yet).

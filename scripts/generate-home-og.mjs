@@ -11,7 +11,7 @@ import path from 'node:path';
 import { buildDocument, escapeHtml, renderCards, root } from './og-card.mjs';
 
 /** Keep in sync with HEADLINE in src/data/landing.ts and the page title in src/pages/index.astro. */
-const HEADLINE = 'Problem Solving, for Problem Solvers.';
+const HEADLINE = 'Problem Solving, for Change Makers.';
 const TAGLINE = 'Technology for nonprofits, built on open source.';
 
 const outFile = path.join(root, 'public/og/home.jpg');
