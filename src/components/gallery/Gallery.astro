@@ -1,0 +1,153 @@
+---
+/**
+ * Image gallery for MDX posts. Put Markdown images inside it, with a blank line
+ * around each one so MDX still parses them as Markdown:
+ *
+ *   <Gallery>
+ *
+ *   ![Caption one](./one.png)
+ *
+ *   ![Caption two](./two.png)
+ *
+ *   </Gallery>
+ *
+ * Phones swipe between images. Wider screens get a thumbnail column beside the
+ * main image. Motion and styles: gallery.css. Behaviour: gallery-controller.ts.
+ * Optional props: aspectRatio (default '4 / 3') and label (for screen readers).
+ */
+import { type HTMLElement, parse } from 'node-html-parser';
+import './gallery.css';
+
+interface Props {
+	/** Shape of the main image area. Images keep their own ratio inside it. */
+	aspectRatio?: string;
+	label?: string;
+}
+
+interface Slide {
+	attrs: Record<string, string>;
+	caption: string;
+}
+
+const { aspectRatio = '4 / 3', label = 'Image gallery' } = Astro.props;
+
+// Astro has already optimised the slotted Markdown images, so reuse its <img>
+// output as is. An empty <Gallery /> has no default slot, and render() then
+// returns undefined.
+const slides = parseSlides((await Astro.slots.render('default')) ?? '');
+const hasMany = slides.length > 1;
+// Past this count the dot row gets wider than a phone; the "n / total" counter covers it.
+const MAX_DOTS = 10;
+const showDots = hasMany && slides.length <= MAX_DOTS;
+
+function parseSlides(html: string): Slide[] {
+	return parse(html)
+		.querySelectorAll('img')
+		.map((img, index) => ({
+			attrs: slideAttrs(img, index),
+			caption: captionOf(img),
+		}));
+}
+
+function slideAttrs(img: HTMLElement, index: number) {
+	const attrs = { ...img.attributes };
+	// Only the first slide is on screen at load; the rest can wait.
+	attrs.loading = index === 0 ? 'eager' : 'lazy';
+	attrs.fetchpriority = index === 0 ? 'high' : 'auto';
+	return attrs;
+}
+
+function thumbAttrs(slide: Slide) {
+	const { src, srcset, sizes, width, height } = slide.attrs;
+	return { src, srcset, sizes, width, height };
+}
+
+function captionOf(img: HTMLElement) {
+	const figcaption = img.closest('figure')?.querySelector('figcaption');
+	return (figcaption?.textContent ?? img.getAttribute('alt') ?? '').trim();
+}
+---
+
+{
+	slides.length > 0 && (
+		<div class="gallery not-prose" data-gallery style={`--gallery-ratio: ${aspectRatio}`}>
+			<div class="gallery-stage">
+				<div
+					class="gallery-track"
+					data-gallery-track
+					tabindex="0"
+					role="region"
+					aria-roledescription="carousel"
+					aria-label={label}
+					aria-keyshortcuts="ArrowLeft ArrowRight"
+				>
+					{slides.map((slide, index) => (
+						<div
+							class="gallery-slide"
+							role="group"
+							aria-roledescription="slide"
+							aria-label={`${index + 1} of ${slides.length}`}
+						>
+							<img {...slide.attrs} data-caption={slide.caption} />
+						</div>
+					))}
+				</div>
+
+				{hasMany && (
+					<>
+						<button type="button" class="gallery-arrow is-prev" data-gallery-prev aria-label="Previous image">
+							<svg viewBox="0 0 16 16" aria-hidden="true">
+								<path d="M10 3 5 8l5 5" />
+							</svg>
+						</button>
+						<button type="button" class="gallery-arrow is-next" data-gallery-next aria-label="Next image">
+							<svg viewBox="0 0 16 16" aria-hidden="true">
+								<path d="m6 3 5 5-5 5" />
+							</svg>
+						</button>
+						<span class="gallery-counter" aria-hidden="true">
+							<span data-gallery-current>1</span> / {slides.length}
+						</span>
+					</>
+				)}
+			</div>
+
+			{hasMany && (
+				<div class="gallery-thumbs" data-gallery-thumbs>
+					{slides.map((slide, index) => (
+						<button
+							type="button"
+							class="gallery-thumb"
+							data-gallery-thumb
+							aria-label={`Show image ${index + 1}${slide.caption ? `: ${slide.caption}` : ''}`}
+							aria-current={index === 0 ? 'true' : undefined}
+						>
+							<img {...thumbAttrs(slide)} alt="" loading="lazy" decoding="async" />
+						</button>
+					))}
+					<span class="gallery-thumb-ring" data-gallery-ring aria-hidden="true" />
+				</div>
+			)}
+
+			{showDots && (
+				<div class="gallery-dots" aria-hidden="true">
+					{slides.map(() => (
+						<span class="gallery-dot" data-gallery-dot />
+					))}
+					<span class="gallery-dot-indicator" data-gallery-dot-indicator />
+				</div>
+			)}
+
+			<p class="gallery-caption" data-gallery-caption aria-live="polite">
+				{slides[0].caption}
+			</p>
+		</div>
+	)
+}
+
+<script>
+	import { GalleryController } from './gallery-controller';
+
+	GalleryController.mountAll();
+	document.addEventListener('astro:page-load', () => GalleryController.mountAll());
+</script>

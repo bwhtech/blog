@@ -122,6 +122,36 @@ unhighlighted (`markdown.syntaxHighlight.excludeLangs` in `astro.config.mjs`)
 and `src/components/Mermaid.astro` renders it in the browser, matching the
 light or dark theme. Mermaid loads only on pages that contain a diagram.
 
+## Image gallery
+
+An `.mdx` post can show several images as one gallery. `<Gallery>` is passed to
+every post in `src/pages/blog/[...slug].astro`, so the post needs no import:
+
+```mdx
+<Gallery>
+
+![Before the change](./before.png)
+
+![After the change](./after.png)
+
+</Gallery>
+```
+
+- Put a blank line around each image. Without it, MDX does not parse the
+  Markdown, and the path is not resolved.
+- The alt text is the caption. The images go through the image pipeline as usual.
+- Optional props: `aspectRatio` (default `'4 / 3'`) and `label` (for screen readers).
+- On a phone, the reader swipes, with dots and an "n / total" counter. At 768px
+  and wider, a thumbnail column sits beside the main image, and the arrows and
+  the ←/→ keys also work. More than 10 images drop the dots and keep the counter.
+- The component is in `src/components/gallery/`. The track is a native
+  scroll-snap scroller, and `gallery-indicators.ts` moves the ring, the dot and
+  the caption fade with the scroll on every frame. Do not add CSS transitions to
+  those; they would lag the finger.
+- It is a port of the CS17 blog's gallery (`NagariaHussain/foss_academy`,
+  `src/components/ui/gallery/`), with frappe-ui colour tokens. That site has an
+  image viewer and this one does not, so Enter does not open the image here.
+
 ## Styling and Vue islands
 
 Every design token comes from `frappe-ui` — the Espresso palette, the semantic
