@@ -13,7 +13,8 @@
  *
  * Phones swipe between images. Wider screens get a thumbnail column beside the
  * main image. Motion and styles: gallery.css. Behaviour: gallery-controller.ts.
- * Optional props: aspectRatio (default '4 / 3') and label (for screen readers).
+ * Optional props: aspectRatio (default '4 / 3'), label (for screen readers) and
+ * autoplay (`autoplay` for every 4 seconds, or `autoplay={6000}` for a delay in ms).
  */
 import { type HTMLElement, parse } from 'node-html-parser';
 import './gallery.css';
@@ -22,6 +23,8 @@ interface Props {
 	/** Shape of the main image area. Images keep their own ratio inside it. */
 	aspectRatio?: string;
 	label?: string;
+	/** Advance on a timer. `true` means every 4 seconds; a number is the delay in ms. */
+	autoplay?: boolean | number;
 }
 
 interface Slide {
@@ -29,7 +32,9 @@ interface Slide {
 	caption: string;
 }
 
-const { aspectRatio = '4 / 3', label = 'Image gallery' } = Astro.props;
+const { aspectRatio = '4 / 3', label = 'Image gallery', autoplay = false } = Astro.props;
+const DEFAULT_AUTOPLAY_MS = 4000;
+const autoplayMs = autoplay === true ? DEFAULT_AUTOPLAY_MS : autoplay || undefined;
 
 // Astro has already optimised the slotted Markdown images, so reuse its <img>
 // output as is. An empty <Gallery /> has no default slot, and render() then
@@ -70,7 +75,12 @@ function captionOf(img: HTMLElement) {
 
 {
 	slides.length > 0 && (
-		<div class="gallery not-prose" data-gallery style={`--gallery-ratio: ${aspectRatio}`}>
+		<div
+			class="gallery not-prose"
+			data-gallery
+			data-gallery-autoplay={autoplayMs}
+			style={`--gallery-ratio: ${aspectRatio}`}
+		>
 			<div class="gallery-stage">
 				<div
 					class="gallery-track"
