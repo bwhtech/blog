@@ -140,7 +140,12 @@ every post in `src/pages/blog/[...slug].astro`, so the post needs no import:
 - Put a blank line around each image. Without it, MDX does not parse the
   Markdown, and the path is not resolved.
 - The alt text is the caption. The images go through the image pipeline as usual.
-- Optional props: `aspectRatio` (default `'4 / 3'`) and `label` (for screen readers).
+- Optional props: `aspectRatio` (default `'4 / 3'`), `label` (for screen readers)
+  and `autoplay` (`autoplay` advances every 4 seconds, `autoplay={6000}` sets the
+  delay in ms). Autoplay runs only while the gallery is half on screen and the tab
+  is visible, pauses under the pointer or focus, and stops for good on the first
+  swipe, click or key. It never starts under `prefers-reduced-motion`, and it
+  mutes the caption's `aria-live` while it plays. It lives in `gallery-autoplay.ts`.
 - On a phone, the reader swipes, with dots and an "n / total" counter. At 768px
   and wider, a thumbnail column sits beside the main image, and the arrows and
   the ←/→ keys also work. More than 10 images drop the dots and keep the counter.

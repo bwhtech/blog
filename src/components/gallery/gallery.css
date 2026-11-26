@@ -157,9 +157,12 @@
 
 /* ---------- Caption ---------- */
 
+/* Padding, not margin: prose.css zeroes the margin of any <p> inside .not-prose
+   with a more specific selector, which left the caption touching the dots. */
 .gallery .gallery-caption {
-	min-height: 1.5em;
-	margin: 0.75em 0 0;
+	min-height: calc(1.5em + 0.75rem);
+	margin: 0;
+	padding-top: 0.75rem;
 	color: var(--ink-gray-5);
 	font-size: 13px;
 	line-height: 1.5;

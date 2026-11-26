@@ -1,3 +1,4 @@
+import { GalleryAutoplay } from './gallery-autoplay';
 import { GalleryIndicators } from './gallery-indicators';
 
 /**
@@ -16,6 +17,7 @@ export class GalleryController {
 	private readonly counter: HTMLElement | null;
 	private readonly prev: HTMLButtonElement | null;
 	private readonly next: HTMLButtonElement | null;
+	private readonly autoplay: GalleryAutoplay | null;
 	private index = 0;
 	private frame = 0;
 	/** Slide a click is scrolling to. Scroll events on the way there are ignored. */
@@ -39,6 +41,7 @@ export class GalleryController {
 		this.prev = root.querySelector('[data-gallery-prev]');
 		this.next = root.querySelector('[data-gallery-next]');
 		this.indicators = new GalleryIndicators(root, this.track, this.slides.length);
+		this.autoplay = this.createAutoplay(root);
 	}
 
 	bind() {
@@ -52,6 +55,7 @@ export class GalleryController {
 		this.prev?.addEventListener('click', () => this.goTo(this.index - 1));
 		this.next?.addEventListener('click', () => this.goTo(this.index + 1));
 		this.render();
+		this.autoplay?.start();
 	}
 
 	goTo(index: number, { instant = false } = {}) {
@@ -61,6 +65,13 @@ export class GalleryController {
 		this.track.scrollTo({ left: target * this.track.clientWidth, behavior });
 		// Update now so the thumbnail reacts on click, not after the scroll finishes.
 		this.setIndex(target);
+	}
+
+	private createAutoplay(root: HTMLElement) {
+		const delay = Number(root.dataset.galleryAutoplay);
+		if (!delay || this.slides.length < 2) return null;
+		// Wraps to the first slide after the last.
+		return new GalleryAutoplay(root, delay, () => this.goTo((this.index + 1) % this.slides.length));
 	}
 
 	private onKey(event: KeyboardEvent) {
